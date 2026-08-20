@@ -1,11 +1,14 @@
+import SeriesSection from "./components/SeriesSection";
+import SpeakerSection from "./components/SpeakerSection";
 const backgroundImage = "/images/hero-background.png";
 const microphoneImage = "/images/microphone.png";
 const votaLogo = "/icons/vota-logo.png";
 const arrowUpRight = "/icons/arrow-up-right.svg";
 const arrowRight = "/icons/arrow-right.svg";
 const arrowRightDark = "/icons/arrow-right-dark.svg";
-const arrowUp = "/icons/arrow-up.svg";
+const arrowAngle = "/icons/arrow-angle.svg";
 const portraitImage = "/images/portrait.png";
+const businessmanImage = "/images/businessman.png";
 const businesswomanImage = "/images/businesswoman.png";
 
 function Arrow({ source }: { source: string }) {
@@ -14,8 +17,9 @@ function Arrow({ source }: { source: string }) {
 
 export default function Home() {
   return (
+    <>
     <main
-      className="isolate relative min-h-[1080px] overflow-hidden rounded-b-[60px] bg-[#050505] max-[760px]:min-h-[720px] max-[760px]:rounded-b-[30px]"
+      className="hero-frame isolate relative min-h-[900px] overflow-hidden bg-[#050505] max-[760px]:min-h-[670px]"
       data-node-id="1:845">
       {/* Background */}
       <div className="absolute inset-0 z-0" aria-hidden="true">
@@ -38,7 +42,7 @@ export default function Home() {
         aria-hidden="true"
       >
         <img
-          className="absolute left-[-19.25%] top-[-37.48%] h-[130%] w-[119.22%] max-w-none object-cover"
+          className="absolute left-[-19.25%] top-[-32%] h-[130%] w-[119.22%] max-w-none object-cover"
           src={microphoneImage}
           alt=""
         />
@@ -141,46 +145,67 @@ export default function Home() {
 
       {/* People */}
       <div
-        className="absolute bottom-[24%] left-1/2 z-[10] flex -translate-x-1/2 max-[760px]:bottom-[5%]"
+        className="absolute bottom-[18%] left-1/2 z-[10] flex -translate-x-1/2 max-[760px]:bottom-[5%]"
         aria-label="Meet the people behind Voice of Talent"
       >
+      <div className="flex items-center rounded-[100px] border-2 border-white p-1">
         <div className="relative h-[60px] w-[60px] overflow-hidden rounded-full border-2 border-white bg-[rgba(0,0,0,.2)]">
-          <img
-            className="h-full w-full object-cover"
-            src={portraitImage}
-            alt=""
-          />
+          <img className="h-full w-full object-cover" src={businessmanImage} alt="" />
         </div>
-
         <div className="relative -ml-5 h-[60px] w-[60px] overflow-hidden rounded-full border-2 border-white bg-[rgba(0,0,0,.2)]">
-          <img
-            className="h-full w-full object-cover"
-            src={businesswomanImage}
-            alt=""
-          />
+          <img className="h-full w-full object-cover" src={businesswomanImage} alt="" />
         </div>
-
         <div className="relative -ml-5 h-[60px] w-[60px] overflow-hidden rounded-full border-2 border-white bg-[rgba(0,0,0,.2)]">
-          <img
-            className="h-full w-full object-cover"
-            src={portraitImage}
-            alt=""
-          />
+          <img className="h-full w-full object-cover" src={businessmanImage} alt="" />
         </div>
-
         <a
-          className="relative -ml-5 flex h-[60px] w-[60px] items-center justify-center rounded-full border-2 border-white bg-[#159a99]"
+          className="relative -ml-5 flex h-[60px] w-[60px] items-center justify-center rounded-full "
           href="#speakers"
           aria-label="View speakers"
         >
-          <img
-            className="h-[17px] w-[17px] rotate-[-135deg] scale-y-[-1] object-contain"
-            src={arrowUp}
-            alt=""
-          />
-        </a>
+          <img className="" src={arrowAngle} alt="" />
+          </a>
+        </div>
       </div>
     </main>
+
+    <section
+      id="mission"
+      className="relative min-h-[380px] overflow-hidden bg-white px-[8.7%]  pt-[100px] text-[#202020] max-[760px]:min-h-[500px] max-[760px]:px-6 max-[760px]:pb-16 max-[760px]:pt-20"
+      aria-labelledby="mission-title"
+    >
+      <div className="flex items-start justify-between gap-20 max-[760px]:flex-col max-[760px]:gap-12">
+        <p className="m-0 shrink-0 text-[23px] font-semibold uppercase tracking-[-.02em] text-[#159a99] max-[760px]:text-[11px]">
+          — The VOTA Mission
+        </p>
+      <div className="relative w-[min(68%,820px)] text-right max-[760px]:w-full">
+        <h2
+          id="mission-title"
+          className="m-0 font-geist text-[clamp(25px,2.1vw,36px)] font-medium leading-[1.22] tracking-[-.03em] text-right max-[760px]:text-[27px]"
+        >
+          <span className="text-[#202020]">
+            Behind every great organization, successful team and
+          </span>{" "}
+          <span className="text-[#969696]">
+            life-changing career opportunity is someone who recognized potential.
+          </span>
+        </h2>
+
+        <div className="absolute left-[30%] top-[60px] z-[2] h-[150px] w-[150px] rotate-[-8deg] overflow-hidden rounded-[6px]  max-[760px]:left-[18%] max-[760px]:top-[148px]">
+          <img
+            className="h-full w-full object-cover"
+            src={portraitImage}
+            alt="A member of the Voice of Talent community"
+          />
+        </div>
+      </div>
+      </div>
+
+    </section>
+
+    <SeriesSection />
+    <SpeakerSection />
+    </>
   );
 }
 
