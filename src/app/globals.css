@@ -2,8 +2,9 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #050505;
+  --foreground: #ffffff;
+  --teal: #159a99;
 }
 
 @theme inline {
@@ -15,10 +16,13 @@
   --font-sans: "Geist", sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes microphone-rise {
+  from {
+    transform: translateX(var(--microphone-shift)) translateY(100%);
+  }
+
+  to {
+    transform: translateX(var(--microphone-shift)) translateY(0);
   }
 }
 
