@@ -27,9 +27,19 @@
 }
 
 body {
-  background: var(--background);
+  background: #ffffff;
   color: var(--foreground);
   font-family: "Geist", sans-serif;
+}
+
+.hero-frame {
+  border-radius: 0 0 60px 60px;
+}
+
+@media (max-width: 760px) {
+  .hero-frame {
+    border-radius: 0 0 30px 30px;
+  }
 }
 
 /* Headings default to Geist */
