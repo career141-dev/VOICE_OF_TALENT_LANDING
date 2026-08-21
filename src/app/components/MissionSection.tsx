@@ -12,8 +12,8 @@ const containerVariants: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.04,
-      delayChildren: 0.08,
+      staggerChildren: 0.035,
+      delayChildren: 0.02,
     },
   },
 };
@@ -21,15 +21,15 @@ const containerVariants: Variants = {
 const wordVariants: Variants = {
   hidden: {
     opacity: 0,
-    y: 22,
-    filter: "blur(5px)",
+    y: 20,
+    filter: "blur(4px)",
   },
   visible: {
     opacity: 1,
     y: 0,
     filter: "blur(0px)",
     transition: {
-      duration: 0.45,
+      duration: 0.4,
       ease: [0.22, 1, 0.36, 1] as const,
     },
   },
@@ -47,8 +47,8 @@ export default function MissionSection() {
         <motion.p
           initial={{ opacity: 0, x: -24 }}
           whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] as const }}
+          viewport={{ once: true, amount: 0.05, margin: "0px 0px 50px 0px" }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] as const }}
           className="m-0 shrink-0 text-[23px] font-semibold uppercase tracking-[-.02em] text-[#159a99] max-[760px]:text-[11px]"
         >
           — The VOTA Mission
@@ -61,43 +61,48 @@ export default function MissionSection() {
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
+            viewport={{ once: true, amount: 0.05, margin: "0px 0px 50px 0px" }}
             className="m-0 font-geist text-[clamp(25px,2.1vw,36px)] font-medium leading-[1.28] tracking-[-.03em] text-right max-[760px]:text-[27px]"
           >
             {/* Primary Dark Words */}
             <span className="text-[#202020]">
               {primaryWords.map((word, index) => (
-                <motion.span
-                  key={`primary-${index}`}
-                  variants={wordVariants}
-                  className="inline-block mr-[0.28em] will-change-transform"
-                >
-                  {word}
-                </motion.span>
+                <span key={`primary-${index}`} className="inline-block whitespace-nowrap">
+                  <motion.span
+                    variants={wordVariants}
+                    className="inline-block will-change-transform"
+                  >
+                    {word}
+                  </motion.span>
+                  <span>&nbsp;</span>
+                </span>
               ))}
-            </span>{" "}
+            </span>
+
             {/* Secondary Muted Words */}
             <span className="text-[#969696]">
               {secondaryWords.map((word, index) => (
-                <motion.span
-                  key={`secondary-${index}`}
-                  variants={wordVariants}
-                  className="inline-block mr-[0.28em] will-change-transform"
-                >
-                  {word}
-                </motion.span>
+                <span key={`secondary-${index}`} className="inline-block whitespace-nowrap">
+                  <motion.span
+                    variants={wordVariants}
+                    className="inline-block will-change-transform"
+                  >
+                    {word}
+                  </motion.span>
+                  {index < secondaryWords.length - 1 && <span>&nbsp;</span>}
+                </span>
               ))}
             </span>
           </motion.h2>
 
           {/* Floating Portrait Image with smooth scroll entrance */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.82, rotate: -14, y: 30 }}
+            initial={{ opacity: 0, scale: 0.82, rotate: -14, y: 24 }}
             whileInView={{ opacity: 1, scale: 1, rotate: -8, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
+            viewport={{ once: true, amount: 0.05, margin: "0px 0px 50px 0px" }}
             transition={{
-              duration: 0.8,
-              delay: 0.35,
+              duration: 0.65,
+              delay: 0.2,
               ease: [0.22, 1, 0.36, 1] as const,
             }}
             className="absolute left-[30%] top-[60px] z-[2] h-[150px] w-[150px] overflow-hidden rounded-[6px] shadow-lg max-[760px]:left-[18%] max-[760px]:top-[148px]"
