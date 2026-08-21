@@ -13,7 +13,6 @@ const arrowUpRight = "/icons/arrow-up-right.svg";
 const arrowRight = "/icons/arrow-right.svg";
 const arrowRightDark = "/icons/arrow-right-dark.svg";
 const arrowAngle = "/icons/arrow-angle.svg";
-const portraitImage = "/images/portrait.png";
 const businessmanImage = "/images/businessman.png";
 const businesswomanImage = "/images/businesswoman.png";
 

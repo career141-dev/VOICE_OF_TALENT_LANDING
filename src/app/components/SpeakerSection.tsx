@@ -1,6 +1,10 @@
 "use client";
 
 import React from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay } from 'swiper/modules';
+
+import 'swiper/css';
 
 const arrowRightTeal = "/icons/arrow-right-teal.svg";
 
@@ -26,45 +30,35 @@ const voicesData: VoiceItem[] = [
   },
   {
     id: 2,
-    name: 'Ranil Jayasekara',
-    role: 'Senior General Manager, Human Resource & Sustainability',
-    company: 'A. Baur & Co. (Pvt) Ltd',
-    quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
+    name: 'Shiromi de Alwis',
+    role: 'Director Talent & Culture',
+    company: 'WSO2',
+    quote: 'Fostering continuous learning and agile mindsets enables people to excel in hyper-growth tech environments.',
+    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150',
     bannerImage: '/images/Pillar-01.png',
   },
   {
     id: 3,
-    name: 'Sarah Jenkins',
-    role: 'Head of Talent Acquisition',
-    company: 'Global Tech Solutions',
-    quote: 'Innovation starts with diverse perspectives. When we change how we source, we change what we can build.',
+    name: 'James Vijayakumar ',
+    role: 'Director Talent & Culture',
+    company: 'WSO2',
+    quote: 'Empowering teams with psychological safety drives breakthrough innovations and high retention.',
     avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150',
     bannerImage: '/images/Pillar-01.png',
   },
   {
     id: 4,
-    name: 'David Chen',
-    role: 'Chief People Officer',
-    company: 'NextGen Dynamics',
-    quote: 'The future of work is not about location; it is about connection, purpose, and continuous learning opportunities.',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
-    bannerImage: '/images/Pillar-01.png',
-  },
-  {
-    id: 5,
-    name: 'Priyantha Kumarage',
-    role: 'Director - Human Capital',
-    company: 'Apex Holdings',
-    quote: 'Empowering local talent with global exposure creates an unstoppable workforce for tomorrow.',
+    name: 'Nisha de Alwis',
+    role: 'Director Talent & Culture',
+    company: 'WSO2',
+    quote: 'Creating inclusive workspaces allows talent to bring their authentic self to work.',
     avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150',
     bannerImage: '/images/Pillar-01.png',
   }
 ];
 
 export default function VoicesSlider() {
-  // Duplicated array rendered back-to-back for seamless 0% -> -50% infinite loop
-  const marqueeData = [...voicesData, ...voicesData];
+  const extendedData = [...voicesData, ...voicesData, ...voicesData];
 
   const badgeClasses = "inline-flex h-[51.968px] items-center justify-center gap-[8.338px] rounded-[25.558px] border-[1.042px] border-[#D6D6D6] bg-[#F2F2F2] px-[25.013px] py-[12.507px] text-[14.591px] font-semibold leading-normal text-black [font-family:Geist,sans-serif] uppercase hover:rounded-[25.558px] hover:border-[#D6D6D6] hover:bg-[#F2F2F2]";
 
@@ -80,37 +74,47 @@ export default function VoicesSlider() {
         </h2>
       </div>
 
-      {/* Infinite Horizontal Marquee Carousel with Gradient Edge Mask */}
-      <div className="w-full overflow-hidden marquee-mask py-24 -my-14">
-        <div className="animate-marquee-infinite flex gap-6">
-          {marqueeData.map((item, index) => (
-            <div
+      {/* Swiper Full-Width Carousel */}
+      <div className="w-full">
+        <Swiper
+          modules={[Autoplay]}
+          slidesPerView="auto"
+          spaceBetween={24}
+          loop={true}
+          speed={300}
+          autoplay={{
+            delay: 3500,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+          }}
+          className="!overflow-visible flex items-center py-6 px-4 md:px-12"
+        >
+          {extendedData.map((item, index) => (
+            <SwiperSlide
               key={`${item.id}-${index}`}
               className="
                 group 
-                relative
-                flex 
+                !flex 
                 flex-col 
                 justify-between 
                 overflow-hidden 
                 bg-[#F5F7FA] 
                 cursor-pointer 
-                w-[334px] 
-                h-[510px] 
-                shrink-0
+                !w-[334px] 
+                !h-[510px] 
                 rounded-[29.98px] 
                 border-[1.62px] 
                 border-[#E0E0E0] 
                 shadow-sm
                 
                 transition-all 
-                duration-[700ms] 
+                duration-[900ms] 
                 ease-[cubic-bezier(0.25,1,0.5,1)]
                 
-                hover:w-[563px] 
-                hover:h-[598px] 
+                hover:!w-[563px] 
+                hover:!h-[598px] 
                 hover:-translate-y-[88px] 
-                hover:shadow-2xl
+                hover:shadow-xl
               "
             >
               {/* --- 1. ACTIVE / HOVER STATE VIEW --- */}
@@ -127,9 +131,9 @@ export default function VoicesSlider() {
                 group-hover:opacity-100
                 
                 transition-opacity 
-                duration-[600ms] 
+                duration-[800ms] 
                 ease-in-out 
-                delay-[200ms]
+                delay-[250ms]
                 
                 z-10
                 bg-[#F5F7FA]
@@ -137,6 +141,7 @@ export default function VoicesSlider() {
                 pointer-events-none
                 group-hover:pointer-events-auto
               ">
+                
                 <div className="relative h-[310px] overflow-hidden bg-gradient-to-r from-teal-700 via-teal-600 to-teal-400 p-[32px] flex flex-col justify-between text-white shrink-0 rounded-[30px] border border-transparent">
                   <div className="flex justify-between items-start z-10">
                     <span className={badgeClasses}>
@@ -161,7 +166,7 @@ export default function VoicesSlider() {
                 {/* Middle Quote Section */}
                 <div className="px-[32px] pt-[32px] pb-[20px] flex-1 flex flex-col justify-center">
                   <p className="font-geist text-[22px] font-normal leading-[150%] text-[#666]">
-                    &ldquo;{item.quote}&rdquo;
+                    "{item.quote}"
                   </p>
                 </div>
 
@@ -187,7 +192,7 @@ export default function VoicesSlider() {
                 group-hover:opacity-0
                 
                 transition-opacity 
-                duration-[500ms] 
+                duration-[700ms] 
                 ease-in-out
                 
                 z-0
@@ -195,6 +200,7 @@ export default function VoicesSlider() {
                 pointer-events-auto
                 group-hover:pointer-events-none
               ">
+                
                 {/* Reusable Badge */}
                 <div>
                   <span className={badgeClasses}>
@@ -214,15 +220,16 @@ export default function VoicesSlider() {
                       className="w-[84px] h-[84px] rounded-full object-cover flex-shrink-0"
                     />
                   </div>
+                  
                 </div>
 
                 <p className="absolute inset-x-8 bottom-[84px] line-clamp-2 font-geist text-[22.673px] font-light leading-[150%] text-[#666]">
-                  {item.role} &middot; {item.company}
+                  {item.role} · {item.company}
                 </p>
               </div>
-            </div>
+            </SwiperSlide>
           ))}
-        </div>
+        </Swiper>
       </div>
     </section>
   );
