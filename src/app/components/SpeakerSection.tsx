@@ -213,7 +213,7 @@ export default function VoicesSlider() {
       </div>
 
       {/* Pure CSS Infinite Marquee Track */}
-      <div className="marquee-container pt-24 pb-6">
+      <div className="marquee-container pb-6">
         <div className="marquee-track flex items-center">
           {/* List Set 1 */}
           <div className="flex shrink-0 items-center gap-6 pr-6">
