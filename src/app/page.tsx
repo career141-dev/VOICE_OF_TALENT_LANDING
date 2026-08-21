@@ -100,7 +100,7 @@ export default function Home() {
 
     <section
       id="mission"
-      className="relative min-h-[380px] overflow-hidden bg-white px-6 md:px-[8.7%] pt-14 pb-12 md:pt-[100px] md:pb-16 text-[#202020]"
+      className="relative overflow-hidden bg-white px-6 md:px-[8.7%] pt-14 pb-0 md:pt-[100px] md:pb-16 text-[#202020]"
       aria-labelledby="mission-title"
     >
       <div className="flex items-start justify-between gap-6 md:gap-20 flex-col md:flex-row">
@@ -110,7 +110,7 @@ export default function Home() {
         <div className="relative w-full md:w-[min(100%,1081px)] text-left md:text-right">
           <MissionHeadline />
 
-          <div className="hidden sm:block absolute left-[30%] top-[60px] z-[2] h-[150px] w-[150px] rotate-[-8deg] overflow-hidden rounded-[6px] shadow-md">
+          <div className="block mt-6 relative md:absolute md:left-[30%] md:top-[60px] md:mt-0 z-[2] h-[120px] w-[120px] md:h-[150px] md:w-[150px] rotate-[-8deg] overflow-hidden rounded-[6px] shadow-md">
             <img
               className="h-full w-full object-cover"
               src={portraitImage}
