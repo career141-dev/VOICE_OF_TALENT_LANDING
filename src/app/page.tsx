@@ -110,7 +110,7 @@ export default function Home() {
         <div className="relative w-full md:w-[min(100%,1081px)] text-left md:text-right">
           <MissionHeadline />
 
-          <div className="block mt-4 relative md:absolute md:left-[28%] md:top-[40px] md:mt-0 z-[2] w-[150px] sm:w-[170px] md:w-[210px] pointer-events-none">
+          <div className="block -mt-3 relative md:absolute md:left-[28%] md:top-[68px] md:mt-0 z-[2] w-[145px] sm:w-[170px] md:w-[210px] pointer-events-none">
             <img
               className="w-full h-auto object-contain"
               src={portraitImage}
