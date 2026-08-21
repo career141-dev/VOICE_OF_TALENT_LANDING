@@ -2,6 +2,10 @@ import SeriesSection from "./components/SeriesSection";
 import SpeakerSection from "./components/SpeakerSection";
 import CoreConversationThemes from "./components/CoreConversationThemes";
 import FullReleasesSection from "./components/FullReleasesSection";
+import Footer from "./components/footer";
+import { IndustryVoicesSection } from "./components/Industry";
+import BuiltForEveryoneSection from "./components/BuiltForEveryoneSection";
+import VotaBannerSection from "./components/VotaBanner";
 const backgroundImage = "/images/hero-background.png";
 const microphoneImage = "/images/microphone.png";
 const votaLogo = "/icons/vota-logo.png";
@@ -12,6 +16,7 @@ const arrowAngle = "/icons/arrow-angle.svg";
 const portraitImage = "/images/portrait.png";
 const businessmanImage = "/images/businessman.png";
 const businesswomanImage = "/images/businesswoman.png";
+
 
 function Arrow({ source }: { source: string }) {
   return <img className="h-[17px] w-[17px] object-contain" src={source} alt="" />;
@@ -209,6 +214,10 @@ export default function Home() {
     <SpeakerSection />
     <CoreConversationThemes/>
     <FullReleasesSection />
+    <IndustryVoicesSection/>
+    <BuiltForEveryoneSection/>
+    <VotaBannerSection/>
+    <Footer/>
     </>
   );
 }

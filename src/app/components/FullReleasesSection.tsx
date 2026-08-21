@@ -77,7 +77,7 @@ export default function FullReleasesSection() {
     <section className="w-full overflow-hidden bg-[#F5F7FA] px-6 py-20 text-[#262626] md:px-12 lg:px-[8.7%] lg:py-28">
       {/* Heading */}
       <div className="mb-12 text-center lg:mb-16">
-        <span className="inline-flex rounded-full border border-[rgba(21,154,153,0.20)] bg-[rgba(21,154,153,0.10)] px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-[#159A99]">
+        <span className="inline-flex items-center rounded-[123.833px] border-[1.238px] border-[rgba(21,154,153,0.20)] bg-[rgba(21,154,153,0.10)] px-[14.86px] py-[7.43px] font-['Geist'] text-[13.622px] font-semibold leading-normal uppercase text-[#159A99] mb-3">
           Full Releases
         </span>
 

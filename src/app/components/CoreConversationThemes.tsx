@@ -63,7 +63,7 @@ export default function CoreConversationThemes() {
       {/* Heading */}
       <div className="mb-10 flex items-end justify-between gap-6 lg:mb-14">
         <div>
-          <span className="inline-flex rounded-full border border-[rgba(21,154,153,0.2)] bg-[rgba(21,154,153,0.1)] px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-[#159A99]">
+          <span className="inline-flex items-center rounded-[123.833px] border-[1.238px] border-[rgba(21,154,153,0.20)] bg-[rgba(21,154,153,0.10)] px-[14.86px] py-[7.43px] font-['Geist'] text-[13.622px] font-semibold leading-normal uppercase text-[#159A99] mb-3">
             Curated Topics
           </span>
 
