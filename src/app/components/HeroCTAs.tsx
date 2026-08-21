@@ -51,7 +51,7 @@ export default function HeroCTAs() {
 
       {/* Secondary — Explore VOTA */}
       <motion.a
-        href="#partners"
+        href="#speakers"
         className="group relative inline-flex h-[50px] items-center justify-center gap-2 overflow-hidden rounded-[25px] border border-[#e0e0e0] bg-white px-[22px] text-[14px] font-semibold uppercase text-black no-underline max-[760px]:h-[44px]"
         initial={{ boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}
         whileHover={{

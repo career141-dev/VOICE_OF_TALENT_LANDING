@@ -87,7 +87,7 @@ export default function FullReleasesSection() {
       </div>
 
       {/* Centered layout with exact desktop sizes */}
-      <div className="mx-auto flex w-full max-w-[1595px] flex-col gap-8 min-[1100px]:flex-row min-[1100px]:items-start">
+      <div className="mx-auto flex w-full max-w-[1595px] flex-col-reverse gap-8 min-[1100px]:flex-row min-[1100px]:items-start">
         {/* Episode playlist */}
         <div
           className="
