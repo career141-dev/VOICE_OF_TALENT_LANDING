@@ -251,7 +251,7 @@ export default function VoicesSlider() {
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
-        <div className="relative h-[480px] w-full max-w-[380px] mx-auto flex items-center justify-center">
+        <div className="relative h-[480px] w-full max-w-[420px] mx-auto flex items-center justify-center">
           {voicesData.map((item, index) => {
             const count = voicesData.length;
             let offset = (index - activeMobileIndex + count) % count;
@@ -282,11 +282,11 @@ export default function VoicesSlider() {
                 }}
                 className="absolute top-0 flex flex-col justify-between overflow-hidden bg-[#F5F7FA] rounded-[24px] border-[1.5px] border-[#E0E0E0] cursor-grab active:cursor-grabbing"
                 animate={{
-                  x: isCenter ? "0%" : isLeft ? "-38%" : "38%",
-                  scale: isCenter ? 1 : 0.82,
+                  x: isCenter ? "0%" : isLeft ? "-50%" : "50%",
+                  scale: isCenter ? 1 : 0.88,
                   zIndex: isCenter ? 20 : 10,
-                  opacity: isCenter ? 1 : 0.45,
-                  rotateY: isCenter ? 0 : isLeft ? 12 : -12,
+                  opacity: isCenter ? 1 : 0.65,
+                  rotateY: isCenter ? 0 : isLeft ? 8 : -8,
                 }}
                 transition={{
                   type: "spring",
@@ -295,11 +295,11 @@ export default function VoicesSlider() {
                   mass: 0.8,
                 }}
                 style={{
-                  width: "285px",
+                  width: "275px",
                   height: "475px",
                   boxShadow: isCenter
                     ? "0 24px 48px -12px rgba(21,154,153,0.22), 0 12px 24px -8px rgba(0,0,0,0.12)"
-                    : "0 10px 25px -10px rgba(0,0,0,0.1)",
+                    : "0 14px 28px -10px rgba(0,0,0,0.15)",
                 }}
               >
                 {/* ── Center Card: Rich Active Web Hover State ── */}
