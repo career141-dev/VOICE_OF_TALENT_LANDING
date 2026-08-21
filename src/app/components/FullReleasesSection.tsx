@@ -143,21 +143,25 @@ export default function FullReleasesSection() {
                         bg-white
                         px-[32px]
                         text-left
+                        cursor-pointer
                         transition-all
                         duration-300
                         ease-out
+                        hover:-translate-y-1
+                        active:scale-[0.985]
+                        active:translate-y-0
                       `,
                       isSelected
-                        ? "border-[1.62px] border-[#E0E0E0] shadow-[0_10px_28px_rgba(0,0,0,0.05)]"
-                        : "border border-transparent hover:border-[#E0E0E0] hover:shadow-[0_8px_20px_rgba(0,0,0,0.04)]",
+                        ? "border-[1.62px] border-[#159A99]/50 shadow-[0_12px_28px_rgba(21,154,153,0.08),0_4px_12px_rgba(0,0,0,0.04)]"
+                        : "border border-[#EAECEE] hover:border-[#159A99]/40 hover:shadow-[0_12px_24px_-4px_rgba(0,0,0,0.06)]",
                     ].join(" ")}
                   >
                     {/* Number is cropped only within this panel */}
                     <div className="relative h-full w-[190px] shrink-0 overflow-hidden">
                       <span
                         className={[
-                          "absolute left-0 top-[28px] z-10 rounded-[4px] px-2 py-1 text-[8px] font-bold uppercase tracking-wide text-white",
-                          isSelected ? "bg-[#4F4F4F]" : "bg-[#B6B8BB]",
+                          "absolute left-0 top-[28px] z-10 rounded-[4px] px-2 py-1 text-[8px] font-bold uppercase tracking-wide text-white transition-colors duration-300",
+                          isSelected ? "bg-[#159A99]" : "bg-[#B6B8BB] group-hover:bg-[#159A99]",
                         ].join(" ")}
                       >
                         Episode
@@ -165,8 +169,8 @@ export default function FullReleasesSection() {
 
                       <p
                         className={[
-                          "absolute -bottom-[25px] -left-[4px] font-['Geist'] text-[96px] font-bold leading-none tracking-[-0.08em]",
-                          isSelected ? "text-[#202020]" : "text-[#E2E3E5]",
+                          "absolute -bottom-[25px] -left-[4px] font-['Geist'] text-[96px] font-bold leading-none tracking-[-0.08em] transition-colors duration-300",
+                          isSelected ? "text-[#202020]" : "text-[#E2E3E5] group-hover:text-[#CBD1D6]",
                         ].join(" ")}
                       >
                         {episode.number}
@@ -177,8 +181,8 @@ export default function FullReleasesSection() {
                     <div className="ml-auto flex min-w-0 flex-1 flex-col justify-center pr-2 text-right">
                       <p
                         className={[
-                          "truncate font-['Geist'] text-[16px] font-bold uppercase tracking-wide",
-                          isSelected ? "text-[#159A99]" : "text-[#B9BBBE]",
+                          "truncate font-['Geist'] text-[16px] font-bold uppercase tracking-wide transition-colors duration-300",
+                          isSelected ? "text-[#159A99]" : "text-[#B9BBBE] group-hover:text-[#159A99]",
                         ].join(" ")}
                       >
                         {episode.guest}
@@ -186,10 +190,10 @@ export default function FullReleasesSection() {
 
                       <p
                         className={[
-                          "mt-2 truncate font-['Geist'] text-[13px] leading-normal",
+                          "mt-2 truncate font-['Geist'] text-[13px] leading-normal transition-colors duration-300",
                           isSelected
                             ? "font-medium text-[#202020]"
-                            : "font-normal text-[#AEB0B3]",
+                            : "font-normal text-[#AEB0B3] group-hover:text-[#333333]",
                         ].join(" ")}
                       >
                         {episode.title}
