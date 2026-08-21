@@ -203,7 +203,7 @@ export default function VoicesSlider() {
   return (
     <section id="speakers" className="w-full py-16 overflow-hidden bg-white">
       {/* Header Section */}
-      <div className="text-center mb-[136px] px-4">
+      <div className="text-center mb-12 px-4">
         <span className="inline-flex items-center rounded-[123.833px] border-[1.238px] border-[rgba(21,154,153,0.20)] bg-[rgba(21,154,153,0.10)] px-[14.86px] py-[7.43px] font-['Geist'] text-[13.622px] font-semibold leading-normal uppercase text-[#159A99] mb-3">
           AN INDUSTRY-LED VIDEO SERIES BY CAREER141
         </span>
@@ -212,8 +212,8 @@ export default function VoicesSlider() {
         </h2>
       </div>
 
-      {/* Pure CSS Infinite Marquee Track */}
-      <div className="marquee-container pb-6">
+      {/* Pure CSS Infinite Marquee Track with hover headroom */}
+      <div className="marquee-container -mt-[96px] pt-[96px] pb-10">
         <div className="marquee-track flex items-center">
           {/* List Set 1 */}
           <div className="flex shrink-0 items-center gap-6 pr-6">
