@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 
 const audiences = [
   {
@@ -34,6 +34,12 @@ const audiences = [
 ];
 
 export default function BuiltForEveryoneSection() {
+  const [activeMobileCard, setActiveMobileCard] = useState<string>("01");
+
+  const toggleMobileCard = (number: string) => {
+    setActiveMobileCard(number);
+  };
+
   return (
     <section className="w-full overflow-hidden bg-white px-6 py-16 text-[#262626] md:px-12 lg:px-[7.4%] lg:py-24">
       {/* Heading */}
@@ -150,68 +156,90 @@ export default function BuiltForEveryoneSection() {
         ))}
       </div>
 
-      {/* ── MOBILE VIEW (< md): Clean, High-Contrast & Legible Cards ── */}
+      {/* ── MOBILE VIEW (< md): Interactive Tap-to-Fill Cards ── */}
       <div className="grid md:hidden grid-cols-1 sm:grid-cols-2 gap-4">
-        {audiences.map((audience) => (
-          <article
-            key={`mobile-${audience.number}`}
-            className="
-              relative
-              flex
-              flex-col
-              justify-between
-              overflow-hidden
-              rounded-[24px]
-              border
-              border-[#E3E8EC]
-              bg-[#F8FAFC]
-              p-6
-              shadow-sm
-              transition-all
-              active:bg-[#F0F5F6]
-              active:border-[#159A99]/50
-            "
-          >
-            {/* Watermark Number */}
-            <span
-              className="
-                pointer-events-none
-                absolute
-                right-4
-                top-1
-                font-geist
-                text-[80px]
-                font-black
-                leading-none
-                tracking-[-0.08em]
-                text-[#E5ECF0]
-                select-none
-              "
-              aria-hidden="true"
+        {audiences.map((audience) => {
+          const isActive = activeMobileCard === audience.number;
+
+          return (
+            <article
+              key={`mobile-${audience.number}`}
+              onClick={() => toggleMobileCard(audience.number)}
+              className={[
+                `
+                  relative
+                  flex
+                  flex-col
+                  justify-between
+                  overflow-hidden
+                  rounded-[24px]
+                  p-6
+                  cursor-pointer
+                  transition-all
+                  duration-500
+                  ease-out
+                  active:scale-[0.98]
+                `,
+                isActive
+                  ? "bg-[#159A99] border border-[#159A99] shadow-[0_16px_32px_-8px_rgba(21,154,153,0.35)] -translate-y-0.5"
+                  : "bg-[#F8FAFC] border border-[#E3E8EC] shadow-sm",
+              ].join(" ")}
             >
-              {audience.number}
-            </span>
-
-            {/* Top Tag & Number */}
-            <div className="relative z-10 flex items-center justify-between mb-4">
-              <span className="rounded-full bg-[rgba(21,154,153,0.10)] px-3 py-1 font-geist text-[11px] font-bold uppercase tracking-wider text-[#159A99]">
-                {audience.tag}
+              {/* Watermark Number */}
+              <span
+                className={[
+                  "pointer-events-none absolute right-4 top-1 font-geist text-[80px] font-black leading-none tracking-[-0.08em] select-none transition-colors duration-500",
+                  isActive ? "text-white/20" : "text-[#E5ECF0]",
+                ].join(" ")}
+                aria-hidden="true"
+              >
+                {audience.number}
               </span>
-            </div>
 
-            {/* Title */}
-            <div className="relative z-10">
-              <h3 className="font-geist text-[21px] font-bold leading-tight text-[#161616]">
-                {audience.title}
-              </h3>
+              {/* Top Tag & Number */}
+              <div className="relative z-10 flex items-center justify-between mb-4">
+                <span
+                  className={[
+                    "rounded-full px-3 py-1 font-geist text-[11px] font-bold uppercase tracking-wider transition-colors duration-500",
+                    isActive
+                      ? "bg-white/20 text-white backdrop-blur-sm"
+                      : "bg-[rgba(21,154,153,0.10)] text-[#159A99]",
+                  ].join(" ")}
+                >
+                  {audience.tag}
+                </span>
 
-              {/* Description directly readable without hover */}
-              <p className="mt-2.5 font-geist text-[14px] leading-relaxed text-[#57606A]">
-                {audience.description}
-              </p>
-            </div>
-          </article>
-        ))}
+                {isActive && (
+                  <span className="flex items-center gap-1 font-geist text-[11px] font-semibold text-white/90 uppercase tracking-wider">
+                    <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
+                    ACTIVE
+                  </span>
+                )}
+              </div>
+
+              {/* Content */}
+              <div className="relative z-10">
+                <h3
+                  className={[
+                    "font-geist text-[21px] font-bold leading-tight transition-colors duration-500",
+                    isActive ? "text-white" : "text-[#161616]",
+                  ].join(" ")}
+                >
+                  {audience.title}
+                </h3>
+
+                <p
+                  className={[
+                    "mt-2.5 font-geist text-[14px] leading-relaxed transition-colors duration-500",
+                    isActive ? "text-white/90" : "text-[#57606A]",
+                  ].join(" ")}
+                >
+                  {audience.description}
+                </p>
+              </div>
+            </article>
+          );
+        })}
       </div>
     </section>
   );
