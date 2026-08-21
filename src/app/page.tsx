@@ -110,9 +110,9 @@ export default function Home() {
         <div className="relative w-full md:w-[min(100%,1081px)] text-left md:text-right">
           <MissionHeadline />
 
-          <div className="block mt-6 relative md:absolute md:left-[30%] md:top-[60px] md:mt-0 z-[2] h-[120px] w-[120px] md:h-[150px] md:w-[150px] rotate-[-8deg] overflow-hidden rounded-[6px] shadow-md">
+          <div className="block mt-4 relative md:absolute md:left-[28%] md:top-[40px] md:mt-0 z-[2] w-[150px] sm:w-[170px] md:w-[210px] pointer-events-none">
             <img
-              className="h-full w-full object-cover"
+              className="w-full h-auto object-contain"
               src={portraitImage}
               alt="A member of the Voice of Talent community"
             />
