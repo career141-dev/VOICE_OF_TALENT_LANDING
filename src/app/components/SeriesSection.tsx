@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import AnimatedCounter from "./AnimatedCounter";
 
 const video = "/images/video.png";
 
@@ -60,7 +61,7 @@ export default function SeriesSection() {
 
         <div className="shrink-0 text-right max-[760px]:text-left">
           <p className="m-0 text-[72px] font-semibold leading-none tracking-tight text-[#222] max-[1024px]:text-[56px] max-[760px]:text-[46px]">
-            150K+
+            <AnimatedCounter to={150} suffix="K+" />
           </p>
 
           <p className="mt-3 text-[16px] font-medium uppercase tracking-widest text-[#888] max-[1024px]:text-[13px] max-[760px]:text-[10px]">
