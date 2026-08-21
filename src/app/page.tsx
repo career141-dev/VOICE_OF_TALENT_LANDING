@@ -1,5 +1,7 @@
 import SeriesSection from "./components/SeriesSection";
 import SpeakerSection from "./components/SpeakerSection";
+import CoreConversationThemes from "./components/CoreConversationThemes";
+import FullReleasesSection from "./components/FullReleasesSection";
 const backgroundImage = "/images/hero-background.png";
 const microphoneImage = "/images/microphone.png";
 const votaLogo = "/icons/vota-logo.png";
@@ -205,6 +207,8 @@ export default function Home() {
 
     <SeriesSection />
     <SpeakerSection />
+    <CoreConversationThemes/>
+    <FullReleasesSection />
     </>
   );
 }
