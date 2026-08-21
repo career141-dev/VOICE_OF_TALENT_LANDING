@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { motion } from 'framer-motion';
 
 const arrowRightTeal = "/icons/arrow-right-teal.svg";
-const arrowLeft = "/icons/arrow-right.svg"; // inverted for left
 
 interface VoiceItem {
   id: number;
@@ -57,17 +56,28 @@ const voicesData: VoiceItem[] = [
 
 export default function VoicesSlider() {
   const [activeMobileIndex, setActiveMobileIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
   const listSet = [...voicesData, ...voicesData];
 
   const badgeClasses = "inline-flex h-[42px] md:h-[51.968px] items-center justify-center gap-[6px] md:gap-[8.338px] rounded-[25.558px] border-[1.042px] border-[#D6D6D6] bg-[#F2F2F2] px-[18px] md:px-[25.013px] py-[8px] md:py-[12.507px] text-[12px] md:text-[14.591px] font-semibold leading-normal text-black font-geist uppercase";
 
-  const prevMobile = () => {
+  const prevMobile = useCallback(() => {
     setActiveMobileIndex((prev) => (prev === 0 ? voicesData.length - 1 : prev - 1));
-  };
+  }, []);
 
-  const nextMobile = () => {
+  const nextMobile = useCallback(() => {
     setActiveMobileIndex((prev) => (prev === voicesData.length - 1 ? 0 : prev + 1));
-  };
+  }, []);
+
+  /* ── Auto-swapping on Mobile (3.5s interval, pauses on touch) ── */
+  useEffect(() => {
+    if (isPaused) return;
+    const interval = setInterval(() => {
+      nextMobile();
+    }, 3500);
+
+    return () => clearInterval(interval);
+  }, [isPaused, nextMobile]);
 
   /* ── Desktop Card ── */
   const renderDesktopCard = (item: VoiceItem, key: string) => (
@@ -231,12 +241,19 @@ export default function VoicesSlider() {
         </div>
       </div>
 
-      {/* ── MOBILE VIEW: 3-Card Depth Stack (Middle card bigger, side cards behind) ── */}
-      <div className="block md:hidden relative w-full px-4 pt-4 pb-8">
+      {/* ── MOBILE VIEW: 3-Card Depth Stack with Touch Swipe & Auto-swap ── */}
+      <div 
+        className="block md:hidden relative w-full px-4 pt-4 pb-8 select-none touch-pan-y"
+        onTouchStart={() => setIsPaused(true)}
+        onTouchEnd={() => {
+          setTimeout(() => setIsPaused(false), 2000);
+        }}
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+      >
         <div className="relative h-[480px] w-full max-w-[380px] mx-auto flex items-center justify-center">
           {voicesData.map((item, index) => {
             const count = voicesData.length;
-            // Calculate distance relative to active
             let offset = (index - activeMobileIndex + count) % count;
             if (offset > count / 2) offset -= count;
 
@@ -244,7 +261,6 @@ export default function VoicesSlider() {
             const isLeft = offset === -1 || (activeMobileIndex === 0 && index === count - 1);
             const isRight = offset === 1 || (activeMobileIndex === count - 1 && index === 0);
 
-            // Only show 3 cards: left, center, right
             if (!isCenter && !isLeft && !isRight) return null;
 
             return (
@@ -254,7 +270,17 @@ export default function VoicesSlider() {
                   if (isLeft) prevMobile();
                   if (isRight) nextMobile();
                 }}
-                className="absolute top-0 flex flex-col justify-between overflow-hidden bg-[#F5F7FA] rounded-[24px] border-[1.5px] border-[#E0E0E0] cursor-pointer"
+                drag={isCenter ? "x" : false}
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.25}
+                onDragEnd={(_, info) => {
+                  if (info.offset.x < -35 || info.velocity.x < -200) {
+                    nextMobile();
+                  } else if (info.offset.x > 35 || info.velocity.x > 200) {
+                    prevMobile();
+                  }
+                }}
+                className="absolute top-0 flex flex-col justify-between overflow-hidden bg-[#F5F7FA] rounded-[24px] border-[1.5px] border-[#E0E0E0] cursor-grab active:cursor-grabbing"
                 animate={{
                   x: isCenter ? "0%" : isLeft ? "-38%" : "38%",
                   scale: isCenter ? 1 : 0.82,
@@ -277,7 +303,7 @@ export default function VoicesSlider() {
                 }}
               >
                 {/* Top Badge & Profile */}
-                <div className="p-5 flex flex-col justify-between h-full">
+                <div className="p-5 flex flex-col justify-between h-full pointer-events-none">
                   <div>
                     <span className="inline-flex items-center rounded-full border border-[#D6D6D6] bg-[#F2F2F2] px-3.5 py-1.5 text-[11px] font-semibold uppercase text-black font-geist">
                       EXPLORE VOTA
