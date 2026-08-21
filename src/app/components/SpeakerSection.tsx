@@ -65,14 +65,14 @@ export default function VoicesSlider() {
   return (
     <section className="w-full py-16 overflow-hidden bg-white">
       {/* Header Section */}
-<div className="text-center mb-[136px] px-4">
-  <span className="inline-flex items-center rounded-[123.833px] border-[1.238px] border-[rgba(21,154,153,0.20)] bg-[rgba(21,154,153,0.10)] px-[14.86px] py-[7.43px] font-['Geist'] text-[13.622px] font-semibold leading-normal uppercase text-[#159A99] mb-3">
-    AN INDUSTRY-LED VIDEO SERIES BY CAREER141
-  </span>
-  <h2 className="text-center font-['Geist'] text-[46px] font-extrabold leading-[110%] text-[#262626] capitalize">
-    Meet The Voices Behind The Industry
-  </h2>
-</div>
+      <div className="text-center mb-[136px] px-4">
+        <span className="inline-flex items-center rounded-[123.833px] border-[1.238px] border-[rgba(21,154,153,0.20)] bg-[rgba(21,154,153,0.10)] px-[14.86px] py-[7.43px] font-['Geist'] text-[13.622px] font-semibold leading-normal uppercase text-[#159A99] mb-3">
+          AN INDUSTRY-LED VIDEO SERIES BY CAREER141
+        </span>
+        <h2 className="text-center font-['Geist'] text-[46px] font-extrabold leading-[110%] text-[#262626] capitalize">
+          Meet The Voices Behind The Industry
+        </h2>
+      </div>
 
       {/* Swiper Full-Width Carousel */}
       <div className="w-full">
@@ -81,20 +81,66 @@ export default function VoicesSlider() {
           slidesPerView="auto"
           spaceBetween={24}
           loop={true}
-          speed={700}
+          speed={300}
           autoplay={{
             delay: 3500,
             disableOnInteraction: false,
-            pauseOnMouseEnter: true, // IMPORTANT: Pauses the slide movement when hovered
+            pauseOnMouseEnter: true,
           }}
-          className="!overflow-visible flex items-center py-6 px-4 md:px-12" // Added some padding so left-most edge isn't cut off
+          className="!overflow-visible flex items-center py-6 px-4 md:px-12"
         >
           {extendedData.map((item, index) => (
             <SwiperSlide
-            key={`${item.id}-${index}`}
-            className="group !flex flex-col justify-between overflow-hidden bg-[#F5F7FA] transition-all duration-500 ease-in-out cursor-pointer !w-[334px] !h-[510px] rounded-[29.98px] border-[1.62px] border-[#E0E0E0] shadow-sm hover:!w-[563px] hover:!h-[598px] hover:-translate-y-[88px] hover:shadow-xl"
+              key={`${item.id}-${index}`}
+              className="
+                group 
+                !flex 
+                flex-col 
+                justify-between 
+                overflow-hidden 
+                bg-[#F5F7FA] 
+                cursor-pointer 
+                !w-[334px] 
+                !h-[510px] 
+                rounded-[29.98px] 
+                border-[1.62px] 
+                border-[#E0E0E0] 
+                shadow-sm
+                
+                transition-all 
+                duration-[900ms] 
+                ease-[cubic-bezier(0.25,1,0.5,1)]
+                
+                hover:!w-[563px] 
+                hover:!h-[598px] 
+                hover:-translate-y-[88px] 
+                hover:shadow-xl
+              "
             >
-              <div className="hidden group-hover:flex flex-col h-full justify-between w-full">
+              {/* --- 1. ACTIVE / HOVER STATE VIEW --- */}
+              <div className="
+                absolute
+                inset-0
+                flex 
+                flex-col 
+                h-full 
+                justify-between 
+                w-full
+                
+                opacity-0 
+                group-hover:opacity-100
+                
+                transition-opacity 
+                duration-[800ms] 
+                ease-in-out 
+                delay-[250ms]
+                
+                z-10
+                bg-[#F5F7FA]
+                
+                pointer-events-none
+                group-hover:pointer-events-auto
+              ">
                 
                 <div className="relative h-[310px] overflow-hidden bg-gradient-to-r from-teal-700 via-teal-600 to-teal-400 p-[32px] flex flex-col justify-between text-white shrink-0 rounded-[30px] border border-transparent">
                   <div className="flex justify-between items-start z-10">
@@ -120,7 +166,7 @@ export default function VoicesSlider() {
                 {/* Middle Quote Section */}
                 <div className="px-[32px] pt-[32px] pb-[20px] flex-1 flex flex-col justify-center">
                   <p className="font-geist text-[22px] font-normal leading-[150%] text-[#666]">
-                    “{item.quote}”
+                    "{item.quote}"
                   </p>
                 </div>
 
@@ -133,8 +179,27 @@ export default function VoicesSlider() {
                 </div>
               </div>
 
-              {/* --- 2. INACTIVE / NORMAL STATE VIEW (Hides on hover) --- */}
-              <div className="relative flex h-full group-hover:hidden flex-col p-8">
+              {/* --- 2. INACTIVE / NORMAL STATE VIEW --- */}
+              <div className="
+                absolute
+                inset-0
+                flex 
+                h-full 
+                flex-col 
+                p-8
+                
+                opacity-100 
+                group-hover:opacity-0
+                
+                transition-opacity 
+                duration-[700ms] 
+                ease-in-out
+                
+                z-0
+                
+                pointer-events-auto
+                group-hover:pointer-events-none
+              ">
                 
                 {/* Reusable Badge */}
                 <div>
