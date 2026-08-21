@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, type Variants } from "framer-motion";
+import { useRef } from "react";
+import { motion, useInView, type Variants } from "framer-motion";
 
 const portraitImage = "/images/portrait.png";
 
@@ -12,7 +13,7 @@ const containerVariants: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.016,
+      staggerChildren: 0.018,
       delayChildren: 0,
     },
   },
@@ -21,8 +22,8 @@ const containerVariants: Variants = {
 const wordVariants: Variants = {
   hidden: {
     opacity: 0,
-    y: 12,
-    filter: "blur(3px)",
+    y: 10,
+    filter: "blur(2px)",
   },
   visible: {
     opacity: 1,
@@ -36,9 +37,14 @@ const wordVariants: Variants = {
 };
 
 export default function MissionSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  // Pre-triggers 200px before the section hits viewport top so there's ZERO delay when scrolling into view
+  const isInView = useInView(sectionRef, { once: true, margin: "200px 0px 0px 0px" });
+
   return (
     <section
       id="mission"
+      ref={sectionRef}
       className="relative min-h-[380px] overflow-hidden bg-white px-[8.7%] pt-[100px] text-[#202020] max-[760px]:min-h-[500px] max-[760px]:px-6 max-[760px]:pb-16 max-[760px]:pt-20"
       aria-labelledby="mission-title"
     >
@@ -46,22 +52,20 @@ export default function MissionSection() {
         {/* Left Subtitle */}
         <motion.p
           initial={{ opacity: 0, x: -16 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, amount: 0.1 }}
+          animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -16 }}
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] as const }}
           className="m-0 shrink-0 text-[23px] font-semibold uppercase tracking-[-.02em] text-[#159a99] max-[760px]:text-[11px]"
         >
           — The VOTA Mission
         </motion.p>
 
-        {/* Right Heading with Fast Staggered Word Reveal */}
+        {/* Right Heading with Instant Pre-Triggered Word Reveal */}
         <div className="relative w-[min(68%,820px)] text-right max-[760px]:w-full">
           <motion.h2
             id="mission-title"
             variants={containerVariants}
             initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.1 }}
+            animate={isInView ? "visible" : "hidden"}
             className="m-0 font-geist text-[clamp(25px,2.1vw,36px)] font-medium leading-[1.28] tracking-[-.03em] text-right max-[760px]:text-[27px]"
           >
             {/* Primary Dark Words */}
@@ -90,14 +94,13 @@ export default function MissionSection() {
             </span>
           </motion.h2>
 
-          {/* Floating Portrait Image with smooth scroll entrance */}
+          {/* Floating Portrait Image */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.88, rotate: -12, y: 18 }}
-            whileInView={{ opacity: 1, scale: 1, rotate: -8, y: 0 }}
-            viewport={{ once: true, amount: 0.1 }}
+            initial={{ opacity: 0, scale: 0.88, rotate: -12, y: 16 }}
+            animate={isInView ? { opacity: 1, scale: 1, rotate: -8, y: 0 } : { opacity: 0, scale: 0.88, rotate: -12, y: 16 }}
             transition={{
               duration: 0.45,
-              delay: 0.12,
+              delay: 0.08,
               ease: [0.22, 1, 0.36, 1] as const,
             }}
             className="absolute left-[30%] top-[60px] z-[2] h-[150px] w-[150px] overflow-hidden rounded-[6px] shadow-lg max-[760px]:left-[18%] max-[760px]:top-[148px]"
