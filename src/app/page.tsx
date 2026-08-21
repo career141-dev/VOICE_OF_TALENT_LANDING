@@ -100,26 +100,25 @@ export default function Home() {
 
     <section
       id="mission"
-      className="relative min-h-[380px] overflow-hidden bg-white px-[8.7%]  pt-[100px] text-[#202020] max-[760px]:min-h-[500px] max-[760px]:px-6 max-[760px]:pb-16 max-[760px]:pt-20"
+      className="relative overflow-hidden bg-white px-6 md:px-[8.7%] pt-14 pb-0 md:pt-[100px] md:pb-16 text-[#202020]"
       aria-labelledby="mission-title"
     >
-      <div className="flex items-start justify-between gap-20 max-[760px]:flex-col max-[760px]:gap-12">
-        <p className="m-0 shrink-0 text-[23px] font-semibold uppercase tracking-[-.02em] text-[#159a99] max-[760px]:text-[11px]">
+      <div className="flex items-start justify-between gap-6 md:gap-20 flex-col md:flex-row">
+        <p className="m-0 shrink-0 text-[15px] md:text-[23px] font-semibold uppercase tracking-[-.02em] text-[#159a99]">
           — The VOTA Mission
         </p>
-      <div className="relative w-[min(100%,1081px)] text-right max-[760px]:w-full">
-        <MissionHeadline />
+        <div className="relative w-full md:w-[min(100%,1081px)] text-left md:text-right">
+          <MissionHeadline />
 
-        <div className="absolute left-[30%] top-[60px] z-[2] h-[150px] w-[150px] rotate-[-8deg] overflow-hidden rounded-[6px]  max-[760px]:left-[18%] max-[760px]:top-[148px]">
-          <img
-            className="h-full w-full object-cover"
-            src={portraitImage}
-            alt="A member of the Voice of Talent community"
-          />
+          <div className="block -mt-3 relative md:absolute md:left-[28%] md:top-[68px] md:mt-0 z-[2] w-[145px] sm:w-[170px] md:w-[210px] pointer-events-none">
+            <img
+              className="w-full h-auto object-contain"
+              src={portraitImage}
+              alt="A member of the Voice of Talent community"
+            />
+          </div>
         </div>
       </div>
-      </div>
-
     </section>
 
     <SeriesSection />

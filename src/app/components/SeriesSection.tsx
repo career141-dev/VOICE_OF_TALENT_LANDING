@@ -40,7 +40,7 @@ export default function SeriesSection() {
     <section
       id="episodes"
       ref={sectionRef}
-      className="bg-[#f8f9fa] px-[8.7%] py-[88px] text-[#202020] max-[760px]:px-6 max-[760px]:py-16"
+      className="bg-[#f8f9fa] px-[8.7%] pt-14 pb-[88px] text-[#202020] max-[760px]:px-6 max-[760px]:pt-10 max-[760px]:pb-16"
       aria-labelledby="series-title"
     >
       {/* Header */}
