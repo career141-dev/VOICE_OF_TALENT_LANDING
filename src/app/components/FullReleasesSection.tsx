@@ -133,15 +133,17 @@ export default function FullReleasesSection() {
                       `
                         group
                         flex
-                        h-[143px]
-                        w-[688px]
-                        max-w-full
+                        h-[110px]
+                        sm:h-[143px]
+                        w-full
                         shrink-0
                         items-center
                         overflow-hidden
-                        rounded-[30px]
+                        rounded-[20px]
+                        sm:rounded-[30px]
                         bg-white
-                        px-[32px]
+                        px-4
+                        sm:px-[32px]
                         text-left
                         cursor-pointer
                         transition-all
@@ -157,10 +159,10 @@ export default function FullReleasesSection() {
                     ].join(" ")}
                   >
                     {/* Number is cropped only within this panel */}
-                    <div className="relative h-full w-[190px] shrink-0 overflow-hidden">
+                    <div className="relative h-full w-[90px] sm:w-[190px] shrink-0 overflow-hidden">
                       <span
                         className={[
-                          "absolute left-0 top-[28px] z-10 rounded-[4px] px-2 py-1 text-[8px] font-bold uppercase tracking-wide text-white transition-colors duration-300",
+                          "absolute left-0 top-[18px] sm:top-[28px] z-10 rounded-[4px] px-1.5 py-0.5 sm:px-2 sm:py-1 text-[7px] sm:text-[8px] font-bold uppercase tracking-wide text-white transition-colors duration-300",
                           isSelected ? "bg-[#159A99]" : "bg-[#B6B8BB] group-hover:bg-[#159A99]",
                         ].join(" ")}
                       >
@@ -169,7 +171,7 @@ export default function FullReleasesSection() {
 
                       <p
                         className={[
-                          "absolute -bottom-[25px] -left-[4px] font-['Geist'] text-[96px] font-bold leading-none tracking-[-0.08em] transition-colors duration-300",
+                          "absolute -bottom-[16px] sm:-bottom-[25px] -left-[2px] sm:-left-[4px] font-['Geist'] text-[62px] sm:text-[96px] font-bold leading-none tracking-[-0.08em] transition-colors duration-300 select-none",
                           isSelected ? "text-[#202020]" : "text-[#E2E3E5] group-hover:text-[#CBD1D6]",
                         ].join(" ")}
                       >
@@ -178,11 +180,11 @@ export default function FullReleasesSection() {
                     </div>
 
                     {/* Details */}
-                    <div className="ml-auto flex min-w-0 flex-1 flex-col justify-center pr-2 text-right">
+                    <div className="ml-auto flex min-w-0 flex-1 flex-col justify-center pl-2 sm:pl-4 text-right">
                       <p
                         className={[
-                          "truncate font-['Geist'] text-[16px] font-bold uppercase tracking-wide transition-colors duration-300",
-                          isSelected ? "text-[#159A99]" : "text-[#B9BBBE] group-hover:text-[#159A99]",
+                          "line-clamp-1 font-['Geist'] text-[13px] sm:text-[16px] font-bold uppercase tracking-wide transition-colors duration-300",
+                          isSelected ? "text-[#159A99]" : "text-[#8D9296] group-hover:text-[#159A99]",
                         ].join(" ")}
                       >
                         {episode.guest}
@@ -190,10 +192,10 @@ export default function FullReleasesSection() {
 
                       <p
                         className={[
-                          "mt-2 truncate font-['Geist'] text-[13px] leading-normal transition-colors duration-300",
+                          "mt-1 sm:mt-2 line-clamp-2 sm:line-clamp-1 font-['Geist'] text-[11.5px] sm:text-[13px] leading-snug sm:leading-normal transition-colors duration-300",
                           isSelected
                             ? "font-medium text-[#202020]"
-                            : "font-normal text-[#AEB0B3] group-hover:text-[#333333]",
+                            : "font-normal text-[#71767B] group-hover:text-[#333333]",
                         ].join(" ")}
                       >
                         {episode.title}
