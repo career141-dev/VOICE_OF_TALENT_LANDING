@@ -20,6 +20,7 @@ export default function Navbar() {
   const linkRefs        = useRef<(HTMLAnchorElement | null)[]>([]);
   const pillContainerRef = useRef<HTMLDivElement | null>(null);
   const isClickNav      = useRef(false); // suppress IntersectionObserver during click
+  const isMounted       = useRef(false);
 
   /* ── Compute pill position for a given section index ── */
   const computePill = useCallback((idx: number) => {
@@ -31,23 +32,33 @@ export default function Navbar() {
     setPillStyle({ left: linkRect.left - containerRect.left, width: linkRect.width });
   }, []);
 
-  /* ── Initial pill position after mount ── */
+  /* ── Initial pill position after mount safely in rAF ── */
   useEffect(() => {
-    computePill(0);
+    isMounted.current = true;
+    const frame = requestAnimationFrame(() => {
+      if (isMounted.current) {
+        computePill(0);
+      }
+    });
+
+    return () => {
+      isMounted.current = false;
+      cancelAnimationFrame(frame);
+    };
   }, [computePill]);
 
-  /* ── Intersection Observer — only fires when NOT clicking ── */
+  /* ── Intersection Observer — only fires when mounted & NOT clicking ── */
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (isClickNav.current) return; // skip during click-driven scroll
+        if (!isMounted.current || isClickNav.current) return;
         let best: IntersectionObserverEntry | null = null;
         for (const entry of entries) {
           if (entry.isIntersecting) {
             if (!best || entry.intersectionRatio > best.intersectionRatio) best = entry;
           }
         }
-        if (best) {
+        if (best && isMounted.current) {
           const id  = (best.target as HTMLElement).id;
           const idx = NAV_ITEMS.findIndex((i) => i.section === id);
           if (idx >= 0) {

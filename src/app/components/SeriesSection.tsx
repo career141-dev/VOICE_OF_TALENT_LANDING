@@ -13,13 +13,16 @@ export default function SeriesSection() {
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
+    let mounted = true;
     const section = sectionRef.current;
 
     if (!section) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setIsInView(entry.isIntersecting);
+        if (mounted) {
+          setIsInView(entry.isIntersecting);
+        }
       },
       {
         threshold: 0.5,
@@ -28,7 +31,10 @@ export default function SeriesSection() {
 
     observer.observe(section);
 
-    return () => observer.unobserve(section);
+    return () => {
+      mounted = false;
+      observer.unobserve(section);
+    };
   }, []);
 
   const handleVideoSelect = (videoId = "aqz-KE-bpKQ") => {
