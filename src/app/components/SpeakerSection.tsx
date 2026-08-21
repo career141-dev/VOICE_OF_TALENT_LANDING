@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const arrowRightTeal = "/icons/arrow-right-teal.svg";
 
@@ -241,7 +241,7 @@ export default function VoicesSlider() {
         </div>
       </div>
 
-      {/* ── MOBILE VIEW: 3-Card Depth Stack with Touch Swipe & Auto-swap ── */}
+      {/* ── MOBILE VIEW: 3-Card Depth Stack with Desktop Hover State on Center Card ── */}
       <div 
         className="block md:hidden relative w-full px-4 pt-4 pb-8 select-none touch-pan-y"
         onTouchStart={() => setIsPaused(true)}
@@ -295,59 +295,97 @@ export default function VoicesSlider() {
                   mass: 0.8,
                 }}
                 style={{
-                  width: "270px",
-                  height: "460px",
+                  width: "285px",
+                  height: "475px",
                   boxShadow: isCenter
-                    ? "0 20px 40px -15px rgba(0,0,0,0.18)"
+                    ? "0 24px 48px -12px rgba(21,154,153,0.22), 0 12px 24px -8px rgba(0,0,0,0.12)"
                     : "0 10px 25px -10px rgba(0,0,0,0.1)",
                 }}
               >
-                {/* Top Badge & Profile */}
-                <div className="p-5 flex flex-col justify-between h-full pointer-events-none">
-                  <div>
-                    <span className="inline-flex items-center rounded-full border border-[#D6D6D6] bg-[#F2F2F2] px-3.5 py-1.5 text-[11px] font-semibold uppercase text-black font-geist">
-                      EXPLORE VOTA
-                    </span>
-                  </div>
+                {/* ── Center Card: Rich Active Web Hover State ── */}
+                {isCenter ? (
+                  <div className="flex flex-col h-full justify-between w-full bg-[#F5F7FA]">
+                    {/* Top Banner with Teal Gradient & Cutout Graphic */}
+                    <div className="relative h-[240px] overflow-hidden bg-gradient-to-r from-teal-700 via-teal-600 to-teal-400 p-5 flex flex-col justify-between text-white shrink-0 rounded-[22px]">
+                      <div className="flex justify-between items-start z-10">
+                        <span className="inline-flex items-center rounded-full border border-white/30 bg-white/15 px-3 py-1 text-[11px] font-semibold uppercase text-white font-geist backdrop-blur-sm">
+                          EXPLORE VOTA
+                        </span>
+                      </div>
 
-                  <div className="my-auto pt-4">
-                    <div className="flex items-center justify-between gap-2 mb-3">
-                      <h3 className="line-clamp-2 font-geist text-[22px] font-medium leading-tight text-black">
-                        {item.name}
-                      </h3>
                       <img
-                        src={item.avatar}
+                        src={item.bannerImage}
                         alt={item.name}
-                        className="w-[52px] h-[52px] rounded-full object-cover shrink-0 border-2 border-white shadow-sm"
+                        className="absolute right-0 bottom-0 h-[115%] w-auto object-cover object-right pointer-events-none opacity-90"
                       />
+
+                      <div className="relative z-10 max-w-[65%]">
+                        <h3 className="mb-1 font-geist text-[21px] font-medium leading-tight text-white">
+                          {item.name}
+                        </h3>
+                        <p className="font-geist text-[13px] font-light leading-snug text-white/90">
+                          {item.role},<br />{item.company}
+                        </p>
+                      </div>
                     </div>
-                    <p className="line-clamp-2 font-geist text-[14px] font-light leading-snug text-[#666]">
-                      {item.role} · {item.company}
-                    </p>
-                  </div>
 
-                  {/* Quote if center card */}
-                  <div className="border-t border-[#E8E8E8] pt-3 mt-2">
-                    <p className="line-clamp-3 font-geist text-[13px] italic leading-relaxed text-[#555]">
-                      "{item.quote}"
-                    </p>
-                  </div>
+                    {/* Middle Quote */}
+                    <div className="px-5 py-4 flex-1 flex flex-col justify-center">
+                      <p className="font-geist text-[14px] font-normal leading-[1.5] text-[#555]">
+                        "{item.quote}"
+                      </p>
+                    </div>
 
-                  {/* Bottom Action */}
-                  <div className="pt-3 flex items-center justify-between">
-                    <span className="font-geist text-[12px] font-semibold text-[#159A99] uppercase tracking-wide flex items-center gap-1.5">
-                      WATCH CONVERSATION
-                      <img src={arrowRightTeal} alt="" className="h-3.5 w-3.5 object-contain" />
-                    </span>
+                    {/* Bottom Action */}
+                    <div className="h-[56px] shrink-0 border-t border-[#E0E0E0] mx-5 flex items-center">
+                      <a
+                        href="#episodes"
+                        className="flex items-center gap-2 font-geist text-[13px] font-semibold uppercase text-[#159A99] tracking-wide"
+                      >
+                        WATCH CONVERSATION 
+                        <img src={arrowRightTeal} alt="" className="h-3.5 w-3.5 object-contain" />
+                      </a>
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  /* ── Side Inactive Cards: Compact Preview View ── */
+                  <div className="p-5 flex flex-col justify-between h-full pointer-events-none">
+                    <div>
+                      <span className="inline-flex items-center rounded-full border border-[#D6D6D6] bg-[#F2F2F2] px-3 py-1 text-[10px] font-semibold uppercase text-black font-geist">
+                        EXPLORE VOTA
+                      </span>
+                    </div>
+
+                    <div className="my-auto pt-4">
+                      <div className="flex items-center justify-between gap-2 mb-3">
+                        <h3 className="line-clamp-2 font-geist text-[20px] font-medium leading-tight text-black">
+                          {item.name}
+                        </h3>
+                        <img
+                          src={item.avatar}
+                          alt={item.name}
+                          className="w-[48px] h-[48px] rounded-full object-cover shrink-0 border-2 border-white shadow-sm"
+                        />
+                      </div>
+                      <p className="line-clamp-2 font-geist text-[13px] font-light leading-snug text-[#666]">
+                        {item.role} · {item.company}
+                      </p>
+                    </div>
+
+                    <div className="border-t border-[#E8E8E8] pt-2">
+                      <span className="font-geist text-[11px] font-semibold text-[#159A99] uppercase">
+                        TAP TO VIEW
+                      </span>
+                    </div>
+                  </div>
+                )}
               </motion.div>
             );
           })}
         </div>
 
         {/* Mobile Navigation Dots & Arrows */}
-        <div className="flex items-center justify-center gap-4 mt-2">
+        <div className="flex items-center justify-center gap-4 mt-3">
           <button
             onClick={prevMobile}
             aria-label="Previous speaker"
