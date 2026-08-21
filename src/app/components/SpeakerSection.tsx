@@ -63,7 +63,7 @@ export default function VoicesSlider() {
   const badgeClasses = "inline-flex h-[51.968px] items-center justify-center gap-[8.338px] rounded-[25.558px] border-[1.042px] border-[#D6D6D6] bg-[#F2F2F2] px-[25.013px] py-[12.507px] text-[14.591px] font-semibold leading-normal text-black [font-family:Geist,sans-serif] uppercase hover:rounded-[25.558px] hover:border-[#D6D6D6] hover:bg-[#F2F2F2]";
 
   return (
-    <section className="w-full py-16 overflow-hidden bg-white">
+    <section id="speakers" className="w-full py-16 overflow-hidden bg-white">
       {/* Header Section */}
       <div className="text-center mb-[136px] px-4">
         <span className="inline-flex items-center rounded-[123.833px] border-[1.238px] border-[rgba(21,154,153,0.20)] bg-[rgba(21,154,153,0.10)] px-[14.86px] py-[7.43px] font-['Geist'] text-[13.622px] font-semibold leading-normal uppercase text-[#159A99] mb-3">
