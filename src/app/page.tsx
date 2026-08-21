@@ -5,6 +5,7 @@ import FullReleasesSection from "./components/FullReleasesSection";
 import Navbar from "./components/Navbar";
 import HeroTitle from "./components/HeroTitle";
 import HeroCTAs from "./components/HeroCTAs";
+import MissionHeadline from "./components/MissionHeadline";
 const backgroundImage = "/images/hero-background.png";
 const microphoneImage = "/images/microphone.png";
 const votaLogo = "/icons/vota-logo.png";
@@ -101,18 +102,8 @@ export default function Home() {
         <p className="m-0 shrink-0 text-[23px] font-semibold uppercase tracking-[-.02em] text-[#159a99] max-[760px]:text-[11px]">
           — The VOTA Mission
         </p>
-      <div className="relative w-[min(68%,820px)] text-right max-[760px]:w-full">
-        <h2
-          id="mission-title"
-          className="m-0 font-geist text-[clamp(25px,2.1vw,36px)] font-medium leading-[1.22] tracking-[-.03em] text-right max-[760px]:text-[27px]"
-        >
-          <span className="text-[#202020]">
-            Behind every great organization, successful team and
-          </span>{" "}
-          <span className="text-[#969696]">
-            life-changing career opportunity is someone who recognized potential.
-          </span>
-        </h2>
+      <div className="relative w-[min(100%,1081px)] text-right max-[760px]:w-full">
+        <MissionHeadline />
 
         <div className="absolute left-[30%] top-[60px] z-[2] h-[150px] w-[150px] rotate-[-8deg] overflow-hidden rounded-[6px]  max-[760px]:left-[18%] max-[760px]:top-[148px]">
           <img
