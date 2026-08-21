@@ -13,7 +13,7 @@ const containerVariants: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.018,
+      staggerChildren: 0.012,
       delayChildren: 0,
     },
   },
@@ -22,15 +22,13 @@ const containerVariants: Variants = {
 const wordVariants: Variants = {
   hidden: {
     opacity: 0,
-    y: 10,
-    filter: "blur(2px)",
+    y: 8,
   },
   visible: {
     opacity: 1,
     y: 0,
-    filter: "blur(0px)",
     transition: {
-      duration: 0.28,
+      duration: 0.22,
       ease: [0.22, 1, 0.36, 1] as const,
     },
   },
@@ -38,8 +36,8 @@ const wordVariants: Variants = {
 
 export default function MissionSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  // Pre-triggers 200px before the section hits viewport top so there's ZERO delay when scrolling into view
-  const isInView = useInView(sectionRef, { once: true, margin: "200px 0px 0px 0px" });
+  // Expands bottom margin by 400px so it triggers WAY before the user reaches it - zero white screen lag!
+  const isInView = useInView(sectionRef, { once: true, margin: "0px 0px 400px 0px" });
 
   return (
     <section
@@ -51,15 +49,15 @@ export default function MissionSection() {
       <div className="flex items-start justify-between gap-20 max-[760px]:flex-col max-[760px]:gap-12">
         {/* Left Subtitle */}
         <motion.p
-          initial={{ opacity: 0, x: -16 }}
-          animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -16 }}
-          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] as const }}
+          initial={{ opacity: 0, x: -14 }}
+          animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -14 }}
+          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] as const }}
           className="m-0 shrink-0 text-[23px] font-semibold uppercase tracking-[-.02em] text-[#159a99] max-[760px]:text-[11px]"
         >
           — The VOTA Mission
         </motion.p>
 
-        {/* Right Heading with Instant Pre-Triggered Word Reveal */}
+        {/* Right Heading with Instant Reveal */}
         <div className="relative w-[min(68%,820px)] text-right max-[760px]:w-full">
           <motion.h2
             id="mission-title"
@@ -96,11 +94,11 @@ export default function MissionSection() {
 
           {/* Floating Portrait Image */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.88, rotate: -12, y: 16 }}
-            animate={isInView ? { opacity: 1, scale: 1, rotate: -8, y: 0 } : { opacity: 0, scale: 0.88, rotate: -12, y: 16 }}
+            initial={{ opacity: 0, scale: 0.9, rotate: -10, y: 12 }}
+            animate={isInView ? { opacity: 1, scale: 1, rotate: -8, y: 0 } : { opacity: 0, scale: 0.9, rotate: -10, y: 12 }}
             transition={{
-              duration: 0.45,
-              delay: 0.08,
+              duration: 0.35,
+              delay: 0.05,
               ease: [0.22, 1, 0.36, 1] as const,
             }}
             className="absolute left-[30%] top-[60px] z-[2] h-[150px] w-[150px] overflow-hidden rounded-[6px] shadow-lg max-[760px]:left-[18%] max-[760px]:top-[148px]"
