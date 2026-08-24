@@ -4,6 +4,11 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Voice of Talent",
   description: "Voice of Talent Landing Page",
+  icons: {
+    icon: "/icontop.png?v=2",
+    shortcut: "/icontop.png?v=2",
+    apple: "/icontop.png?v=2",
+  },
 };
 
 export default function RootLayout({
@@ -14,6 +19,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full antialiased" suppressHydrationWarning>
       <head>
+        <link rel="icon" type="image/png" href="/icontop.png?v=2" />
+        <link rel="shortcut icon" type="image/png" href="/icontop.png?v=2" />
+        <link rel="apple-touch-icon" href="/icontop.png?v=2" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
