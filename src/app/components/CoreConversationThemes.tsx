@@ -76,8 +76,9 @@ const themes: ThemeItem[] = [
 
 export default function CoreConversationThemes() {
   const sliderRef = useRef<HTMLDivElement>(null);
-  const [isRow1Hovered, setIsRow1Hovered] = useState(false);
-  const [isRow2Hovered, setIsRow2Hovered] = useState(false);
+  
+  // Single global hover state for synchronized row expansion
+  const [isSmallHovered, setIsSmallHovered] = useState(false);
 
   const scrollCards = (direction: "left" | "right") => {
     sliderRef.current?.scrollBy({
@@ -144,26 +145,26 @@ export default function CoreConversationThemes() {
           <div
             className={[
               "min-w-0 transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[flex]",
-              isRow1Hovered ? "flex-[620]" : "flex-[980]",
+              isSmallHovered ? "flex-[620]" : "flex-[980]",
             ].join(" ")}
           >
             <DesktopThemeCard
               item={themes[0]}
-              variant={isRow1Hovered ? "small" : "large"}
+              variant={isSmallHovered ? "small" : "large"}
             />
           </div>
 
           <div
-            onMouseEnter={() => setIsRow1Hovered(true)}
-            onMouseLeave={() => setIsRow1Hovered(false)}
+            onMouseEnter={() => setIsSmallHovered(true)}
+            onMouseLeave={() => setIsSmallHovered(false)}
             className={[
               "min-w-0 cursor-pointer transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[flex]",
-              isRow1Hovered ? "flex-[980]" : "flex-[620]",
+              isSmallHovered ? "flex-[980]" : "flex-[620]",
             ].join(" ")}
           >
             <DesktopThemeCard
               item={themes[1]}
-              variant={isRow1Hovered ? "large" : "small"}
+              variant={isSmallHovered ? "large" : "small"}
             />
           </div>
         </div>
@@ -171,28 +172,28 @@ export default function CoreConversationThemes() {
         {/* Row 2 */}
         <div className="flex w-full gap-6">
           <div
-            onMouseEnter={() => setIsRow2Hovered(true)}
-            onMouseLeave={() => setIsRow2Hovered(false)}
+            onMouseEnter={() => setIsSmallHovered(true)}
+            onMouseLeave={() => setIsSmallHovered(false)}
             className={[
               "min-w-0 cursor-pointer transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[flex]",
-              isRow2Hovered ? "flex-[980]" : "flex-[620]",
+              isSmallHovered ? "flex-[980]" : "flex-[620]",
             ].join(" ")}
           >
             <DesktopThemeCard
               item={themes[2]}
-              variant={isRow2Hovered ? "large" : "small"}
+              variant={isSmallHovered ? "large" : "small"}
             />
           </div>
 
           <div
             className={[
               "min-w-0 transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[flex]",
-              isRow2Hovered ? "flex-[620]" : "flex-[980]",
+              isSmallHovered ? "flex-[620]" : "flex-[980]",
             ].join(" ")}
           >
             <DesktopThemeCard
               item={themes[3]}
-              variant={isRow2Hovered ? "small" : "large"}
+              variant={isSmallHovered ? "small" : "large"}
             />
           </div>
         </div>
