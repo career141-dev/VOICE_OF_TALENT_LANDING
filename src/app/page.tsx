@@ -74,10 +74,10 @@ export default function Home() {
 
         {/* People */}
         <div
-          className="absolute bottom-[23%] left-1/2 z-[10] flex -translate-x-1/2 max-[760px]:bottom-[8%]"
+          className="absolute bottom-[7%] left-1/2 z-[10] flex -translate-x-1/2 max-[760px]:bottom-[4%]"
           aria-label="Meet the people behind Voice of Talent"
         >
-          <div className="mt-3 flex items-center rounded-[100px] border-2 border-white p-1">
+          <div className="flex items-center rounded-[100px] border-2 border-white p-1 transition-transform duration-300 hover:scale-105">
             <div className="relative h-[38px] w-[38px] sm:h-[46px] sm:w-[46px] overflow-hidden rounded-full border-2 border-white bg-[rgba(0,0,0,.2)]">
               <img className="h-full w-full object-cover" src={businessmanImage} alt="" />
             </div>
@@ -88,7 +88,7 @@ export default function Home() {
               <img className="h-full w-full object-cover" src={businessmanImage} alt="" />
             </div>
             <a
-              className="relative -ml-3 sm:-ml-4 flex h-[38px] w-[38px] sm:h-[46px] sm:w-[46px] items-center justify-center rounded-full"
+              className="relative -ml-3 sm:-ml-4 flex h-[38px] w-[38px] sm:h-[46px] sm:w-[46px] items-center justify-center rounded-full transition-transform duration-300 hover:rotate-45"
               href="#speakers"
               aria-label="View speakers"
             >
