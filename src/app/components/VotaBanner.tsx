@@ -4,74 +4,74 @@ import React from "react";
 
 export default function VotaBannerSection() {
   return (
-    <section className="w-full bg-[#F5F7FA] px-6 py-16 md:px-12 lg:px-[8.7%] lg:py-24">
+    <section className="w-full bg-[#F5F7FA] px-4 py-10 sm:px-8 md:px-12 lg:px-[8.7%] lg:py-24">
       <div
-className="
-  relative
-  mx-auto
-  flex
-  h-auto
-  min-h-[420px]
-  w-full
-  max-w-[1636px]
-  overflow-hidden
-  rounded-[30px]
-  border
-  border-[1.03px]
-  bg-cover
-  bg-center
-  px-7
-  py-8
-  sm:min-h-[500px]
-  sm:rounded-[40px]
-  sm:px-12
-  sm:py-12
-  lg:min-h-0
-  lg:rounded-[51.25px]
-  lg:px-14
-  lg:py-16
-"
-        style={{
-          backgroundImage: "url('/images/Container.png')",
-        }}
+        className="
+          relative
+          mx-auto
+          flex
+          min-h-[580px]
+          w-full
+          max-w-[1636px]
+          flex-col
+          justify-between
+          overflow-hidden
+          rounded-[30px]
+          border
+          border-[1.03px]
+          bg-[url('/images/footermob.png')]
+          bg-cover
+          bg-center
+          px-6
+          py-8
+          sm:min-h-[520px]
+          sm:rounded-[40px]
+          sm:px-12
+          sm:py-12
+          md:bg-[url('/images/Container.png')]
+          lg:min-h-0
+          lg:rounded-[51.25px]
+          lg:px-14
+          lg:py-16
+        "
       >
-        {/* Subtle overlay for readable white text */}
-        <div className="pointer-events-none absolute inset-0 bg-black/10" />
+        {/* Subtle overlay for contrast */}
+        <div className="pointer-events-none absolute inset-0 bg-black/20 md:bg-black/10" />
 
-        <div className="relative z-10 flex w-full flex-col items-start">
-          {/* Career141 / VOTA logo */}
+        <div className="relative z-10 flex h-full min-h-[500px] w-full flex-col justify-between items-start sm:min-h-0">
+          {/* Career141 / VOTA Logo (Pinned at top) */}
           <img
             src="/images/Artboard.png"
             alt="Career141 and VOTA"
-            className="h-auto w-[150px] object-contain sm:w-[190px] lg:w-[400px]"
+            className="h-auto w-[160px] object-contain sm:w-[220px] lg:w-[400px]"
           />
 
-          {/* Lower-left banner content */}
-          <div className="mt-20 mb-20">
-            <h2 className="max-w-[760px] font-['Geist'] text-[27px] font-semibold leading-[1.13] tracking-[-0.03em] text-white sm:text-[36px] lg:text-[46px]">
+          {/* Banner Content & Buttons — Vertically Centered on Mobile */}
+          <div className="my-auto w-full max-sm:py-6 sm:my-0 sm:mt-12 md:mt-20">
+            <h2 className="max-w-[760px] font-['Geist'] text-[24px] font-semibold leading-[1.22] tracking-[-0.03em] text-white sm:text-[32px] md:text-[38px] lg:text-[46px]">
               Sri Lanka&apos;s Talent Story Is Being Written Today.
-              <br />
+              <br className="hidden sm:block" />{" "}
               Let The Voices Behind It Be Heard.
             </h2>
 
-            <div className="mt-16 flex flex-wrap items-center gap-4">
-              {/* Watch VOTA button — 223px × 68px */}
+            {/* Buttons Row — Single row layout */}
+            <div className="mt-12 flex flex-row flex-nowrap items-center gap-2.5 sm:mt-10 sm:gap-4 md:mt-16">
+              {/* Watch VOTA Button */}
               <a
-                href="#watch-vota"
+                href="#episodes"
                 className="
                   inline-flex
-                  h-[68px]
-                  w-[223px]
-                  shrink-0
+                  h-[48px]
+                  flex-1
                   items-center
                   justify-center
-                  gap-[11.55px]
-                  rounded-[34.66px]
+                  rounded-full
                   bg-[#159A99]
-                  p-[11.55px]
+                  px-3
                   font-['Geist']
-                  text-[20px]
+                  text-[13px]
                   font-semibold
+                  whitespace-nowrap
                   text-white
                   transition-all
                   duration-300
@@ -81,32 +81,34 @@ className="
                   focus:outline-none
                   focus:ring-2
                   focus:ring-white
-                  focus:ring-offset-2
-                  focus:ring-offset-[#0B171A]
+                  sm:h-[68px]
+                  sm:w-[223px]
+                  sm:flex-none
+                  sm:px-0
+                  sm:text-[20px]
                 "
               >
                 Watch VOTA
               </a>
 
-              {/* Follow the Series button — 251px × 68px */}
+              {/* Follow the Series Button */}
               <a
-                href="#follow-series"
+                href="#full-releases"
                 className="
                   inline-flex
-                  h-[68px]
-                  w-[251px]
-                  shrink-0
+                  h-[48px]
+                  flex-1
                   items-center
                   justify-center
-                  gap-[11.55px]
-                  rounded-[34.66px]
-                  border-[1.16px]
-                  border-white
+                  rounded-full
+                  border
+                  border-white/80
                   bg-transparent
-                  p-[11.55px]
+                  px-3
                   font-['Geist']
-                  text-[20px]
+                  text-[13px]
                   font-semibold
+                  whitespace-nowrap
                   text-white
                   transition-all
                   duration-300
@@ -117,8 +119,11 @@ className="
                   focus:outline-none
                   focus:ring-2
                   focus:ring-white
-                  focus:ring-offset-2
-                  focus:ring-offset-[#0B171A]
+                  sm:h-[68px]
+                  sm:w-[251px]
+                  sm:flex-none
+                  sm:px-0
+                  sm:text-[20px]
                 "
               >
                 Follow the Series

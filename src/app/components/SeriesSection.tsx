@@ -44,10 +44,10 @@ export default function SeriesSection() {
       aria-labelledby="series-title"
     >
       {/* Header */}
-      <div className="mb-12 flex items-center justify-between gap-8 xl:gap-24 max-[760px]:flex-col max-[760px]:items-start max-[760px]:gap-6">
+      <div className="mb-12 flex items-center justify-between gap-8 xl:gap-24 max-[760px]:flex-col max-[760px]:items-center max-[760px]:gap-6">
         <p
           id="series-title"
-          className="m-0 max-w-[880px] text-[26px] font-medium leading-[1.3] text-[#333] xl:text-[28px] max-[1024px]:text-[24px] max-[760px]:text-[22px]"
+          className="m-0 max-w-[880px] text-[26px] font-medium leading-[1.3] text-[#333] xl:text-[28px] max-[1024px]:text-[24px] max-[760px]:text-center max-[760px]:text-[22px]"
         >
           This is more than a video series — It is a platform for leaders to
           <br className="hidden xl:block" />
@@ -59,7 +59,8 @@ export default function SeriesSection() {
           </span>
         </p>
 
-        <div className="shrink-0 text-right max-[760px]:text-left">
+        {/* Counter Block Centered on Mobile View */}
+        <div className="shrink-0 text-right max-[760px]:w-full max-[760px]:text-center">
           <p className="m-0 text-[72px] font-semibold leading-none tracking-tight text-[#222] max-[1024px]:text-[56px] max-[760px]:text-[46px]">
             <AnimatedCounter to={150} suffix="K+" />
           </p>

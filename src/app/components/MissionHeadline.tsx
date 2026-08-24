@@ -42,7 +42,7 @@ export default function MissionHeadline() {
       initial="hidden"
       whileInView="visible"
       viewport={{ once: false, amount: 0.25 }}
-      className="m-0 font-geist text-[20px] sm:text-[24px] md:text-[32px] lg:text-[40px] font-medium leading-[1.35] md:leading-[1.24] tracking-[-0.02em] md:tracking-[-0.04em] text-left md:text-right text-[#232323]"
+      className="m-0 font-geist text-[20px] sm:text-[24px] md:text-[30px] lg:text-[34px] min-[1367px]:text-[40px] font-medium leading-[1.35] min-[1367px]:leading-[1.24] tracking-[-0.02em] min-[1367px]:tracking-[-0.04em] text-left min-[1367px]:text-right text-[#232323]"
     >
       {/* Line 1 - Dark Text */}
       <span className="text-[#232323]">
@@ -57,7 +57,7 @@ export default function MissionHeadline() {
         ))}
       </span>
 
-      <br className="hidden md:inline" />
+      <br className="hidden min-[1367px]:inline" />
 
       {/* Line 2 - Muted Text */}
       <span className="text-[#8d8d8d]">
@@ -71,7 +71,7 @@ export default function MissionHeadline() {
           </motion.span>
         ))}
 
-        <br className="hidden md:inline" />
+        <br className="hidden min-[1367px]:inline" />
 
         {/* Line 3 - Muted Text */}
         {line3Words.map((word, index) => (

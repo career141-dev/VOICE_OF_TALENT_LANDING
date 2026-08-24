@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 const videoPoster = "/images/video.png";
 
@@ -67,59 +67,77 @@ const episodes: Episode[] = [
 export default function FullReleasesSection() {
   const [selectedEpisode, setSelectedEpisode] = useState(episodes[0]);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = () => {
+    if (!scrollContainerRef.current) return;
+    const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
+    const maxScroll = scrollHeight - clientHeight;
+    if (maxScroll > 0) {
+      setScrollProgress(scrollTop / maxScroll);
+    }
+  };
 
   const selectEpisode = (episode: Episode) => {
     setSelectedEpisode(episode);
     setIsPlaying(false);
   };
 
+  // Height configurations for the scroll track & thumb
+  const trackHeight = 628; // Total height of the track container (660px - 32px margins)
+  const thumbHeight = 110; // Increased length of the black scroll handle
+
   return (
-    <section className="w-full overflow-hidden bg-[#F5F7FA] px-6 py-20 text-[#262626] md:px-12 lg:px-[8.7%] lg:py-28">
+    <section
+      id="full-releases"
+      className="w-full overflow-hidden bg-[#F5F7FA] px-6 py-20 text-[#262626] md:px-12 lg:px-[8.7%] lg:py-28">
       {/* Heading */}
       <div className="mb-12 text-center lg:mb-16">
-        <span className="inline-flex items-center rounded-[123.833px] border-[1.238px] border-[rgba(21,154,153,0.20)] bg-[rgba(21,154,153,0.10)] px-[14.86px] py-[7.43px] font-['Geist'] text-[13.622px] font-semibold leading-normal uppercase text-[#159A99] mb-3">
+        <span className="mb-3 inline-flex items-center rounded-full border border-[#159A99]/20 bg-[#159A99]/10 px-4 py-1.5 font-geist text-xs font-semibold uppercase tracking-wider text-[#159A99]">
           Full Releases
         </span>
 
-        <h2 className="mt-4 font-['Geist'] text-3xl font-bold tracking-tight text-[#262626] md:text-4xl lg:text-[46px]">
+        <h2 className="mt-4 font-geist text-3xl font-bold tracking-tight text-[#262626] md:text-4xl lg:text-[46px]">
           Watch. Learn. Be Inspired.
         </h2>
       </div>
 
-      {/* Centered layout with exact desktop sizes */}
+      {/* Main Container */}
       <div className="mx-auto flex w-full max-w-[1595px] flex-col-reverse gap-8 min-[1100px]:flex-row min-[1100px]:items-start">
-        {/* Episode playlist */}
-        <div
-          className="
-            relative
-            mx-auto
-            w-[688px]
-            max-w-full
-            overflow-hidden
-            rounded-[30px]
-            bg-[#F5F7FA]
-          "
-        >
+        {/* Episode Playlist with Custom Scroll Indicator */}
+        <div className="relative mx-auto flex h-[660px] w-[688px] max-w-full rounded-[30px] bg-[#F5F7FA]">
+
+          {/* Custom Scrollbar Track */}
+          <div className="relative my-4 ml-4 flex h-[calc(100%-32px)] w-[5px] shrink-0 items-center justify-center rounded-full bg-[#E2E5E8]">
+            {/* Custom Black Scroll Thumb */}
+            <div
+              className="absolute w-[5px] rounded-full bg-black transition-transform duration-75 ease-out"
+              style={{
+                height: `${thumbHeight}px`,
+                top: "0px",
+                transform: `translateY(${scrollProgress * (trackHeight - thumbHeight)}px)`,
+              }}
+            />
+          </div>
+
+          {/* Scrollable List Container */}
           <div
+            ref={scrollContainerRef}
+            onScroll={handleScroll}
             className="
-              h-[660px]
-              min-w-0
+              h-full
+              w-full
               overflow-y-auto
-              pl-3
-
-              max-[1099px]:h-auto
-              max-[1099px]:max-h-[660px]
-
-              [direction:rtl]
-
-              [&::-webkit-scrollbar]:w-[6px]
-              [&::-webkit-scrollbar-track]:rounded-full
-              [&::-webkit-scrollbar-track]:bg-[#D9DDE2]
-              [&::-webkit-scrollbar-thumb]:rounded-full
-              [&::-webkit-scrollbar-thumb]:bg-black
+              px-6
+              py-1
+              [-ms-overflow-style:none]
+              [scrollbar-width:none]
+              [&::-webkit-scrollbar]:hidden
             "
           >
-            <div className="flex flex-col gap-[18px] py-1 pl-6 pr-1 [direction:ltr]">
+            <div className="flex flex-col gap-4">
               {episodes.map((episode) => {
                 const isSelected = selectedEpisode.id === episode.id;
 
@@ -133,17 +151,14 @@ export default function FullReleasesSection() {
                       `
                         group
                         flex
-                        h-[110px]
-                        sm:h-[143px]
+                        h-[135px]
                         w-full
                         shrink-0
                         items-center
                         overflow-hidden
-                        rounded-[20px]
-                        sm:rounded-[30px]
+                        rounded-[26px]
                         bg-white
-                        px-4
-                        sm:px-[32px]
+                        px-6
                         text-left
                         cursor-pointer
                         transition-all
@@ -151,18 +166,17 @@ export default function FullReleasesSection() {
                         ease-out
                         hover:-translate-y-1
                         active:scale-[0.985]
-                        active:translate-y-0
                       `,
                       isSelected
-                        ? "border-[1.62px] border-[#159A99]/50 shadow-[0_12px_28px_rgba(21,154,153,0.08),0_4px_12px_rgba(0,0,0,0.04)]"
+                        ? "border-[1.5px] border-[#159A99]/50 shadow-[0_12px_28px_rgba(21,154,153,0.08),0_4px_12px_rgba(0,0,0,0.04)]"
                         : "border border-[#EAECEE] hover:border-[#159A99]/40 hover:shadow-[0_12px_24px_-4px_rgba(0,0,0,0.06)]",
                     ].join(" ")}
                   >
-                    {/* Number is cropped only within this panel */}
-                    <div className="relative h-full w-[90px] sm:w-[190px] shrink-0 overflow-hidden">
+                    {/* Episode Number */}
+                    <div className="relative h-full w-[150px] shrink-0 overflow-hidden">
                       <span
                         className={[
-                          "absolute left-0 top-[18px] sm:top-[28px] z-10 rounded-[4px] px-1.5 py-0.5 sm:px-2 sm:py-1 text-[7px] sm:text-[8px] font-bold uppercase tracking-wide text-white transition-colors duration-300",
+                          "absolute left-0 top-[22px] z-10 rounded-[4px] px-2 py-0.5 text-[8px] font-bold uppercase tracking-wide text-white transition-colors duration-300",
                           isSelected ? "bg-[#159A99]" : "bg-[#B6B8BB] group-hover:bg-[#159A99]",
                         ].join(" ")}
                       >
@@ -171,7 +185,7 @@ export default function FullReleasesSection() {
 
                       <p
                         className={[
-                          "absolute -bottom-[16px] sm:-bottom-[25px] -left-[2px] sm:-left-[4px] font-['Geist'] text-[62px] sm:text-[96px] font-bold leading-none tracking-[-0.08em] transition-colors duration-300 select-none",
+                          "absolute -bottom-[20px] -left-[4px] font-geist text-[86px] font-bold leading-none tracking-[-0.08em] transition-colors duration-300 select-none",
                           isSelected ? "text-[#202020]" : "text-[#E2E3E5] group-hover:text-[#CBD1D6]",
                         ].join(" ")}
                       >
@@ -179,11 +193,11 @@ export default function FullReleasesSection() {
                       </p>
                     </div>
 
-                    {/* Details */}
-                    <div className="ml-auto flex min-w-0 flex-1 flex-col justify-center pl-2 sm:pl-4 text-right">
+                    {/* Guest & Title Info */}
+                    <div className="ml-auto flex min-w-0 flex-1 flex-col justify-center pl-4 text-right">
                       <p
                         className={[
-                          "line-clamp-1 font-['Geist'] text-[13px] sm:text-[16px] font-bold uppercase tracking-wide transition-colors duration-300",
+                          "line-clamp-1 font-geist text-[15px] font-bold uppercase tracking-wide transition-colors duration-300",
                           isSelected ? "text-[#159A99]" : "text-[#8D9296] group-hover:text-[#159A99]",
                         ].join(" ")}
                       >
@@ -192,7 +206,7 @@ export default function FullReleasesSection() {
 
                       <p
                         className={[
-                          "mt-1 sm:mt-2 line-clamp-2 sm:line-clamp-1 font-['Geist'] text-[11.5px] sm:text-[13px] leading-snug sm:leading-normal transition-colors duration-300",
+                          "mt-1.5 line-clamp-2 font-geist text-[13px] leading-snug transition-colors duration-300",
                           isSelected
                             ? "font-medium text-[#202020]"
                             : "font-normal text-[#71767B] group-hover:text-[#333333]",
@@ -208,21 +222,8 @@ export default function FullReleasesSection() {
           </div>
         </div>
 
-        {/* Video widget */}
-        <article
-          className="
-            relative
-            mx-auto
-            h-[660px]
-            w-[887px]
-            max-w-full
-            overflow-hidden
-            rounded-[29.98px]
-            border-[1.62px]
-            border-[#E0E0E0]
-            bg-black
-          "
-        >
+        {/* Video Player Section */}
+        <article className="relative mx-auto h-[660px] w-[887px] max-w-full overflow-hidden rounded-[30px] border border-[#E0E0E0] bg-black">
           {isPlaying ? (
             <iframe
               key={`${selectedEpisode.id}-${selectedEpisode.videoId}`}
@@ -259,7 +260,7 @@ export default function FullReleasesSection() {
               </button>
 
               <div className="absolute bottom-6 right-6">
-                <span className="inline-block rounded-full bg-[#159A99] px-5 py-2.5 text-[14px] font-bold tracking-wide text-white shadow-md">
+                <span className="inline-block rounded-full bg-[#159A99] px-5 py-2.5 font-geist text-[14px] font-bold tracking-wide text-white shadow-md">
                   {selectedEpisode.duration}
                 </span>
               </div>

@@ -6,28 +6,28 @@ const votaLogo = "/icons/vota-logo.png";
 const arrowUpRight = "/icons/arrow-up-right.svg";
 
 const NAV_ITEMS = [
-  { label: "Home",     href: "#top",      section: "top" },
+  { label: "Home", href: "#top", section: "top" },
   { label: "Speakers", href: "#speakers", section: "speakers" },
   { label: "Episodes", href: "#episodes", section: "episodes" },
-  { label: "Partners", href: "#partners", section: "partners" },
+  { label: "Partners", href: "#speakers", section: "speakers" },
 ];
 
 const PILL_DURATION = 320; // ms — pill animates first, then scroll happens
 
 export default function Navbar() {
-  const [active, setActive]       = useState("top");
+  const [active, setActive] = useState(NAV_ITEMS[0].label);
   const [pillStyle, setPillStyle] = useState<{ left: number; width: number } | null>(null);
-  const linkRefs        = useRef<(HTMLAnchorElement | null)[]>([]);
+  const linkRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const pillContainerRef = useRef<HTMLDivElement | null>(null);
-  const isClickNav      = useRef(false); // suppress IntersectionObserver during click
+  const isClickNav = useRef(false); // suppress IntersectionObserver during click
 
   /* ── Compute pill position for a given section index ── */
   const computePill = useCallback((idx: number) => {
-    const linkEl      = linkRefs.current[idx];
+    const linkEl = linkRefs.current[idx];
     const containerEl = pillContainerRef.current;
     if (!linkEl || !containerEl) return;
     const containerRect = containerEl.getBoundingClientRect();
-    const linkRect      = linkEl.getBoundingClientRect();
+    const linkRect = linkEl.getBoundingClientRect();
     setPillStyle({ left: linkRect.left - containerRect.left, width: linkRect.width });
   }, []);
 
@@ -48,10 +48,10 @@ export default function Navbar() {
           }
         }
         if (best) {
-          const id  = (best.target as HTMLElement).id;
+          const id = (best.target as HTMLElement).id;
           const idx = NAV_ITEMS.findIndex((i) => i.section === id);
           if (idx >= 0) {
-            setActive(id);
+            setActive(NAV_ITEMS[idx].label);
             computePill(idx);
           }
         }
@@ -73,7 +73,7 @@ export default function Navbar() {
       e.preventDefault();
 
       // 1️⃣ Immediately move the pill
-      setActive(item.section);
+      setActive(item.label);
       computePill(idx);
 
       // 2️⃣ Block IntersectionObserver during scroll
@@ -130,15 +130,14 @@ export default function Navbar() {
 
         {NAV_ITEMS.map((item, i) => (
           <a
-            key={item.section}
+            key={item.label}
             ref={(el) => { linkRefs.current[i] = el; }}
             href={item.href}
             onClick={(e) => handleClick(e, item, i)}
-            className={`relative z-[1] rounded-[22px] px-[16px] py-2 text-[15px] no-underline transition-colors ease-[cubic-bezier(0.4,0,0.2,1)] ${
-              active === item.section
-                ? "font-semibold text-white"
-                : "font-normal text-[#a0a0a0]"
-            }`}
+            className={`relative z-[1] rounded-[22px] px-[16px] py-2 text-[15px] no-underline transition-colors ease-[cubic-bezier(0.4,0,0.2,1)] ${active === item.label
+              ? "font-semibold text-white"
+              : "font-normal text-[#a0a0a0]"
+              }`}
             style={{ transitionDuration: `${PILL_DURATION}ms` }}
           >
             {item.label}
