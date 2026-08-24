@@ -20,40 +20,130 @@ interface VoiceItem {
 const voicesData: VoiceItem[] = [
   {
     id: 1,
-    name: 'Shiromi de Alwis',
-    role: 'Director Talent & Culture',
-    company: 'WSO2',
-    quote: 'Fostering continuous learning and agile mindsets enables people to excel in hyper-growth tech environments.',
-    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150',
-    bannerImage: `${R2_MEDIA_URL}/images/Pillar-01.png`,
+    name: 'Mr. Patrick Pereira',
+    role: 'Vice President Learning & Development',
+    company: 'Aitken Spence Hotels',
+    quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
+    avatar: `${R2_MEDIA_URL}/images/speaker1.png`,
+    bannerImage: `${R2_MEDIA_URL}/images/speaker1.png`,
   },
   {
     id: 2,
-    name: 'James Vijayakumar',
-    role: 'Director Talent & Culture',
-    company: 'WSO2',
-    quote: 'Empowering teams with psychological safety drives breakthrough innovations and high retention.',
-    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150',
-    bannerImage: `${R2_MEDIA_URL}/images/Pillar-01.png`,
-  },
-  {
-    id: 3,
-    name: 'Nisha de Alwis',
-    role: 'Director Talent & Culture',
-    company: 'WSO2',
-    quote: 'Creating inclusive workspaces allows talent to bring their authentic self to work.',
-    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150',
-    bannerImage: `${R2_MEDIA_URL}/images/Pillar-01.png`,
-  },
-  {
-    id: 4,
     name: 'Mr. Ken Vijayakumar',
     role: 'Senior General Manager, Human Resource & Sustainability',
     company: 'A. Baur & Co. (Pvt) Ltd',
     quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
-    bannerImage: `${R2_MEDIA_URL}/images/Pillar-01.png`,
-  }
+    avatar: `${R2_MEDIA_URL}/images/speaker2.png`,
+    bannerImage: `${R2_MEDIA_URL}/images/speaker2.png`,
+  },
+  {
+    id: 3,
+    name: 'Mr. Chamila C Perera',
+    role: 'Former Managing Director, Head of Human Resources',
+    company: 'HSBC Malaysia',
+    quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
+    avatar: `${R2_MEDIA_URL}/images/speaker3.png`,
+    bannerImage: `${R2_MEDIA_URL}/images/speaker3.png`,
+  },
+  {
+    id: 4,
+    name: 'Ms. Thrimuthi Dhanushka',
+    role: 'Group Deputy General Manager, Human Resource & Administration',
+    company: 'Ideal Group',
+    quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
+    avatar: `${R2_MEDIA_URL}/images/speaker4.png`,
+    bannerImage: `${R2_MEDIA_URL}/images/speaker4.png`,
+  },
+  {
+    id: 5,
+    name: 'Ms. Surani Amarasinghe',
+    role: 'Director, Country People Partnering, Sri Lanka',
+    company: 'LSEG (London Stock Exchange Group)',
+    quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
+    avatar: `${R2_MEDIA_URL}/images/speaker5.png`,
+    bannerImage: `${R2_MEDIA_URL}/images/speaker5.png`,
+  },
+  {
+    id: 6,
+    name: 'Mr. Arshaq Farally',
+    role: 'Chief People Officer, Sri Lanka',
+    company: 'Daraz',
+    quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
+    avatar: `${R2_MEDIA_URL}/images/speaker6.png`,
+    bannerImage: `${R2_MEDIA_URL}/images/speaker6.png`,
+  },
+  {
+    id: 7,
+    name: 'Mr. Danushka Seneth',
+    role: 'Head of Human Resources / AGM',
+    company: 'Janashakthi Insurance PLC',
+    quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
+    avatar: `${R2_MEDIA_URL}/images/speaker7.png`,
+    bannerImage: `${R2_MEDIA_URL}/images/speaker7.png`,
+  },
+  {
+    id: 8,
+    name: 'Ms. Hasanthi De Saram',
+    role: 'Director / Senior HR Consultant',
+    company: '(Former Director HR - Asiri Health)',
+    quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
+    avatar: `${R2_MEDIA_URL}/images/speaker8.png`,
+    bannerImage: `${R2_MEDIA_URL}/images/speaker8.png`,
+  },
+  {
+    id: 9,
+    name: 'Mr. Ashan Ransilige',
+    role: 'Chief Executive Officer',
+    company: 'Link Natural Products (Pvt.) Ltd',
+    quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
+    avatar: `${R2_MEDIA_URL}/images/speaker9.png`,
+    bannerImage: `${R2_MEDIA_URL}/images/speaker9.png`,
+  },
+  {
+    id: 10,
+    name: 'Speaker 10',
+    role: 'Strategic HR Partner',
+    company: 'Financial Services',
+    quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
+    avatar: `${R2_MEDIA_URL}/images/speaker10.png`,
+    bannerImage: `${R2_MEDIA_URL}/images/speaker10.png`,
+  },
+  {
+    id: 11,
+    name: 'Speaker 11',
+    role: 'Head of Learning & Development',
+    company: 'Global Brands',
+    quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
+    avatar: `${R2_MEDIA_URL}/images/speaker11.png`,
+    bannerImage: `${R2_MEDIA_URL}/images/speaker11.png`,
+  },
+  {
+    id: 12,
+    name: 'Speaker 12',
+    role: 'Director of People Strategy',
+    company: 'Digital Solutions',
+    quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
+    avatar: `${R2_MEDIA_URL}/images/speaker12.png`,
+    bannerImage: `${R2_MEDIA_URL}/images/speaker12.png`,
+  },
+  {
+    id: 13,
+    name: 'Speaker 13',
+    role: 'Senior TA Specialist',
+    company: 'Global Ventures',
+    quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
+    avatar: `${R2_MEDIA_URL}/images/speaker13.png`,
+    bannerImage: `${R2_MEDIA_URL}/images/speaker13.png`,
+  },
+  {
+    id: 14,
+    name: 'Speaker 14',
+    role: 'Chief People Officer',
+    company: 'Enterprise Network',
+    quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
+    avatar: `${R2_MEDIA_URL}/images/speaker14.png`,
+    bannerImage: `${R2_MEDIA_URL}/images/speaker14.png`,
+  },
 ];
 
 export default function VoicesSlider() {
@@ -145,25 +235,36 @@ export default function VoicesSlider() {
         pointer-events-none
         group-hover:pointer-events-auto
       ">
-        <div className="relative h-[310px] overflow-hidden bg-gradient-to-r from-teal-700 via-teal-600 to-teal-400 p-[32px] flex flex-col justify-between text-white shrink-0 rounded-[30px] border border-transparent">
-          {/* Subtle dark gradient overlay to ensure text is always high contrast */}
-          <div className="absolute inset-0 bg-gradient-to-r from-teal-900/60 via-teal-800/30 to-transparent pointer-events-none z-[1]" />
+        <div
+          className="relative h-[310px] overflow-hidden p-[28px] lg:p-[32px] flex flex-col justify-between text-white shrink-0 rounded-[28px] border border-transparent"
+          style={{
+            background: "radial-gradient(71.47% 191.86% at 92.83% 52.77%, rgba(21, 154, 153, 0) 0%, #159A99 100%), #FFFFFF",
+          }}
+        >
+          {/* Bottom dark overlay ONLY at the bottom */}
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-[45%] z-[1]"
+            style={{
+              background: "linear-gradient(180deg, rgba(102, 102, 102, 0) 0%, #000000 100%)",
+            }}
+          />
+
+          {/* Speaker image filling the right side */}
+          <img
+            src={item.bannerImage}
+            alt={item.name}
+            className="absolute right-0 top-0 h-full w-[65%] object-cover object-[center_top] pointer-events-none z-0"
+          />
 
           <div className="flex justify-between items-start z-10">
-            <span className={badgeClasses}>
+            <span className="inline-flex h-[36px] md:h-[40px] items-center justify-center rounded-full border border-white/20 bg-white px-4 py-1 text-[11px] md:text-[12px] font-bold leading-normal text-black font-geist uppercase shadow-sm">
               EXPLORE VOTA
             </span>
           </div>
 
-          <img
-            src={item.bannerImage}
-            alt={item.name}
-            className="absolute right-0 bottom-0 h-[115%] w-auto max-w-[55%] object-cover object-right-bottom pointer-events-none opacity-95"
-          />
-
-          <div className="relative z-10 max-w-[58%]">
-            <h3 className="mb-2 font-geist text-[35.629px] font-normal leading-normal text-white">{item.name}</h3>
-            <p className="mt-1.5 font-geist text-[22.673px] font-light leading-[150%] text-white">
+          <div className="relative z-10 max-w-[48%] pb-1">
+            <h3 className="font-geist text-[24px] lg:text-[28px] font-bold leading-tight text-white drop-shadow-md">{item.name}</h3>
+            <p className="mt-1.5 font-geist text-[13px] lg:text-[14px] font-normal leading-snug text-white/90">
               {item.role},<br />{item.company}
             </p>
           </div>
@@ -288,30 +389,40 @@ export default function VoicesSlider() {
               className="w-full flex flex-col justify-between overflow-hidden bg-[#F5F7FA] rounded-[28px] border-[1.5px] border-[#E0E0E0] shadow-md cursor-grab active:cursor-grabbing"
             >
               {/* Top Banner with Teal Gradient & Clear Side-by-Side Speaker Image Layout */}
-              <div className="relative h-[215px] sm:h-[235px] md:h-[255px] overflow-hidden bg-gradient-to-r from-teal-700 via-teal-600 to-teal-400 p-5 sm:p-6 md:p-7 flex flex-col justify-between text-white shrink-0 rounded-[24px]">
-                {/* Left gradient shading to guarantee 100% crystal-clear readable text */}
-                <div className="absolute inset-0 bg-gradient-to-r from-teal-900/65 via-teal-800/35 to-transparent pointer-events-none z-[1]" />
+              <div
+                className="relative h-[215px] sm:h-[235px] md:h-[255px] overflow-hidden p-5 sm:p-6 md:p-7 flex flex-col justify-between text-white shrink-0 rounded-[24px]"
+                style={{
+                  background: "radial-gradient(71.47% 191.86% at 92.83% 52.77%, rgba(21, 154, 153, 0) 0%, #159A99 100%), #FFFFFF",
+                }}
+              >
+                {/* Bottom dark overlay ONLY at the bottom */}
+                <div
+                  className="pointer-events-none absolute inset-x-0 bottom-0 h-[45%] z-[1]"
+                  style={{
+                    background: "linear-gradient(180deg, rgba(102, 102, 102, 0) 0%, #000000 100%)",
+                  }}
+                />
+
+                {/* Speaker Photo filling the right half */}
+                <img
+                  src={currentMobileSpeaker.bannerImage}
+                  alt={currentMobileSpeaker.name}
+                  className="absolute right-0 top-0 h-full w-[62%] object-cover object-[center_top] pointer-events-none z-0"
+                />
 
                 {/* Badge */}
                 <div className="flex justify-between items-start z-10">
-                  <span className="inline-flex items-center rounded-full border border-white/20 bg-[#F2F2F2] px-3.5 py-1 text-[11px] font-semibold uppercase text-black font-geist shadow-sm">
+                  <span className="inline-flex items-center rounded-full border border-white/20 bg-white px-3.5 py-1 text-[11px] font-bold uppercase text-black font-geist shadow-sm">
                     EXPLORE VOTA
                   </span>
                 </div>
 
-                {/* Speaker Photo on Right Half (Not zoomed over text) */}
-                <img
-                  src={currentMobileSpeaker.bannerImage}
-                  alt={currentMobileSpeaker.name}
-                  className="absolute right-0 bottom-0 h-[105%] w-auto max-w-[50%] object-cover object-right-bottom pointer-events-none z-0"
-                />
-
                 {/* Speaker Name & Role on Left Half */}
-                <div className="relative z-10 max-w-[56%]">
-                  <h3 className="mb-1 font-geist text-[22px] sm:text-[25px] md:text-[28px] font-medium leading-tight text-white drop-shadow-sm">
+                <div className="relative z-10 max-w-[48%] pb-1">
+                  <h3 className="mb-1 font-geist text-[19px] sm:text-[22px] md:text-[25px] font-bold leading-tight text-white drop-shadow-md">
                     {currentMobileSpeaker.name}
                   </h3>
-                  <p className="font-geist text-[13px] sm:text-[14px] md:text-[15px] font-light leading-snug text-white/95 mt-1">
+                  <p className="font-geist text-[12px] sm:text-[13px] md:text-[13.5px] font-normal leading-snug text-white/90 mt-1">
                     {currentMobileSpeaker.role},<br />{currentMobileSpeaker.company}
                   </p>
                 </div>
@@ -356,9 +467,8 @@ export default function VoicesSlider() {
                 key={`dot-${dotIdx}`}
                 onClick={() => goToSlide(dotIdx)}
                 aria-label={`Go to slide ${dotIdx + 1}`}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  activeMobileIndex === dotIdx ? "w-6 bg-[#159A99]" : "w-2 bg-[#D6D6D6]"
-                }`}
+                className={`h-2 rounded-full transition-all duration-300 ${activeMobileIndex === dotIdx ? "w-6 bg-[#159A99]" : "w-2 bg-[#D6D6D6]"
+                  }`}
               />
             ))}
           </div>
