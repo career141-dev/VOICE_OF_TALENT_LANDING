@@ -41,7 +41,7 @@ const themes: ThemeItem[] = [
     title: "Building TA Careers",
     subtitle: "From Recruiter to Strategic Partner",
     description:
-      "How Sri Lankan organizations are using smart automation without losing the vital human element of talent matching.",
+      "Navigating the modern talent acquisition profession — key skills, executive influence, and long-term career growth in high-demand markets.",
     image: topicImage,
     icon: `${R2_MEDIA_URL}/icons/career.png`,
     accentColor: "#0D7C7B",
@@ -54,7 +54,7 @@ const themes: ThemeItem[] = [
     title: "Candidate Experience",
     subtitle: "The Empathy Advantage",
     description:
-      "How Sri Lankan organizations are using smart automation without losing the vital human element of talent matching.",
+      "Designing transparent, empathetic interview journeys that elevate employer brand prestige and build lasting talent relationships.",
     image: topicImage,
     icon: `${R2_MEDIA_URL}/icons/people.png`,
     accentColor: "#159A99",
@@ -67,7 +67,7 @@ const themes: ThemeItem[] = [
     title: "Strategic Leadership Lessons",
     subtitle: "Leading Through Disruption",
     description:
-      "How Sri Lankan organizations are using smart automation without losing the vital human element of talent matching.",
+      "Actionable insights from veteran HR heads on agile workforce planning, culture transformation, and steering talent through economic shifts.",
     image: topicImage,
     icon: `${R2_MEDIA_URL}/icons/people.png`,
     accentColor: "#0B5959",
@@ -77,9 +77,10 @@ const themes: ThemeItem[] = [
 export default function CoreConversationThemes() {
   const sliderRef = useRef<HTMLDivElement>(null);
 
-  // Hover states for Row 1 and Row 2 accordion expansion
-  const [row1Hovered, setRow1Hovered] = useState(false);
-  const [row2Hovered, setRow2Hovered] = useState(false);
+  // Synchronized diagonal expansion:
+  // isSwapped = false (Initial state): Cards 1 and 4 are expanded; Cards 2 and 3 are compact.
+  // isSwapped = true (Hovered on 2 or 3): Cards 2 and 3 expand; Cards 1 and 4 become compact.
+  const [isSwapped, setIsSwapped] = useState(false);
 
   const scrollCards = (direction: "left" | "right") => {
     sliderRef.current?.scrollBy({
@@ -130,66 +131,68 @@ export default function CoreConversationThemes() {
 
       {/* ── DESKTOP GRID ── */}
       <div className="hidden w-full flex-col gap-6 xl:flex">
-        {/* Row 1 */}
+        {/* Row 1: Card 01 & Card 02 */}
         <div className="flex w-full gap-6">
-          {/* Card 01 - Expanded by default */}
+          {/* Card 01 (AI & Automation) - Expanded in initial state */}
           <div
-            onMouseEnter={() => setRow1Hovered(false)}
+            onMouseEnter={() => setIsSwapped(false)}
+            onClick={() => setIsSwapped(false)}
             className={[
               "min-w-0 transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
-              row1Hovered ? "flex-[635]" : "flex-[970]",
+              isSwapped ? "flex-[635] cursor-pointer" : "flex-[970]",
             ].join(" ")}
           >
             <DesktopThemeCard
               item={themes[0]}
-              variant={row1Hovered ? "small" : "large"}
+              variant={isSwapped ? "small" : "large"}
             />
           </div>
 
-          {/* Card 02 - Compact by default */}
+          {/* Card 02 (Building TA Careers) - Expands on hover/click */}
           <div
-            onMouseEnter={() => setRow1Hovered(true)}
-            onMouseLeave={() => setRow1Hovered(false)}
+            onMouseEnter={() => setIsSwapped(true)}
+            onClick={() => setIsSwapped(true)}
             className={[
-              "min-w-0 cursor-pointer transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
-              row1Hovered ? "flex-[970]" : "flex-[635]",
+              "min-w-0 transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+              isSwapped ? "flex-[970]" : "flex-[635] cursor-pointer",
             ].join(" ")}
           >
             <DesktopThemeCard
               item={themes[1]}
-              variant={row1Hovered ? "large" : "small"}
+              variant={isSwapped ? "large" : "small"}
             />
           </div>
         </div>
 
-        {/* Row 2 */}
+        {/* Row 2: Card 03 & Card 04 */}
         <div className="flex w-full gap-6">
-          {/* Card 03 - Compact by default */}
+          {/* Card 03 (Candidate Experience) - Expands on hover/click */}
           <div
-            onMouseEnter={() => setRow2Hovered(true)}
-            onMouseLeave={() => setRow2Hovered(false)}
+            onMouseEnter={() => setIsSwapped(true)}
+            onClick={() => setIsSwapped(true)}
             className={[
-              "min-w-0 cursor-pointer transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
-              row2Hovered ? "flex-[970]" : "flex-[635]",
+              "min-w-0 transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+              isSwapped ? "flex-[970]" : "flex-[635] cursor-pointer",
             ].join(" ")}
           >
             <DesktopThemeCard
               item={themes[2]}
-              variant={row2Hovered ? "large" : "small"}
+              variant={isSwapped ? "large" : "small"}
             />
           </div>
 
-          {/* Card 04 - Expanded by default */}
+          {/* Card 04 (Strategic Leadership) - Expanded in initial state */}
           <div
-            onMouseEnter={() => setRow2Hovered(false)}
+            onMouseEnter={() => setIsSwapped(false)}
+            onClick={() => setIsSwapped(false)}
             className={[
               "min-w-0 transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
-              row2Hovered ? "flex-[635]" : "flex-[970]",
+              isSwapped ? "flex-[635] cursor-pointer" : "flex-[970]",
             ].join(" ")}
           >
             <DesktopThemeCard
               item={themes[3]}
-              variant={row2Hovered ? "small" : "large"}
+              variant={isSwapped ? "small" : "large"}
             />
           </div>
         </div>
