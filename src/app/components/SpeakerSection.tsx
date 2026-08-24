@@ -3,7 +3,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const arrowRightTeal = "/icons/arrow-right-teal.svg";
+const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
+
+const arrowRightTeal = `${R2_MEDIA_URL}/icons/arrow-right-teal.svg`;
 
 interface VoiceItem {
   id: number;
@@ -23,7 +25,7 @@ const voicesData: VoiceItem[] = [
     company: 'WSO2',
     quote: 'Fostering continuous learning and agile mindsets enables people to excel in hyper-growth tech environments.',
     avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150',
-    bannerImage: '/images/Pillar-01.png',
+    bannerImage: `${R2_MEDIA_URL}/images/Pillar-01.png`,
   },
   {
     id: 2,
@@ -32,7 +34,7 @@ const voicesData: VoiceItem[] = [
     company: 'WSO2',
     quote: 'Empowering teams with psychological safety drives breakthrough innovations and high retention.',
     avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150',
-    bannerImage: '/images/Pillar-01.png',
+    bannerImage: `${R2_MEDIA_URL}/images/Pillar-01.png`,
   },
   {
     id: 3,
@@ -41,7 +43,7 @@ const voicesData: VoiceItem[] = [
     company: 'WSO2',
     quote: 'Creating inclusive workspaces allows talent to bring their authentic self to work.',
     avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150',
-    bannerImage: '/images/Pillar-01.png',
+    bannerImage: `${R2_MEDIA_URL}/images/Pillar-01.png`,
   },
   {
     id: 4,
@@ -50,7 +52,7 @@ const voicesData: VoiceItem[] = [
     company: 'A. Baur & Co. (Pvt) Ltd',
     quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
-    bannerImage: '/images/Pillar-01.png',
+    bannerImage: `${R2_MEDIA_URL}/images/Pillar-01.png`,
   }
 ];
 

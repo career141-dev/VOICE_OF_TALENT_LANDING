@@ -2,8 +2,10 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 
-const votaLogo = "/icons/vota-logo.png";
-const arrowUpRight = "/icons/arrow-up-right.svg";
+const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
+
+const votaLogo = `${R2_MEDIA_URL}/icons/vota-logo.png`;
+const arrowUpRight = `${R2_MEDIA_URL}/icons/arrow-up-right.svg`;
 
 const NAV_ITEMS = [
   { label: "Home", href: "#top", section: "top" },

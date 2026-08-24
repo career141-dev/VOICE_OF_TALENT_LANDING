@@ -2,7 +2,9 @@
 
 import React, { useRef, useState } from "react";
 
-const topicImage = "/images/video.png";
+const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
+
+const topicImage = `${R2_MEDIA_URL}/images/video.png`;
 
 type ThemeItem = {
   id: number;
@@ -28,7 +30,7 @@ const themes: ThemeItem[] = [
     description:
       "How Sri Lankan organizations are using smart automation without losing the vital human element of talent matching.",
     image: topicImage,
-    icon: "/icons/career.png",
+    icon: `${R2_MEDIA_URL}/icons/career.png`,
     accentColor: "#159A99",
   },
   {
@@ -41,7 +43,7 @@ const themes: ThemeItem[] = [
     description:
       "How Sri Lankan organizations are using smart automation without losing the vital human element of talent matching.",
     image: topicImage,
-    icon: "/icons/career.png",
+    icon: `${R2_MEDIA_URL}/icons/career.png`,
     accentColor: "#0D7C7B",
   },
   {
@@ -54,7 +56,7 @@ const themes: ThemeItem[] = [
     description:
       "How Sri Lankan organizations are using smart automation without losing the vital human element of talent matching.",
     image: topicImage,
-    icon: "/icons/people.png",
+    icon: `${R2_MEDIA_URL}/icons/people.png`,
     accentColor: "#159A99",
   },
   {
@@ -67,7 +69,7 @@ const themes: ThemeItem[] = [
     description:
       "How Sri Lankan organizations are using smart automation without losing the vital human element of talent matching.",
     image: topicImage,
-    icon: "/icons/people.png",
+    icon: `${R2_MEDIA_URL}/icons/people.png`,
     accentColor: "#0B5959",
   },
 ];

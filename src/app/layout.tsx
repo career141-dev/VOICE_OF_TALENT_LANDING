@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
+const iconUrl = R2_MEDIA_URL ? `${R2_MEDIA_URL}/images/icontop.png` : "/images/icontop.png";
+
 export const metadata: Metadata = {
   title: "Voice of Talent",
   description: "Voice of Talent Landing Page",
   icons: {
-    icon: "/icontop.png?v=2",
-    shortcut: "/icontop.png?v=2",
-    apple: "/icontop.png?v=2",
+    icon: iconUrl,
+    shortcut: iconUrl,
+    apple: iconUrl,
   },
 };
 
@@ -19,9 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full antialiased" suppressHydrationWarning>
       <head>
-        <link rel="icon" type="image/png" href="/icontop.png?v=2" />
-        <link rel="shortcut icon" type="image/png" href="/icontop.png?v=2" />
-        <link rel="apple-touch-icon" href="/icontop.png?v=2" />
+        <link rel="icon" type="image/png" href={iconUrl} />
+        <link rel="shortcut icon" type="image/png" href={iconUrl} />
+        <link rel="apple-touch-icon" href={iconUrl} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"

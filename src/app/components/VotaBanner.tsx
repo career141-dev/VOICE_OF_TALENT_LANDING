@@ -2,11 +2,17 @@
 
 import React from "react";
 
+const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
+const footerMobImage = `${R2_MEDIA_URL}/images/footermob.png`;
+const containerImage = `${R2_MEDIA_URL}/images/Container.png`;
+const artboardImage = `${R2_MEDIA_URL}/images/Artboard.png`;
+
 export default function VotaBannerSection() {
   return (
     <section className="w-full bg-[#F5F7FA] px-4 py-10 sm:px-8 md:px-12 lg:px-[8.7%] lg:py-24">
       <div
         className="
+          vota-banner-bg
           relative
           mx-auto
           flex
@@ -19,7 +25,6 @@ export default function VotaBannerSection() {
           rounded-[30px]
           border
           border-[1.03px]
-          bg-[url('/images/footermob.png')]
           bg-cover
           bg-center
           px-6
@@ -28,20 +33,29 @@ export default function VotaBannerSection() {
           sm:rounded-[40px]
           sm:px-12
           sm:py-12
-          md:bg-[url('/images/Container.png')]
           lg:min-h-0
           lg:rounded-[51.25px]
           lg:px-14
           lg:py-16
         "
       >
+        <style>{`
+          .vota-banner-bg {
+            background-image: url('${footerMobImage}');
+          }
+          @media (min-width: 768px) {
+            .vota-banner-bg {
+              background-image: url('${containerImage}');
+            }
+          }
+        `}</style>
         {/* Subtle overlay for contrast */}
         <div className="pointer-events-none absolute inset-0 bg-black/20 md:bg-black/10" />
 
         <div className="relative z-10 flex h-full min-h-[500px] w-full flex-col justify-between items-start sm:min-h-0">
           {/* Career141 / VOTA Logo (Pinned at top) */}
           <img
-            src="/images/Artboard.png"
+            src={artboardImage}
             alt="Career141 and VOTA"
             className="h-auto w-[160px] object-contain sm:w-[220px] lg:w-[400px]"
           />

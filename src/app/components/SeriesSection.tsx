@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import AnimatedCounter from "./AnimatedCounter";
 
-const video = "/images/video.png";
+const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
+const video = `${R2_MEDIA_URL}/images/video.png`;
 
 const episodeImages = [video, video, video, video, video];
 

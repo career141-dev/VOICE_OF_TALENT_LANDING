@@ -2,6 +2,9 @@
 
 import React from "react";
 
+const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
+const footerLogo = `${R2_MEDIA_URL}/images/footer.png`;
+
 const seriesLinks = [
   { label: "About", href: "#mission" },
   { label: "Speakers", href: "#speakers" },
@@ -77,7 +80,7 @@ export default function Footer() {
         {/* Logo */}
         <div className="flex justify-center md:justify-start">
           <img
-            src="/images/footer.png"
+            src={footerLogo}
             alt="VOTA — Voice of Talent Acquisition"
             className="h-auto w-[300px] max-w-full object-contain sm:w-[360px] lg:w-[460px]"
           />

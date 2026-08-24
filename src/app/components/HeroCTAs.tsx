@@ -2,8 +2,10 @@
 
 import { motion } from "framer-motion";
 
-const arrowRight     = "/icons/arrow-right.svg";
-const arrowRightDark = "/icons/arrow-right-dark.svg";
+const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
+
+const arrowRight     = `${R2_MEDIA_URL}/icons/arrow-right.svg`;
+const arrowRightDark = `${R2_MEDIA_URL}/icons/arrow-right-dark.svg`;
 
 function Arrow({ source }: { source: string }) {
   return <img className="h-[17px] w-[17px] object-contain" src={source} alt="" />;

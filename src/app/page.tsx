@@ -10,16 +10,18 @@ import Footer from "./components/footer";
 import { IndustryVoicesSection } from "./components/Industry";
 import BuiltForEveryoneSection from "./components/BuiltForEveryoneSection";
 import VotaBannerSection from "./components/VotaBanner";
-const backgroundImage = "/images/hero-background.png";
-const microphoneImage = "/images/microphone.png";
-const votaLogo = "/icons/vota-logo.png";
-const arrowUpRight = "/icons/arrow-up-right.svg";
-const arrowRight = "/icons/arrow-right.svg";
-const arrowRightDark = "/icons/arrow-right-dark.svg";
-const arrowAngle = "/icons/arrow-angle.svg";
-const portraitImage = "/images/portrait.png";
-const businessmanImage = "/images/businessman.png";
-const businesswomanImage = "/images/businesswoman.png";
+const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
+
+const backgroundImage = `${R2_MEDIA_URL}/images/hero-background.png`;
+const microphoneImage = `${R2_MEDIA_URL}/images/microphone.png`;
+const votaLogo = `${R2_MEDIA_URL}/icons/vota-logo.png`;
+const arrowUpRight = `${R2_MEDIA_URL}/icons/arrow-up-right.svg`;
+const arrowRight = `${R2_MEDIA_URL}/icons/arrow-right.svg`;
+const arrowRightDark = `${R2_MEDIA_URL}/icons/arrow-right-dark.svg`;
+const arrowAngle = `${R2_MEDIA_URL}/icons/arrow-angle.svg`;
+const portraitImage = `${R2_MEDIA_URL}/images/portrait.png`;
+const businessmanImage = `${R2_MEDIA_URL}/images/businessman.png`;
+const businesswomanImage = `${R2_MEDIA_URL}/images/businesswoman.png`;
 
 
 function Arrow({ source }: { source: string }) {

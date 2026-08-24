@@ -1,5 +1,7 @@
 "use client";
 
+const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
+
 export function IndustryVoicesSection() {
   const items = [
     "ONE INDUSTRY.",
@@ -27,7 +29,7 @@ export function IndustryVoicesSection() {
           lg:min-h-[505px]
         "
         style={{
-          backgroundImage: "url('/images/Movement Banner.png')",
+          backgroundImage: `url('${R2_MEDIA_URL}/images/Movement Banner.png')`,
         }}
       >
         {/* One moving headline row */}

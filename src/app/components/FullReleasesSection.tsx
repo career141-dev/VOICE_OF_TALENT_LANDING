@@ -2,7 +2,9 @@
 
 import React, { useRef, useState, useEffect } from "react";
 
-const videoPoster = "/images/video.png";
+const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
+
+const videoPoster = `${R2_MEDIA_URL}/images/video.png`;
 
 type Episode = {
   id: number;
