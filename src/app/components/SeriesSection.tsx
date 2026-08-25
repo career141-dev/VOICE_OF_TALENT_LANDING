@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import AnimatedCounter from "./AnimatedCounter";
+import { getOptimizedImageUrl } from "../utils/imageLoader";
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
 const votaLogo = `${R2_MEDIA_URL}/images/VOTA Background White.png`;
@@ -247,11 +248,12 @@ export default function SeriesSection() {
             >
               {/* Speaker Photo filling the right half */}
               <img
-                src={selectedEpisode.bannerImage}
+                src={getOptimizedImageUrl(selectedEpisode.bannerImage, 900)}
                 alt={selectedEpisode.name}
                 loading="eager"
                 decoding="async"
                 fetchPriority="high"
+                sizes="(max-width: 768px) 100vw, 60vw"
                 className="absolute right-0 top-0 h-full w-[65%] max-w-[650px] object-cover object-[center_top] pointer-events-none z-0"
               />
 
@@ -334,10 +336,11 @@ export default function SeriesSection() {
                 >
                   {/* Speaker photo */}
                   <img
-                    src={episode.bannerImage}
+                    src={getOptimizedImageUrl(episode.bannerImage, 300)}
                     alt={episode.name}
                     loading="lazy"
                     decoding="async"
+                    sizes="148px"
                     className="absolute right-0 top-0 h-full w-[70%] object-cover object-[center_top] transition-transform duration-500 group-hover:scale-105"
                   />
 

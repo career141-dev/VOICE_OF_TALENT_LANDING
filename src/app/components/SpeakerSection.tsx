@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getOptimizedImageUrl } from '../utils/imageLoader';
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
 
@@ -294,11 +295,12 @@ export default function VoicesSlider() {
 
           {/* Speaker image filling the right side */}
           <img
-            src={item.bannerImage}
+            src={getOptimizedImageUrl(item.bannerImage, 800)}
             alt={item.name}
             loading={item.id <= 2 ? "eager" : "lazy"}
             decoding="async"
             fetchPriority={item.id <= 2 ? "high" : "low"}
+            sizes="(max-width: 768px) 100vw, 50vw"
             className="absolute right-0 top-0 h-full w-[65%] object-cover object-[center_top] pointer-events-none z-0"
           />
 
@@ -374,10 +376,11 @@ export default function VoicesSlider() {
               {item.name}
             </h3>
             <img
-              src={item.avatar}
+              src={getOptimizedImageUrl(item.avatar, 200)}
               alt={item.name}
               loading={item.id <= 2 ? "eager" : "lazy"}
               decoding="async"
+              sizes="84px"
               className="w-[84px] h-[84px] rounded-full object-cover flex-shrink-0"
             />
           </div>
