@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { getOptimizedImageUrl } from "./utils/imageLoader";
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
 const iconUrl = R2_MEDIA_URL ? `${R2_MEDIA_URL}/images/icontop.png` : "/images/icontop.png";
@@ -35,9 +36,9 @@ export default function RootLayout({
           <>
             <link rel="preconnect" href={R2_MEDIA_URL} crossOrigin="anonymous" />
             <link rel="dns-prefetch" href={R2_MEDIA_URL} />
-            <link rel="preload" as="image" href={`${R2_MEDIA_URL}/images/hero-background.png`} />
-            <link rel="preload" as="image" href={`${R2_MEDIA_URL}/images/speaker1.png`} />
-            <link rel="preload" as="image" href={`${R2_MEDIA_URL}/images/speaker2.png`} />
+            <link rel="preload" as="image" href={getOptimizedImageUrl(`${R2_MEDIA_URL}/images/hero-background.png`, 1920)} />
+            <link rel="preload" as="image" href={getOptimizedImageUrl(`${R2_MEDIA_URL}/images/speaker1.png`, 800)} />
+            <link rel="preload" as="image" href={getOptimizedImageUrl(`${R2_MEDIA_URL}/images/speaker2.png`, 800)} />
           </>
         ) : null}
         <link
