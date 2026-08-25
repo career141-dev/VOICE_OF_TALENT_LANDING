@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
 const reelBackground = `${R2_MEDIA_URL}/images/reelThumbnail/reelthumbnail.png`;
@@ -11,8 +11,8 @@ type Episode = {
   guest: string;
   role: string;
   company: string;
-  duration: string;
-  videoId?: string;
+  reels: string[];
+  reelDurations?: string[];
   videoUrl?: string;
 };
 
@@ -23,8 +23,12 @@ const episodes: Episode[] = [
     guest: "MR. PATRICK PEREIRA",
     role: "Vice President Learning & Development",
     company: "Aitken Spence Hotels",
-    duration: "14 MIN",
     videoUrl: `${R2_MEDIA_URL}/videos/Mr.%20Pratrick%20Pereira.mp4`,
+    reels: [
+      `${R2_MEDIA_URL}/videos/reels/01%20Mr%20Patrick%20Pereira.mp4`,
+      `${R2_MEDIA_URL}/videos/reels/02%20Mr%20Patrick%20Pereira.mp4`,
+    ],
+    reelDurations: ["1 MIN", "45 SEC"],
   },
   {
     id: 2,
@@ -32,8 +36,12 @@ const episodes: Episode[] = [
     guest: "MR. KEN VIJAYAKUMAR",
     role: "Senior General Manager, Human Resource & Sustainability",
     company: "A. Baur & Co. (Pvt) Ltd",
-    duration: "12 MIN",
     videoUrl: `${R2_MEDIA_URL}/videos/Mr.Ken.mp4`,
+    reels: [
+      `${R2_MEDIA_URL}/videos/reels/01%20Mr.%20Ken.mp4`,
+      `${R2_MEDIA_URL}/videos/reels/02%20Mr.%20Ken.mp4`,
+    ],
+    reelDurations: ["50 SEC", "55 SEC"],
   },
   {
     id: 3,
@@ -41,8 +49,12 @@ const episodes: Episode[] = [
     guest: "MR. CHAMILA C PERERA",
     role: "Former Managing Director, Head of Human Resources",
     company: "HSBC Malaysia",
-    duration: "16 MIN",
     videoUrl: `${R2_MEDIA_URL}/videos/Mr.%20Chamila%20C%20Perera.mp4`,
+    reels: [
+      `${R2_MEDIA_URL}/videos/reels/01%20Mr.%20Chamila%20C%20Perera.mp4`,
+      `${R2_MEDIA_URL}/videos/reels/02%20Mr.%20Chamila%20C%20Perera.mp4`,
+    ],
+    reelDurations: ["45 SEC", "1 MIN"],
   },
   {
     id: 4,
@@ -50,8 +62,12 @@ const episodes: Episode[] = [
     guest: "MS. THRIMUTHI DHANUSHKA",
     role: "Group Deputy General Manager, Human Resource & Administration",
     company: "Ideal Group",
-    duration: "13 MIN",
     videoUrl: `${R2_MEDIA_URL}/videos/Ms.Thrimuthi%20Dhanushka.mp4`,
+    reels: [
+      `${R2_MEDIA_URL}/videos/reels/01%20Ms.Thrimuthi.mp4`,
+      `${R2_MEDIA_URL}/videos/reels/02%20Ms.Thrimuthi.mp4`,
+    ],
+    reelDurations: ["1 MIN", "40 SEC"],
   },
   {
     id: 5,
@@ -59,8 +75,12 @@ const episodes: Episode[] = [
     guest: "MS. SURANI AMARASINGHE",
     role: "Director, Country People Partnering, Sri Lanka",
     company: "LSEG (London Stock Exchange Group)",
-    duration: "15 MIN",
     videoUrl: `${R2_MEDIA_URL}/videos/Ms.%20Surani%20Amarasinghe.mp4`,
+    reels: [
+      `${R2_MEDIA_URL}/videos/reels/01%20Ms%20Surani%20Amarasinghe.mp4`,
+      `${R2_MEDIA_URL}/videos/reels/02%20Ms%20Surani%20Amarasinghe.mp4`,
+    ],
+    reelDurations: ["55 SEC", "50 SEC"],
   },
   {
     id: 6,
@@ -68,8 +88,12 @@ const episodes: Episode[] = [
     guest: "MR. ARSHAQ FARALLY",
     role: "Chief People Officer, Sri Lanka",
     company: "Daraz",
-    duration: "11 MIN",
     videoUrl: `${R2_MEDIA_URL}/videos/Mr.%20Arshaq%20Farally.mp4`,
+    reels: [
+      `${R2_MEDIA_URL}/videos/reels/01%20Mr%20Arshaq%20Farally.mp4`,
+      `${R2_MEDIA_URL}/videos/reels/02%20Mr%20Arshaq%20Farally.mp4`,
+    ],
+    reelDurations: ["45 SEC", "1 MIN"],
   },
   {
     id: 7,
@@ -77,8 +101,11 @@ const episodes: Episode[] = [
     guest: "MR. DANUSHKA SENETH",
     role: "Head of Human Resources / AGM",
     company: "Janashakthi Insurance PLC",
-    duration: "14 MIN",
-    videoId: "aqz-KE-bpKQ",
+    reels: [
+      `${R2_MEDIA_URL}/videos/reels/01%20Mr%20Danushka%20Seneth.mp4`,
+      `${R2_MEDIA_URL}/videos/reels/02%20Mr%20Danushka%20Seneth.mp4`,
+    ],
+    reelDurations: ["1 MIN", "45 SEC"],
   },
   {
     id: 8,
@@ -86,8 +113,12 @@ const episodes: Episode[] = [
     guest: "MS. HASANTHI DE SARAM",
     role: "Director / Senior HR Consultant",
     company: "(Former Director HR - Asiri Health)",
-    duration: "17 MIN",
     videoUrl: `${R2_MEDIA_URL}/videos/Ms.%20Hasanthi.mp4`,
+    reels: [
+      `${R2_MEDIA_URL}/videos/reels/01%20Ms%20Hasanthi.mp4`,
+      `${R2_MEDIA_URL}/videos/reels/02%20Ms%20Hasanthi.mp4`,
+    ],
+    reelDurations: ["50 SEC", "55 SEC"],
   },
   {
     id: 9,
@@ -95,8 +126,12 @@ const episodes: Episode[] = [
     guest: "MR. ASHAN RANSILIGE",
     role: "Chief Executive Officer",
     company: "Link Natural Products (Pvt.) Ltd",
-    duration: "15 MIN",
     videoUrl: `${R2_MEDIA_URL}/videos/Mr.%20Ashan%20Ransilige.mp4`,
+    reels: [
+      `${R2_MEDIA_URL}/videos/reels/01%20Mr%20Ashan%20Ransilige.mp4`,
+      `${R2_MEDIA_URL}/videos/reels/02%20Mr%20Ashan%20Ransilige.mp4`,
+    ],
+    reelDurations: ["45 SEC", "1 MIN"],
   },
   {
     id: 10,
@@ -104,8 +139,11 @@ const episodes: Episode[] = [
     guest: "MR. INDIKA RANATHUNGA",
     role: "Chief Operating Officer",
     company: "Allied Commercial Fertillizers",
-    duration: "12 MIN",
-    videoId: "aqz-KE-bpKQ",
+    reels: [
+      `${R2_MEDIA_URL}/videos/reels/01%20Mr%20Indika%20Ranathunga.mp4`,
+      `${R2_MEDIA_URL}/videos/reels/02%20Mr%20Indika%20Ranathunga.mp4`,
+    ],
+    reelDurations: ["1 MIN", "50 SEC"],
   },
   {
     id: 11,
@@ -113,8 +151,11 @@ const episodes: Episode[] = [
     guest: "MS. CHAMINDRA PERERA",
     role: "Human Resources Director",
     company: "GRI Sri Lanka",
-    duration: "14 MIN",
-    videoId: "aqz-KE-bpKQ",
+    reels: [
+      `${R2_MEDIA_URL}/videos/reels/01%20Ms%20Chamindra%20Perera.mp4`,
+      `${R2_MEDIA_URL}/videos/reels/02%20Ms%20Chamindra%20Perera.mp4`,
+    ],
+    reelDurations: ["55 SEC", "45 SEC"],
   },
   {
     id: 12,
@@ -122,8 +163,11 @@ const episodes: Episode[] = [
     guest: "MS. CHANDIMA BAMBARENDA",
     role: "Group Head of Human Resources",
     company: "Pyramid Wilmar Group",
-    duration: "13 MIN",
-    videoId: "aqz-KE-bpKQ",
+    reels: [
+      `${R2_MEDIA_URL}/videos/reels/01%20Ms%20Chandima%20Bambarenda.mp4`,
+      `${R2_MEDIA_URL}/videos/reels/02%20Ms%20Chandima%20Bambarenda.mp4`,
+    ],
+    reelDurations: ["45 SEC", "1 MIN"],
   },
   {
     id: 13,
@@ -131,8 +175,11 @@ const episodes: Episode[] = [
     guest: "MR. GEHAN SAMUEL",
     role: "Manager of Human Resources Development",
     company: "MAS Holdings Silueta",
-    duration: "16 MIN",
-    videoId: "aqz-KE-bpKQ",
+    reels: [
+      `${R2_MEDIA_URL}/videos/reels/01%20Mr%20Gehan%20Samuel.mp4`,
+      `${R2_MEDIA_URL}/videos/reels/02%20Mr%20Gehan%20Samuel.mp4`,
+    ],
+    reelDurations: ["1 MIN", "55 SEC"],
   },
   {
     id: 14,
@@ -140,17 +187,35 @@ const episodes: Episode[] = [
     guest: "MR. KANISHKA MUNASINGHE",
     role: "General Manager, Human Resources",
     company: "Port City BPO",
-    duration: "15 MIN",
-    videoId: "aqz-KE-bpKQ",
+    reels: [
+      `${R2_MEDIA_URL}/videos/reels/01%20Mr%20Kanishka%20Munasinghe.mp4`,
+      `${R2_MEDIA_URL}/videos/reels/02%20Mr%20Kanishka%20Munasinghe.mp4`,
+    ],
+    reelDurations: ["50 SEC", "45 SEC"],
   },
 ];
 
 export default function FullReleasesSection() {
   const [selectedEpisode, setSelectedEpisode] = useState(episodes[0]);
+  const [activeReelIndex, setActiveReelIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
 
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const reelSliderRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const togglePlayPause = () => {
+    if (!videoRef.current) return;
+    if (videoRef.current.paused) {
+      videoRef.current.play();
+      setIsPaused(false);
+    } else {
+      videoRef.current.pause();
+      setIsPaused(true);
+    }
+  };
 
   const handleScroll = () => {
     if (!scrollContainerRef.current) return;
@@ -161,31 +226,37 @@ export default function FullReleasesSection() {
     }
   };
 
-  useEffect(() => {
-    const handleSelectEvent = (event: Event) => {
-      const customEvent = event as CustomEvent<{ episodeId: number }>;
-      const episodeId = customEvent.detail?.episodeId;
-      if (episodeId) {
-        const targetEpisode = episodes.find((ep) => ep.id === episodeId);
-        if (targetEpisode) {
-          setSelectedEpisode(targetEpisode);
-          setIsPlaying(true);
-        }
-      }
-    };
+  const handleReelScroll = () => {
+    if (!reelSliderRef.current) return;
+    const { scrollLeft, clientWidth } = reelSliderRef.current;
+    const newIndex = scrollLeft > clientWidth / 2 ? 1 : 0;
+    if (newIndex !== activeReelIndex) {
+      setActiveReelIndex(newIndex);
+    }
+  };
 
-    window.addEventListener("vota-select-episode", handleSelectEvent);
-    return () => window.removeEventListener("vota-select-episode", handleSelectEvent);
-  }, []);
+  const scrollToReel = (index: number) => {
+    setActiveReelIndex(index);
+    if (reelSliderRef.current) {
+      const width = reelSliderRef.current.clientWidth;
+      reelSliderRef.current.scrollTo({
+        left: index * width,
+        behavior: "smooth",
+      });
+    }
+  };
+
 
   const selectEpisode = (episode: Episode) => {
     setSelectedEpisode(episode);
+    scrollToReel(0);
     setIsPlaying(false);
+    setIsPaused(false);
   };
 
-  // Height configurations for the scroll track & thumb
-  const trackHeight = 628; // Total height of the track container (660px - 32px margins)
-  const thumbHeight = 90; // Height of the black scroll handle
+  const currentReels = selectedEpisode.reels && selectedEpisode.reels.length > 0
+    ? selectedEpisode.reels
+    : [selectedEpisode.videoUrl || "", selectedEpisode.videoUrl || ""];
 
   return (
     <section
@@ -312,99 +383,216 @@ export default function FullReleasesSection() {
           </div>
         </div>
 
-        {/* Video Player Section with Reel Thumbnail Poster */}
-        <article className="relative mx-auto h-[380px] sm:h-[460px] md:h-[540px] min-[1100px]:h-[660px] w-full min-[1100px]:w-[887px] max-w-full overflow-hidden rounded-[24px] sm:rounded-[30px] border-[1.62px] border-[#E0E0E0] bg-black shadow-lg opacity-100">
-          {isPlaying ? (
-            <div className="relative h-full w-full bg-black flex items-center justify-center">
-              {selectedEpisode.videoUrl ? (
-                <video
-                  key={selectedEpisode.videoUrl}
-                  src={selectedEpisode.videoUrl}
-                  controls
-                  autoPlay
-                  playsInline
-                  className="absolute inset-0 h-full w-full object-contain bg-black"
-                />
-              ) : (
-                <div className="relative flex flex-col items-center justify-center p-8 text-center text-white">
-                  <p className="font-geist text-2xl font-bold">{selectedEpisode.guest}</p>
-                  <p className="mt-2 font-geist text-sm text-white/70">Video release coming soon</p>
-                </div>
-              )}
+        {/* Video Player Section with Reel Thumbnail Poster & Swipeable 2-Reel Slider */}
+        <div className="mx-auto flex w-full min-[1100px]:w-[887px] max-w-full flex-col items-center">
+          <div
+            ref={reelSliderRef}
+            onScroll={handleReelScroll}
+            className="relative flex h-[380px] sm:h-[460px] md:h-[540px] min-[1100px]:h-[660px] w-full max-w-full overflow-x-auto overflow-y-hidden rounded-[24px] sm:rounded-[30px] border-[1.62px] border-[#E0E0E0] bg-black shadow-lg opacity-100 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {/* Render 2 Reel Slides (Reel 1 & Reel 2) */}
+            {[0, 1].map((reelIdx) => {
+              const reelUrl = currentReels[reelIdx];
+              const isCurrentSlideActive = activeReelIndex === reelIdx;
+              const isCurrentSlidePlaying = isPlaying && isCurrentSlideActive;
 
-              {/* Close Video button */}
-              <button
-                type="button"
-                onClick={() => setIsPlaying(false)}
-                aria-label="Close video player"
-                className="absolute top-4 right-4 z-20 flex items-center gap-1.5 rounded-full bg-black/70 px-4 py-2 font-geist text-xs font-semibold text-white backdrop-blur-md transition-all hover:bg-black cursor-pointer"
-              >
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-                Close Video
-              </button>
-            </div>
-          ) : (
-            <div
-              onClick={() => setIsPlaying(true)}
-              className="relative h-full w-full bg-cover bg-center overflow-hidden flex flex-col justify-between p-8 sm:p-10 cursor-pointer group"
-              style={{
-                backgroundImage: `url('${reelBackground}')`,
-              }}
-            >
-              {/* 1. Back Photo: Big, Grayscale, Upper-Left (Desktop only) */}
-              <div className="pointer-events-none absolute inset-0 overflow-hidden hidden min-[1100px]:block">
-                <img
-                  src={`${R2_MEDIA_URL}/images/reelThumbnail/speaker${selectedEpisode.id}reel.png`}
-                  alt=""
-                  className="absolute -top-[2%] sm:-top-[2.5%] -left-[10%] sm:-left-[5%] h-[118%] w-[110%] object-cover object-[center_top] grayscale contrast-125 brightness-105 opacity-50 select-none transition-transform duration-700 group-hover:scale-105"
-                  style={{
-                    maskImage: "linear-gradient(180deg, rgba(0,0,0,1) 48%, rgba(0,0,0,0) 88%)",
-                    WebkitMaskImage: "linear-gradient(180deg, rgba(0,0,0,1) 48%, rgba(0,0,0,0) 88%)",
-                  }}
-                />
-              </div>
-
-              {/* 2. Front Photo: Full Color */}
-              <div className="pointer-events-none absolute inset-0 overflow-hidden">
-                <img
-                  src={`${R2_MEDIA_URL}/images/reelThumbnail/speaker${selectedEpisode.id}reel.png`}
-                  alt={selectedEpisode.guest}
-                  className="absolute -bottom-[6%] right-[2%] sm:right-[6%] h-[75%] w-[65%] sm:w-[58%] object-cover object-[center_bottom] select-none drop-shadow-[0_20px_40px_rgba(0,0,0,0.85)] transition-transform duration-500 group-hover:scale-105"
-                />
-              </div>
-
-              {/* Bottom Row: Circular Teal Play Button (Bottom-Left) & Teal Duration Pill (Bottom-Right) */}
-              <div className="relative z-10 flex items-center justify-between mt-auto w-full">
-                {/* Circular Teal Play Button (Bottom-Left) */}
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsPlaying(true);
-                  }}
-                  aria-label={`Play episode ${selectedEpisode.number}`}
-                  className="flex h-[58px] w-[58px] sm:h-[64px] sm:w-[64px] items-center justify-center rounded-full bg-[#159A99] text-white shadow-xl shadow-[#159A99]/40 transition-transform duration-300 hover:scale-110 active:scale-95 group/btn cursor-pointer"
+              return (
+                <article
+                  key={reelIdx}
+                  className="relative h-full w-full shrink-0 snap-center overflow-hidden bg-black select-none cursor-pointer"
                 >
-                  <svg
-                    className="ml-1 h-7 w-7 text-white transition-transform duration-300 group-hover/btn:scale-110"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path d="M8 5v14l11-7z" />
-                  </svg>
-                </button>
+                  {isCurrentSlidePlaying ? (
+                    <div
+                      onClick={togglePlayPause}
+                      className="relative h-full w-full bg-black flex items-center justify-center select-none cursor-pointer"
+                    >
+                      {reelUrl ? (
+                        <>
+                          <video
+                            ref={isCurrentSlideActive ? videoRef : null}
+                            key={`${selectedEpisode.id}-${reelIdx}-${reelUrl}`}
+                            src={reelUrl}
+                            autoPlay
+                            playsInline
+                            onPlay={() => setIsPaused(false)}
+                            onPause={() => setIsPaused(true)}
+                            className="absolute inset-0 h-full w-full object-contain bg-black pointer-events-none"
+                          />
 
-                {/* Teal Duration Pill (Bottom-Right) */}
-                <span className="inline-block rounded-full bg-[#159A99] px-5 py-2 font-geist text-[13px] sm:text-[14px] font-bold tracking-wide text-white shadow-md">
-                  {selectedEpisode.duration}
-                </span>
-              </div>
-            </div>
-          )}
-        </article>
+                          {/* Center Pause/Play Indicator Overlay */}
+                          {isPaused && (
+                            <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/35 backdrop-blur-[1px] transition-all pointer-events-none">
+                              <div className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full bg-[#159A99] text-white shadow-2xl transition-transform hover:scale-110">
+                                <svg className="ml-1 h-8 w-8 sm:h-10 sm:w-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M8 5v14l11-7z" />
+                                </svg>
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <div className="relative flex flex-col items-center justify-center p-8 text-center text-white pointer-events-none">
+                          <p className="font-geist text-2xl font-bold">{selectedEpisode.guest}</p>
+                          <p className="mt-2 font-geist text-sm text-white/70">Reel release coming soon</p>
+                        </div>
+                      )}
+
+                      {/* Close Video button */}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsPlaying(false);
+                          setIsPaused(false);
+                        }}
+                        aria-label="Close video player"
+                        className="absolute top-4 right-4 z-20 flex items-center gap-1.5 rounded-full bg-black/70 px-4 py-2 font-geist text-xs font-semibold text-white backdrop-blur-md transition-all hover:bg-black cursor-pointer"
+                      >
+                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                        Close Video
+                      </button>
+                    </div>
+                  ) : (
+                    <div
+                      onClick={() => {
+                        scrollToReel(reelIdx);
+                        setIsPlaying(true);
+                        setIsPaused(false);
+                      }}
+                      className="relative h-full w-full bg-cover bg-center overflow-hidden flex flex-col justify-between p-8 sm:p-10 group cursor-pointer"
+                      style={{
+                        backgroundImage: `url('${reelBackground}')`,
+                      }}
+                    >
+                      {/* 1. Back Photo: Big, Grayscale, Upper-Left (Desktop only) */}
+                      <div className="pointer-events-none absolute inset-0 overflow-hidden hidden min-[1100px]:block">
+                        <img
+                          src={`${R2_MEDIA_URL}/images/reelThumbnail/speaker${selectedEpisode.id}reel.png`}
+                          alt=""
+                          className="absolute -top-[2%] sm:-top-[2.5%] -left-[10%] sm:-left-[5%] h-[118%] w-[110%] object-cover object-[center_top] grayscale contrast-125 brightness-105 opacity-50 select-none transition-transform duration-700 group-hover:scale-105"
+                          style={{
+                            maskImage: "linear-gradient(180deg, rgba(0,0,0,1) 48%, rgba(0,0,0,0) 88%)",
+                            WebkitMaskImage: "linear-gradient(180deg, rgba(0,0,0,1) 48%, rgba(0,0,0,0) 88%)",
+                          }}
+                        />
+                      </div>
+
+                      {/* 2. Front Photo: Full Color */}
+                      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                        <img
+                          src={`${R2_MEDIA_URL}/images/reelThumbnail/speaker${selectedEpisode.id}reel.png`}
+                          alt={selectedEpisode.guest}
+                          className="absolute -bottom-[6%] right-[2%] sm:right-[6%] h-[75%] w-[65%] sm:w-[58%] object-cover object-[center_bottom] select-none drop-shadow-[0_20px_40px_rgba(0,0,0,0.85)] transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </div>
+
+                      {/* Bottom Row: Circular Teal Play Button (Bottom-Left) & Teal Duration Pill (Bottom-Right) */}
+                      <div className="relative z-10 flex items-center justify-between mt-auto w-full">
+                        {/* Circular Teal Play Button (Bottom-Left) */}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            scrollToReel(reelIdx);
+                            setIsPlaying(true);
+                            setIsPaused(false);
+                          }}
+                          aria-label={`Play Reel ${reelIdx + 1} of ${selectedEpisode.guest}`}
+                          className="flex h-[58px] w-[58px] sm:h-[64px] sm:w-[64px] items-center justify-center rounded-full bg-[#159A99] text-white shadow-xl shadow-[#159A99]/40 transition-transform duration-300 hover:scale-110 active:scale-95 group/btn cursor-pointer"
+                        >
+                          <svg
+                            className="ml-1 h-7 w-7 text-white transition-transform duration-300 group-hover/btn:scale-110"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                          >
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        </button>
+
+                        {/* Teal Duration Pill (Bottom-Right) */}
+                        <span className="inline-block rounded-full bg-[#159A99] px-5 py-2 font-geist text-[13px] sm:text-[14px] font-bold tracking-wide text-white shadow-md">
+                          REEL 0{reelIdx + 1} · {selectedEpisode.reelDurations?.[reelIdx] || "1 MIN"}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </article>
+              );
+            })}
+          </div>
+
+          {/* Navigation Controls: < (1) (2) > */}
+          <div className="mt-5 flex items-center justify-center gap-3">
+            {/* Previous Arrow (<) */}
+            <button
+              type="button"
+              onClick={() => {
+                scrollToReel(0);
+              }}
+              aria-label="Previous Reel"
+              disabled={activeReelIndex === 0}
+              className={`flex h-9 w-9 items-center justify-center rounded-full border transition-all cursor-pointer ${activeReelIndex === 0
+                ? "border-[#E0E0E0] text-[#B0B0B0] opacity-40 cursor-not-allowed"
+                : "border-[#159A99] bg-white text-[#159A99] hover:bg-[#159A99] hover:text-white active:scale-95 shadow-sm"
+                }`}
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+
+            {/* Circle 1 */}
+            <button
+              type="button"
+              onClick={() => {
+                scrollToReel(0);
+              }}
+              aria-label="Switch to Reel 1"
+              className={`flex h-9 w-9 items-center justify-center rounded-full font-geist text-[14px] font-bold transition-all cursor-pointer ${activeReelIndex === 0
+                ? "bg-[#159A99] text-white shadow-md shadow-[#159A99]/30 scale-105"
+                : "border border-[#D0D7DE] bg-white text-[#555] hover:border-[#159A99] hover:text-[#159A99]"
+                }`}
+            >
+              1
+            </button>
+
+            {/* Circle 2 */}
+            <button
+              type="button"
+              onClick={() => {
+                scrollToReel(1);
+              }}
+              aria-label="Switch to Reel 2"
+              className={`flex h-9 w-9 items-center justify-center rounded-full font-geist text-[14px] font-bold transition-all cursor-pointer ${activeReelIndex === 1
+                ? "bg-[#159A99] text-white shadow-md shadow-[#159A99]/30 scale-105"
+                : "border border-[#D0D7DE] bg-white text-[#555] hover:border-[#159A99] hover:text-[#159A99]"
+                }`}
+            >
+              2
+            </button>
+
+            {/* Next Arrow (>) */}
+            <button
+              type="button"
+              onClick={() => {
+                scrollToReel(1);
+              }}
+              aria-label="Next Reel"
+              disabled={activeReelIndex === 1}
+              className={`flex h-9 w-9 items-center justify-center rounded-full border transition-all cursor-pointer ${activeReelIndex === 1
+                ? "border-[#E0E0E0] text-[#B0B0B0] opacity-40 cursor-not-allowed"
+                : "border-[#159A99] bg-white text-[#159A99] hover:bg-[#159A99] hover:text-white active:scale-95 shadow-sm"
+                }`}
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        </div>
       </div>
     </section>
   );

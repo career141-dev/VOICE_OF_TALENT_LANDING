@@ -10,7 +10,6 @@ type ThemeItem = {
   id: number;
   number: string;
   tag: string;
-  duration: string;
   title: string;
   subtitle: string;
   description: string;
@@ -23,13 +22,12 @@ const themes: ThemeItem[] = [
   {
     id: 1,
     number: "01",
-    tag: "TECH & AUTOMATION",
-    duration: "24 MIN STREAM",
-    title: "AI & Automation in Recruitment",
-    subtitle: "Algorithm vs. Intuition",
+    tag: "STRATEGIC EVOLUTION",
+    title: "The changing role of Talent Acquisition",
+    subtitle: "From Transactional to Transformational",
     description:
-      "How Sri Lankan organizations are using smart automation without losing the vital human element of talent matching.",
-    image: topicImage,
+      "How modern talent teams are evolving from operational recruiters into strategic advisors who shape workforce strategy and long-term organizational success.",
+    image: `${R2_MEDIA_URL}/images/core%20section/core1.png`,
     icon: `${R2_MEDIA_URL}/icons/career.png`,
     accentColor: "#159A99",
   },
@@ -37,38 +35,83 @@ const themes: ThemeItem[] = [
     id: 2,
     number: "02",
     tag: "CAREER BLUEPRINTS",
-    duration: "18 MIN STREAM",
-    title: "Building TA Careers",
-    subtitle: "From Recruiter to Strategic Partner",
+    title: "Building a meaningful career in TA",
+    subtitle: "Mastery, Growth & Executive Influence",
     description:
-      "Navigating the modern talent acquisition profession — key skills, executive influence, and long-term career growth in high-demand markets.",
-    image: topicImage,
+      "Navigating the talent acquisition profession with purpose — developing key competencies, stakeholder trust, and sustainable career progression in competitive markets.",
+    image: `${R2_MEDIA_URL}/images/core%20section/core2.png`,
     icon: `${R2_MEDIA_URL}/icons/career.png`,
     accentColor: "#0D7C7B",
   },
   {
     id: 3,
     number: "03",
-    tag: "BRAND & EXPERIENCE",
-    duration: "22 MIN STREAM",
-    title: "Candidate Experience",
-    subtitle: "The Empathy Advantage",
+    tag: "TALENT ASSESSMENT",
+    title: "Recognizing potential beyond a resume",
+    subtitle: "Unlocking Hidden Capabilities",
     description:
-      "Designing transparent, empathetic interview journeys that elevate employer brand prestige and build lasting talent relationships.",
-    image: topicImage,
+      "Evaluating mindset, problem-solving ability, and culture-add to discover exceptional talent beyond conventional credentials and traditional job qualifications.",
+    image: `${R2_MEDIA_URL}/images/core%20section/core3.png`,
     icon: `${R2_MEDIA_URL}/icons/people.png`,
     accentColor: "#159A99",
   },
   {
     id: 4,
     number: "04",
-    tag: "EXECUTIVE INSIGHTS",
-    duration: "30 MIN STREAM",
-    title: "Strategic Leadership Lessons",
-    subtitle: "Leading Through Disruption",
+    tag: "CANDIDATE JOURNEY",
+    title: "Creating better candidate experiences",
+    subtitle: "The Empathy Advantage",
     description:
-      "Actionable insights from veteran HR heads on agile workforce planning, culture transformation, and steering talent through economic shifts.",
-    image: topicImage,
+      "Designing transparent, empathetic interview journeys that elevate employer brand prestige, respect applicant time, and build lasting professional relationships.",
+    image: `${R2_MEDIA_URL}/images/core%20section/core4.png`,
+    icon: `${R2_MEDIA_URL}/icons/people.png`,
+    accentColor: "#0B5959",
+  },
+  {
+    id: 5,
+    number: "05",
+    tag: "BUSINESS IMPACT",
+    title: "The relationship between talent and business growth",
+    subtitle: "People as the Ultimate Growth Engine",
+    description:
+      "Understanding how visionary hiring directly drives bottom-line profitability, fuels market expansion, and establishes sustainable competitive differentiation.",
+    image: `${R2_MEDIA_URL}/images/core%20section/core5.png`,
+    icon: `${R2_MEDIA_URL}/icons/career.png`,
+    accentColor: "#159A99",
+  },
+  {
+    id: 6,
+    number: "06",
+    tag: "TECH & INNOVATION",
+    title: "Technology, AI and the future of recruitment",
+    subtitle: "Algorithm Meets Human Intuition",
+    description:
+      "Leveraging smart automation and AI-driven screening to optimize hiring velocity while fiercely safeguarding the vital human touch in decision-making.",
+    image: `${R2_MEDIA_URL}/images/core%20section/core6.png`,
+    icon: `${R2_MEDIA_URL}/icons/career.png`,
+    accentColor: "#0D7C7B",
+  },
+  {
+    id: 7,
+    number: "07",
+    tag: "EXECUTIVE PERSPECTIVE",
+    title: "Leadership lessons from inside the industry",
+    subtitle: "Wisdom from Veteran HR Heads",
+    description:
+      "Unfiltered leadership insights on navigating disruption, building resilient team cultures, and guiding talent through dynamic economic shifts.",
+    image: `${R2_MEDIA_URL}/images/core%20section/core7.png`,
+    icon: `${R2_MEDIA_URL}/icons/people.png`,
+    accentColor: "#159A99",
+  },
+  {
+    id: 8,
+    number: "08",
+    tag: "NATIONAL WORKFORCE",
+    title: "The future of Sri Lanka's workforce",
+    subtitle: "Building Global Competitiveness",
+    description:
+      "Empowering the next generation of local professionals with globally competitive skills, adaptable mindsets, and cross-industry opportunities.",
+    image: `${R2_MEDIA_URL}/images/core%20section/core8.png`,
     icon: `${R2_MEDIA_URL}/icons/people.png`,
     accentColor: "#0B5959",
   },
@@ -77,16 +120,27 @@ const themes: ThemeItem[] = [
 export default function CoreConversationThemes() {
   const sliderRef = useRef<HTMLDivElement>(null);
 
-  // Synchronized diagonal expansion:
-  // isSwapped = false (Initial state): Cards 1 and 4 are expanded; Cards 2 and 3 are compact.
-  // isSwapped = true (Hovered on 2 or 3): Cards 2 and 3 expand; Cards 1 and 4 become compact.
-  const [isSwapped, setIsSwapped] = useState(false);
+  // Active page: 0 = First 4 widgets (Themes 1-4), 1 = Other 4 widgets (Themes 5-8)
+  const [currentPage, setCurrentPage] = useState<0 | 1>(0);
 
-  const scrollCards = (direction: "left" | "right") => {
-    sliderRef.current?.scrollBy({
-      left: direction === "right" ? 360 : -360,
-      behavior: "smooth",
-    });
+  // Synchronized diagonal expansion:
+  // isSwapped = false (Initial state): Cards 1 and 4 (or 5 and 8) are expanded; Cards 2 and 3 (or 6 and 7) are compact.
+  // isSwapped = true (Hovered on 2 or 3): Cards 2 and 3 expand; Cards 1 and 4 become compact.
+  const [isSwappedPage1, setIsSwappedPage1] = useState(false);
+  const [isSwappedPage2, setIsSwappedPage2] = useState(false);
+
+  const handlePrev = () => {
+    if (sliderRef.current) {
+      sliderRef.current.scrollBy({ left: -360, behavior: "smooth" });
+    }
+    setCurrentPage((prev) => (prev === 0 ? 1 : 0));
+  };
+
+  const handleNext = () => {
+    if (sliderRef.current) {
+      sliderRef.current.scrollBy({ left: 360, behavior: "smooth" });
+    }
+    setCurrentPage((prev) => (prev === 0 ? 1 : 0));
   };
 
   return (
@@ -103,24 +157,42 @@ export default function CoreConversationThemes() {
           </h2>
         </div>
 
-        {/* Navigation Arrow Controls */}
+        {/* Navigation Arrow Controls with Page Indicator */}
         <div className="flex items-center justify-center gap-3">
           <button
             type="button"
-            onClick={() => scrollCards("left")}
-            aria-label="Previous themes"
-            className="flex h-12 w-12 items-center justify-center rounded-full bg-[#F2F5F7] text-[#161616] transition-colors hover:bg-[#E2E8EC] active:scale-95"
+            onClick={handlePrev}
+            aria-label="Previous 4 themes"
+            className="flex h-12 w-12 items-center justify-center rounded-full bg-[#F2F5F7] text-[#161616] transition-all hover:bg-[#E2E8EC] hover:text-[#159A99] active:scale-95 cursor-pointer shadow-sm"
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="h-5 w-5">
               <path d="M15 19l-7-7 7-7" />
             </svg>
           </button>
 
+          {/* Desktop Page Indicators */}
+          <div className="hidden items-center gap-2 px-1 xl:flex">
+            <button
+              type="button"
+              onClick={() => setCurrentPage(0)}
+              aria-label="Show themes 1 to 4"
+              className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${currentPage === 0 ? "w-7 bg-[#159A99]" : "w-2.5 bg-[#D5DCE2] hover:bg-[#B8C2CC]"
+                }`}
+            />
+            <button
+              type="button"
+              onClick={() => setCurrentPage(1)}
+              aria-label="Show themes 5 to 8"
+              className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${currentPage === 1 ? "w-7 bg-[#159A99]" : "w-2.5 bg-[#D5DCE2] hover:bg-[#B8C2CC]"
+                }`}
+            />
+          </div>
+
           <button
             type="button"
-            onClick={() => scrollCards("right")}
-            aria-label="Next themes"
-            className="flex h-12 w-12 items-center justify-center rounded-full bg-[#F2F5F7] text-[#161616] transition-colors hover:bg-[#E2E8EC] active:scale-95"
+            onClick={handleNext}
+            aria-label="Next 4 themes"
+            className="flex h-12 w-12 items-center justify-center rounded-full bg-[#F2F5F7] text-[#161616] transition-all hover:bg-[#E2E8EC] hover:text-[#159A99] active:scale-95 cursor-pointer shadow-sm"
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="h-5 w-5">
               <path d="M9 5l7 7-7 7" />
@@ -129,76 +201,155 @@ export default function CoreConversationThemes() {
         </div>
       </div>
 
-      {/* ── DESKTOP GRID ── */}
-      <div className="hidden w-full flex-col gap-6 xl:flex">
-        {/* Row 1: Card 01 & Card 02 */}
-        <div className="flex w-full gap-6">
-          {/* Card 01 (AI & Automation) - Expanded in initial state */}
-          <div
-            onMouseEnter={() => setIsSwapped(false)}
-            onClick={() => setIsSwapped(false)}
-            className={[
-              "min-w-0 transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
-              isSwapped ? "flex-[635] cursor-pointer" : "flex-[970]",
-            ].join(" ")}
-          >
-            <DesktopThemeCard
-              item={themes[0]}
-              variant={isSwapped ? "small" : "large"}
-            />
+      {/* ── DESKTOP PAGINATED 4-WIDGET VIEW WITH SMOOTH SLIDE ── */}
+      <div className="hidden w-full overflow-hidden xl:block">
+        <div
+          className="flex w-[200%] transition-transform duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]"
+          style={{
+            transform: currentPage === 0 ? "translateX(0%)" : "translateX(-50%)",
+          }}
+        >
+          {/* ── PAGE 1: 4 Widgets (Themes 01, 02, 03, 04) ── */}
+          <div className="w-1/2 shrink-0 flex flex-col gap-6 pr-4">
+            {/* Row 1: Card 01 & Card 02 */}
+            <div className="flex w-full gap-6">
+              {/* Card 01 - Expanded in initial state */}
+              <div
+                onMouseEnter={() => setIsSwappedPage1(false)}
+                onClick={() => setIsSwappedPage1(false)}
+                className={[
+                  "min-w-0 transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                  isSwappedPage1 ? "flex-[635] cursor-pointer" : "flex-[970]",
+                ].join(" ")}
+              >
+                <DesktopThemeCard
+                  item={themes[0]}
+                  variant={isSwappedPage1 ? "small" : "large"}
+                />
+              </div>
+
+              {/* Card 02 - Expands on hover/click */}
+              <div
+                onMouseEnter={() => setIsSwappedPage1(true)}
+                onClick={() => setIsSwappedPage1(true)}
+                className={[
+                  "min-w-0 transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                  isSwappedPage1 ? "flex-[970]" : "flex-[635] cursor-pointer",
+                ].join(" ")}
+              >
+                <DesktopThemeCard
+                  item={themes[1]}
+                  variant={isSwappedPage1 ? "large" : "small"}
+                />
+              </div>
+            </div>
+
+            {/* Row 2: Card 03 & Card 04 */}
+            <div className="flex w-full gap-6">
+              {/* Card 03 - Expands on hover/click */}
+              <div
+                onMouseEnter={() => setIsSwappedPage1(true)}
+                onClick={() => setIsSwappedPage1(true)}
+                className={[
+                  "min-w-0 transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                  isSwappedPage1 ? "flex-[970]" : "flex-[635] cursor-pointer",
+                ].join(" ")}
+              >
+                <DesktopThemeCard
+                  item={themes[2]}
+                  variant={isSwappedPage1 ? "large" : "small"}
+                />
+              </div>
+
+              {/* Card 04 - Expanded in initial state */}
+              <div
+                onMouseEnter={() => setIsSwappedPage1(false)}
+                onClick={() => setIsSwappedPage1(false)}
+                className={[
+                  "min-w-0 transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                  isSwappedPage1 ? "flex-[635] cursor-pointer" : "flex-[970]",
+                ].join(" ")}
+              >
+                <DesktopThemeCard
+                  item={themes[3]}
+                  variant={isSwappedPage1 ? "small" : "large"}
+                />
+              </div>
+            </div>
           </div>
 
-          {/* Card 02 (Building TA Careers) - Expands on hover/click */}
-          <div
-            onMouseEnter={() => setIsSwapped(true)}
-            onClick={() => setIsSwapped(true)}
-            className={[
-              "min-w-0 transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
-              isSwapped ? "flex-[970]" : "flex-[635] cursor-pointer",
-            ].join(" ")}
-          >
-            <DesktopThemeCard
-              item={themes[1]}
-              variant={isSwapped ? "large" : "small"}
-            />
-          </div>
-        </div>
+          {/* ── PAGE 2: 4 Widgets (Themes 05, 06, 07, 08) ── */}
+          <div className="w-1/2 shrink-0 flex flex-col gap-6 pl-4">
+            {/* Row 1: Card 05 & Card 06 */}
+            <div className="flex w-full gap-6">
+              {/* Card 05 - Expanded in initial state */}
+              <div
+                onMouseEnter={() => setIsSwappedPage2(false)}
+                onClick={() => setIsSwappedPage2(false)}
+                className={[
+                  "min-w-0 transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                  isSwappedPage2 ? "flex-[635] cursor-pointer" : "flex-[970]",
+                ].join(" ")}
+              >
+                <DesktopThemeCard
+                  item={themes[4]}
+                  variant={isSwappedPage2 ? "small" : "large"}
+                />
+              </div>
 
-        {/* Row 2: Card 03 & Card 04 */}
-        <div className="flex w-full gap-6">
-          {/* Card 03 (Candidate Experience) - Expands on hover/click */}
-          <div
-            onMouseEnter={() => setIsSwapped(true)}
-            onClick={() => setIsSwapped(true)}
-            className={[
-              "min-w-0 transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
-              isSwapped ? "flex-[970]" : "flex-[635] cursor-pointer",
-            ].join(" ")}
-          >
-            <DesktopThemeCard
-              item={themes[2]}
-              variant={isSwapped ? "large" : "small"}
-            />
-          </div>
+              {/* Card 06 - Expands on hover/click */}
+              <div
+                onMouseEnter={() => setIsSwappedPage2(true)}
+                onClick={() => setIsSwappedPage2(true)}
+                className={[
+                  "min-w-0 transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                  isSwappedPage2 ? "flex-[970]" : "flex-[635] cursor-pointer",
+                ].join(" ")}
+              >
+                <DesktopThemeCard
+                  item={themes[5]}
+                  variant={isSwappedPage2 ? "large" : "small"}
+                />
+              </div>
+            </div>
 
-          {/* Card 04 (Strategic Leadership) - Expanded in initial state */}
-          <div
-            onMouseEnter={() => setIsSwapped(false)}
-            onClick={() => setIsSwapped(false)}
-            className={[
-              "min-w-0 transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
-              isSwapped ? "flex-[635] cursor-pointer" : "flex-[970]",
-            ].join(" ")}
-          >
-            <DesktopThemeCard
-              item={themes[3]}
-              variant={isSwapped ? "small" : "large"}
-            />
+            {/* Row 2: Card 07 & Card 08 */}
+            <div className="flex w-full gap-6">
+              {/* Card 07 - Expands on hover/click */}
+              <div
+                onMouseEnter={() => setIsSwappedPage2(true)}
+                onClick={() => setIsSwappedPage2(true)}
+                className={[
+                  "min-w-0 transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                  isSwappedPage2 ? "flex-[970]" : "flex-[635] cursor-pointer",
+                ].join(" ")}
+              >
+                <DesktopThemeCard
+                  item={themes[6]}
+                  variant={isSwappedPage2 ? "large" : "small"}
+                />
+              </div>
+
+              {/* Card 08 - Expanded in initial state */}
+              <div
+                onMouseEnter={() => setIsSwappedPage2(false)}
+                onClick={() => setIsSwappedPage2(false)}
+                className={[
+                  "min-w-0 transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                  isSwappedPage2 ? "flex-[635] cursor-pointer" : "flex-[970]",
+                ].join(" ")}
+              >
+                <DesktopThemeCard
+                  item={themes[7]}
+                  variant={isSwappedPage2 ? "small" : "large"}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* ── TABLET & MOBILE VIEW ── */}
+      {/* ── TABLET & MOBILE VIEW (All 8 Themes Swipeable) ── */}
       <div
         ref={sliderRef}
         className="flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4 pt-2 xl:hidden [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
@@ -315,12 +466,6 @@ function MobileThemeCard({ item }: { item: ThemeItem }) {
             decoding="async"
             className="h-full w-full object-cover"
           />
-          <div className="absolute bottom-2.5 left-3 flex items-center gap-1.5 rounded-full bg-black/60 px-2.5 py-1 backdrop-blur-md">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#159A99]" />
-            <span className="font-geist text-[10px] font-semibold uppercase text-white">
-              {item.duration}
-            </span>
-          </div>
         </div>
       )}
 

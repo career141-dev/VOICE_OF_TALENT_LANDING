@@ -149,26 +149,124 @@ export const seriesEpisodesData: SeriesEpisode[] = [
 
 export default function SeriesSection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const isManuallyClosedRef = useRef(false);
+
   // Default to Episode 2 (Mr. Ken Vijayakumar)
   const [selectedEpisode, setSelectedEpisode] = useState<SeriesEpisode>(
     seriesEpisodesData[1] || seriesEpisodesData[0]
   );
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
-  const [hasScrolledIn, setHasScrolledIn] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [showControls, setShowControls] = useState(true);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
 
-  // Auto-play default video without sound when scrolled into view
+  const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const formatTime = (seconds: number) => {
+    if (isNaN(seconds) || seconds < 0) return "00:00";
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  const resetControlsTimeout = () => {
+    if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
+    controlsTimeoutRef.current = setTimeout(() => {
+      if (videoRef.current && !videoRef.current.paused) {
+        setShowControls(false);
+      }
+    }, 3500);
+  };
+
+  const togglePlayPause = () => {
+    if (!videoRef.current) return;
+    if (videoRef.current.paused) {
+      videoRef.current.play().catch(() => {});
+      setIsPaused(false);
+      resetControlsTimeout();
+    } else {
+      videoRef.current.pause();
+      setIsPaused(true);
+      setShowControls(true);
+    }
+  };
+
+  const handleContainerClick = () => {
+    if (!showControls) {
+      setShowControls(true);
+      resetControlsTimeout();
+    } else {
+      togglePlayPause();
+    }
+  };
+
+  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newTime = parseFloat(e.target.value);
+    setCurrentTime(newTime);
+    if (videoRef.current) {
+      videoRef.current.currentTime = newTime;
+    }
+    resetControlsTimeout();
+  };
+
+  const handleTimeUpdate = () => {
+    if (videoRef.current && !isDragging) {
+      setCurrentTime(videoRef.current.currentTime);
+    }
+  };
+
+  const handleLoadedMetadata = () => {
+    if (videoRef.current) {
+      setDuration(videoRef.current.duration || 0);
+      setCurrentTime(videoRef.current.currentTime || 0);
+    }
+  };
+
+  // Sync mute state directly without remounting video
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = isMuted;
+    }
+  }, [isMuted]);
+
+  // Auto-play/resume video when scrolled into view (desktop autoplays, mobile stays paused), pause when scrolled away
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !hasScrolledIn) {
-          setIsPlaying(true);
-          setIsMuted(true);
-          setHasScrolledIn(true);
+        const isMobile = window.innerWidth < 1024;
+        if (entry.isIntersecting) {
+          if (!isManuallyClosedRef.current) {
+            setIsPlaying(true);
+            if (isMobile) {
+              // On mobile, stay paused on entry with controls ready until user taps
+              if (videoRef.current) {
+                videoRef.current.pause();
+                setIsPaused(true);
+                setShowControls(true);
+              }
+            } else {
+              // On desktop, auto-play / resume
+              if (videoRef.current && videoRef.current.paused) {
+                videoRef.current.play().catch(() => {});
+                setIsPaused(false);
+                resetControlsTimeout();
+              }
+            }
+          }
+        } else {
+          if (videoRef.current && !videoRef.current.paused) {
+            videoRef.current.pause();
+            setIsPaused(true);
+            setShowControls(true);
+          }
         }
       },
       {
-        threshold: 0.25,
+        threshold: 0.2,
       }
     );
 
@@ -177,7 +275,7 @@ export default function SeriesSection() {
     }
 
     return () => observer.disconnect();
-  }, [hasScrolledIn]);
+  }, []);
 
   useEffect(() => {
     const handleSelectEvent = (event: Event) => {
@@ -186,9 +284,14 @@ export default function SeriesSection() {
       if (episodeId) {
         const targetEpisode = seriesEpisodesData.find((ep) => ep.id === episodeId);
         if (targetEpisode) {
+          isManuallyClosedRef.current = false;
           setSelectedEpisode(targetEpisode);
           setIsPlaying(true);
           setIsMuted(false);
+          setIsPaused(false);
+          setShowControls(true);
+          setCurrentTime(0);
+          resetControlsTimeout();
         }
       }
     };
@@ -198,18 +301,29 @@ export default function SeriesSection() {
   }, []);
 
   const handleEpisodeSelect = (episode: SeriesEpisode) => {
+    isManuallyClosedRef.current = false;
     setSelectedEpisode(episode);
     setIsPlaying(true);
     setIsMuted(false);
+    setIsPaused(false);
+    setShowControls(true);
+    setCurrentTime(0);
+    resetControlsTimeout();
   };
 
   const handlePlay = () => {
+    isManuallyClosedRef.current = false;
     setIsPlaying(true);
     setIsMuted(false);
+    setIsPaused(false);
+    setShowControls(true);
+    resetControlsTimeout();
   };
 
   const handleCloseVideo = () => {
+    isManuallyClosedRef.current = true;
     setIsPlaying(false);
+    setIsPaused(false);
   };
 
   return (
@@ -251,62 +365,212 @@ export default function SeriesSection() {
         {/* Main Featured Video / Poster */}
         <article className="group relative min-h-[500px] sm:min-h-[520px] md:min-h-[540px] xl:min-h-[560px] overflow-hidden rounded-[28px] md:rounded-[32px] bg-[#159A99] shadow-xl">
           {isPlaying ? (
-            <div className="relative h-full w-full bg-black min-h-[500px] sm:min-h-[520px] md:min-h-[540px] xl:min-h-[560px] flex items-center justify-center">
+            <div
+              onClick={handleContainerClick}
+              onMouseMove={() => {
+                setShowControls(true);
+                resetControlsTimeout();
+              }}
+              className="relative h-full w-full bg-black min-h-[500px] sm:min-h-[520px] md:min-h-[540px] xl:min-h-[560px] flex items-center justify-center cursor-pointer select-none overflow-hidden"
+            >
               {selectedEpisode.videoUrl ? (
-                <video
-                  key={`${selectedEpisode.videoUrl}-${isMuted}`}
-                  src={selectedEpisode.videoUrl}
-                  controls
-                  autoPlay
-                  muted={isMuted}
-                  loop
-                  playsInline
-                  className="absolute inset-0 h-full w-full object-contain bg-black"
-                />
+                <>
+                  <video
+                    ref={videoRef}
+                    key={selectedEpisode.videoUrl}
+                    src={selectedEpisode.videoUrl}
+                    autoPlay
+                    muted={isMuted}
+                    loop
+                    playsInline
+                    onTimeUpdate={handleTimeUpdate}
+                    onLoadedMetadata={handleLoadedMetadata}
+                    onPlay={() => {
+                      setIsPaused(false);
+                      resetControlsTimeout();
+                    }}
+                    onPause={() => {
+                      setIsPaused(true);
+                      setShowControls(true);
+                    }}
+                    className="absolute inset-0 h-full w-full object-contain bg-black pointer-events-none"
+                  />
+
+                  {/* Top Controls: Mute/Unmute & Close Video */}
+                  <div
+                    className={`absolute top-4 inset-x-4 z-20 flex items-center justify-between transition-opacity duration-300 ${
+                      showControls ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                    }`}
+                  >
+                    {/* Mute/Unmute toggle button */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsMuted((prev) => !prev);
+                        resetControlsTimeout();
+                      }}
+                      className="flex items-center gap-1.5 rounded-full bg-black/75 px-3.5 py-2 font-geist text-xs font-semibold text-white backdrop-blur-md transition-all hover:bg-black cursor-pointer shadow-md"
+                      aria-label={isMuted ? "Unmute video sound" : "Mute video sound"}
+                    >
+                      {isMuted ? (
+                        <>
+                          <svg className="h-4 w-4 text-[#159A99]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                          </svg>
+                          <span>Unmute</span>
+                        </>
+                      ) : (
+                        <>
+                          <svg className="h-4 w-4 text-[#159A99]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                          </svg>
+                          <span>Mute</span>
+                        </>
+                      )}
+                    </button>
+
+                    {/* Close Video button */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCloseVideo();
+                      }}
+                      aria-label="Close video player"
+                      className="flex items-center gap-1.5 rounded-full bg-black/70 px-4 py-2 font-geist text-xs font-semibold text-white backdrop-blur-md transition-all hover:bg-black cursor-pointer"
+                    >
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                      Close Video
+                    </button>
+                  </div>
+
+                  {/* Center Play / Pause Button Overlay */}
+                  <div
+                    className={`absolute inset-0 z-10 flex items-center justify-center transition-all duration-300 pointer-events-none ${
+                      showControls ? "opacity-100" : "opacity-0"
+                    }`}
+                  >
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        togglePlayPause();
+                      }}
+                      className="pointer-events-auto flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full bg-[#159A99]/90 text-white shadow-2xl backdrop-blur-md transition-transform duration-200 hover:scale-110 active:scale-95 cursor-pointer"
+                      aria-label={isPaused ? "Play video" : "Pause video"}
+                    >
+                      {isPaused ? (
+                        <svg className="ml-1 h-8 w-8 sm:h-10 sm:w-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                      ) : (
+                        <svg className="h-8 w-8 sm:h-10 sm:w-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
+                        </svg>
+                      )}
+                    </button>
+                  </div>
+
+                  {/* Bottom Scrubber & Duration Control Bar */}
+                  <div
+                    className={`absolute inset-x-0 bottom-0 z-20 flex flex-col justify-end bg-gradient-to-t from-black/90 via-black/50 to-transparent p-4 sm:p-6 transition-opacity duration-300 ${
+                      showControls ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                    }`}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {/* Interactive Scrubber Bar */}
+                    <div className="relative flex w-full items-center py-2 cursor-pointer">
+                      <input
+                        type="range"
+                        min={0}
+                        max={duration || 100}
+                        step={0.1}
+                        value={currentTime}
+                        onChange={handleSeek}
+                        onMouseDown={() => setIsDragging(true)}
+                        onMouseUp={() => setIsDragging(false)}
+                        onTouchStart={() => setIsDragging(true)}
+                        onTouchEnd={() => setIsDragging(false)}
+                        className="w-full h-1.5 sm:h-2 rounded-full appearance-none bg-white/30 accent-[#159A99] cursor-pointer focus:outline-none"
+                        style={{
+                          background: `linear-gradient(to right, #159A99 ${duration > 0 ? (currentTime / duration) * 100 : 0}%, rgba(255, 255, 255, 0.3) ${duration > 0 ? (currentTime / duration) * 100 : 0}%)`,
+                        }}
+                        aria-label="Video timeline scrubber"
+                      />
+                    </div>
+
+                    {/* Bottom Row: Play/Pause Icon + Timestamps + Quick 10s Skip Buttons */}
+                    <div className="mt-1 flex items-center justify-between font-geist text-xs sm:text-sm font-medium text-white">
+                      <div className="flex items-center gap-3">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            togglePlayPause();
+                          }}
+                          className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/30 transition-all active:scale-95 cursor-pointer"
+                          aria-label={isPaused ? "Play video" : "Pause video"}
+                        >
+                          {isPaused ? (
+                            <svg className="ml-0.5 h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M8 5v14l11-7z" />
+                            </svg>
+                          ) : (
+                            <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
+                            </svg>
+                          )}
+                        </button>
+
+                        <span className="tabular-nums tracking-wide text-white/90">
+                          {formatTime(currentTime)} <span className="text-white/40">/</span> {formatTime(duration)}
+                        </span>
+                      </div>
+
+                      {/* Quick -10s / +10s Skip */}
+                      <div className="flex items-center gap-2 text-white/80">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (videoRef.current) {
+                              videoRef.current.currentTime = Math.max(0, videoRef.current.currentTime - 10);
+                            }
+                            resetControlsTimeout();
+                          }}
+                          className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] sm:text-xs font-semibold hover:bg-white/20 transition-all cursor-pointer"
+                          aria-label="Rewind 10 seconds"
+                        >
+                          -10s
+                        </button>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (videoRef.current) {
+                              videoRef.current.currentTime = Math.min(duration, videoRef.current.currentTime + 10);
+                            }
+                            resetControlsTimeout();
+                          }}
+                          className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] sm:text-xs font-semibold hover:bg-white/20 transition-all cursor-pointer"
+                          aria-label="Forward 10 seconds"
+                        >
+                          +10s
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </>
               ) : (
-                <div className="relative flex flex-col items-center justify-center p-8 text-center text-white">
+                <div className="relative flex flex-col items-center justify-center p-8 text-center text-white pointer-events-none">
                   <p className="font-geist text-2xl font-bold">{selectedEpisode.name}</p>
                   <p className="mt-2 font-geist text-sm text-white/70">Video release coming soon</p>
                 </div>
               )}
-
-              {/* Mute/Unmute toggle button */}
-              <button
-                type="button"
-                onClick={() => setIsMuted((prev) => !prev)}
-                className="absolute top-4 left-4 z-20 flex items-center gap-1.5 rounded-full bg-black/75 px-3.5 py-2 font-geist text-xs font-semibold text-white backdrop-blur-md transition-all hover:bg-black cursor-pointer shadow-md"
-                aria-label={isMuted ? "Unmute video sound" : "Mute video sound"}
-              >
-                {isMuted ? (
-                  <>
-                    <svg className="h-4 w-4 text-[#159A99]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
-                    </svg>
-                    <span>Unmute</span>
-                  </>
-                ) : (
-                  <>
-                    <svg className="h-4 w-4 text-[#159A99]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                    </svg>
-                    <span>Mute</span>
-                  </>
-                )}
-              </button>
-
-              {/* Close Video button */}
-              <button
-                type="button"
-                onClick={handleCloseVideo}
-                aria-label="Close video player"
-                className="absolute top-4 right-4 z-20 flex items-center gap-1.5 rounded-full bg-black/70 px-4 py-2 font-geist text-xs font-semibold text-white backdrop-blur-md transition-all hover:bg-black cursor-pointer"
-              >
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-                Close Video
-              </button>
             </div>
           ) : (
             <div

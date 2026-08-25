@@ -24,8 +24,9 @@ const arrowRight = `${R2_MEDIA_URL}/icons/arrow-right.svg`;
 const arrowRightDark = `${R2_MEDIA_URL}/icons/arrow-right-dark.svg`;
 const arrowAngle = `${R2_MEDIA_URL}/icons/arrow-angle.svg`;
 const portraitImage = getOptimizedImageUrl(`${R2_MEDIA_URL}/images/portrait.png`, 500);
-const businessmanImage = `${R2_MEDIA_URL}/images/businessman.png`;
-const businesswomanImage = `${R2_MEDIA_URL}/images/businesswoman.png`;
+const speakerImage1 = `${R2_MEDIA_URL}/images/speaker1.png`;
+const speakerImage2 = `${R2_MEDIA_URL}/images/speaker2.png`;
+const speakerImage4 = `${R2_MEDIA_URL}/images/speaker4.png`;
 
 
 function Arrow({ source }: { source: string }) {
@@ -33,6 +34,14 @@ function Arrow({ source }: { source: string }) {
 }
 
 export default function Home() {
+  const scrollToSpeakers = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const el = document.getElementById("speakers");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <>
       <main
@@ -89,24 +98,26 @@ export default function Home() {
           className="absolute bottom-[7%] left-1/2 z-[10] flex -translate-x-1/2 max-[760px]:bottom-[4%]"
           aria-label="Meet the people behind Voice of Talent"
         >
-          <div className="flex items-center rounded-[100px] border-2 border-white p-1 transition-transform duration-300 hover:scale-105">
-            <div className="relative h-[38px] w-[38px] sm:h-[46px] sm:w-[46px] overflow-hidden rounded-full border-2 border-white bg-[rgba(0,0,0,.2)]">
-              <img className="h-full w-full object-cover" src={businessmanImage} alt="" />
+          <a
+            href="#speakers"
+            onClick={scrollToSpeakers}
+            className="group flex items-center rounded-[100px] border-2 border-white/80 bg-black/30 p-1 backdrop-blur-md transition-all duration-300 hover:scale-105 hover:border-white hover:bg-black/50 cursor-pointer shadow-lg"
+          >
+            <div className="relative h-[38px] w-[38px] sm:h-[46px] sm:w-[46px] overflow-hidden rounded-full border-2 border-white bg-[#159A99]/30">
+              <img className="h-full w-full object-cover object-top" src={speakerImage1} alt="Mr. Patrick Pereira" />
             </div>
-            <div className="relative -ml-3 sm:-ml-4 h-[38px] w-[38px] sm:h-[46px] sm:w-[46px] overflow-hidden rounded-full border-2 border-white bg-[rgba(0,0,0,.2)]">
-              <img className="h-full w-full object-cover" src={businesswomanImage} alt="" />
+            <div className="relative -ml-3 sm:-ml-4 h-[38px] w-[38px] sm:h-[46px] sm:w-[46px] overflow-hidden rounded-full border-2 border-white bg-[#159A99]/30">
+              <img className="h-full w-full object-cover object-top" src={speakerImage4} alt="Ms. Thrimuthi Dhanushka" />
             </div>
-            <div className="relative -ml-3 sm:-ml-4 h-[38px] w-[38px] sm:h-[46px] sm:w-[46px] overflow-hidden rounded-full border-2 border-white bg-[rgba(0,0,0,.2)]">
-              <img className="h-full w-full object-cover" src={businessmanImage} alt="" />
+            <div className="relative -ml-3 sm:-ml-4 h-[38px] w-[38px] sm:h-[46px] sm:w-[46px] overflow-hidden rounded-full border-2 border-white bg-[#159A99]/30">
+              <img className="h-full w-full object-cover object-top" src={speakerImage2} alt="Mr. Ken Vijayakumar" />
             </div>
-            <a
-              className="relative -ml-3 sm:-ml-4 flex h-[38px] w-[38px] sm:h-[46px] sm:w-[46px] items-center justify-center rounded-full transition-transform duration-300 hover:rotate-45"
-              href="#speakers"
-              aria-label="View speakers"
+            <div
+              className="relative -ml-3 sm:-ml-4 flex h-[38px] w-[38px] sm:h-[46px] sm:w-[46px] items-center justify-center rounded-full transition-transform duration-300 group-hover:rotate-45"
             >
-              <img className="h-full w-full object-contain" src={arrowAngle} alt="" />
-            </a>
-          </div>
+              <img className="h-full w-full object-contain" src={arrowAngle} alt="Go to speakers" />
+            </div>
+          </a>
         </div>
       </main>
 
