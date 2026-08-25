@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import SeriesSection from "./components/SeriesSection";
 import SpeakerSection from "./components/SpeakerSection";
 import CoreConversationThemes from "./components/CoreConversationThemes";
@@ -10,16 +13,17 @@ import Footer from "./components/footer";
 import { IndustryVoicesSection } from "./components/Industry";
 import BuiltForEveryoneSection from "./components/BuiltForEveryoneSection";
 import VotaBannerSection from "./components/VotaBanner";
+import { getOptimizedImageUrl } from "./utils/imageLoader";
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
 
-const backgroundImage = `${R2_MEDIA_URL}/images/hero-background.png`;
-const microphoneImage = `${R2_MEDIA_URL}/images/microphone.png`;
+const backgroundImage = getOptimizedImageUrl(`${R2_MEDIA_URL}/images/hero-background.png`, 1920);
+const microphoneImage = getOptimizedImageUrl(`${R2_MEDIA_URL}/images/microphone.png`, 900);
 const votaLogo = `${R2_MEDIA_URL}/icons/vota-logo.png`;
 const arrowUpRight = `${R2_MEDIA_URL}/icons/arrow-up-right.svg`;
 const arrowRight = `${R2_MEDIA_URL}/icons/arrow-right.svg`;
 const arrowRightDark = `${R2_MEDIA_URL}/icons/arrow-right-dark.svg`;
 const arrowAngle = `${R2_MEDIA_URL}/icons/arrow-angle.svg`;
-const portraitImage = `${R2_MEDIA_URL}/images/portrait.png`;
+const portraitImage = getOptimizedImageUrl(`${R2_MEDIA_URL}/images/portrait.png`, 500);
 const businessmanImage = `${R2_MEDIA_URL}/images/businessman.png`;
 const businesswomanImage = `${R2_MEDIA_URL}/images/businesswoman.png`;
 
@@ -32,13 +36,17 @@ export default function Home() {
   return (
     <>
       <main
-        className="hero-frame isolate relative min-h-[900px] overflow-hidden bg-[#050505] max-[760px]:min-h-[670px]"
+        className="hero-frame isolate relative min-h-[900px] overflow-hidden bg-[#050505] bg-[radial-gradient(ellipse_at_center,rgba(21,154,153,0.22)_0%,#050505_75%)] max-[760px]:min-h-[670px]"
         data-node-id="1:845">
         {/* Background */}
         <div className="absolute inset-0 z-0" aria-hidden="true">
           <img
             className="h-full w-full object-cover"
             src={backgroundImage}
+            loading="eager"
+            decoding="async"
+            fetchPriority="high"
+            sizes="100vw"
             alt=""
           />
         </div>
@@ -57,6 +65,8 @@ export default function Home() {
           <img
             className="absolute left-[-19.25%] top-[-32%] h-[130%] w-[119.22%] max-w-none object-cover blur-[2px]"
             src={microphoneImage}
+            loading="eager"
+            decoding="async"
             alt=""
           />
         </div>
@@ -116,6 +126,8 @@ export default function Home() {
               <img
                 className="w-full h-auto object-contain"
                 src={portraitImage}
+                loading="lazy"
+                decoding="async"
                 alt="A member of the Voice of Talent community"
               />
             </div>

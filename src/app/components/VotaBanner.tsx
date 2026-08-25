@@ -57,6 +57,8 @@ export default function VotaBannerSection() {
           <img
             src={artboardImage}
             alt="Career141 and VOTA"
+            loading="lazy"
+            decoding="async"
             className="h-auto w-[160px] object-contain sm:w-[220px] lg:w-[400px]"
           />
 

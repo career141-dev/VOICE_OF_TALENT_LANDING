@@ -1,5 +1,7 @@
 "use client";
 
+import React, { useRef, useState } from "react";
+
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
 
 export function IndustryVoicesSection() {
@@ -11,6 +13,38 @@ export function IndustryVoicesSection() {
     "MANY VOICES.",
     "ONE FUTURE.",
   ];
+
+  const [dragOffset, setDragOffset] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const startXRef = useRef(0);
+  const currentDragRef = useRef(0);
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    setIsDragging(true);
+    startXRef.current = e.clientX - currentDragRef.current;
+    try {
+      (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    } catch {
+      // Ignore if setPointerCapture fails on some touch devices
+    }
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isDragging) return;
+    const newOffset = e.clientX - startXRef.current;
+    currentDragRef.current = newOffset;
+    setDragOffset(newOffset);
+  };
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isDragging) return;
+    setIsDragging(false);
+    try {
+      (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
+    } catch {
+      // Ignore
+    }
+  };
 
   return (
     <section className="relative w-full overflow-hidden bg-[#0A5B5B]">
@@ -32,9 +66,23 @@ export function IndustryVoicesSection() {
           backgroundImage: `url('${R2_MEDIA_URL}/images/Movement Banner.png')`,
         }}
       >
-        {/* One moving headline row */}
-        <div className="pointer-events-none absolute left-0 top-[20%] w-full overflow-hidden">
-          <div className="industry-marquee flex w-max whitespace-nowrap">
+        {/* Interactive swipeable/draggable headline row */}
+        <div
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
+          className={`absolute left-0 top-[20%] z-10 w-full overflow-hidden select-none touch-pan-y ${
+            isDragging ? "cursor-grabbing" : "cursor-grab"
+          }`}
+        >
+          <div
+            className="industry-marquee flex w-max whitespace-nowrap"
+            style={{
+              transform: `translateX(${dragOffset}px)`,
+              animationPlayState: isDragging ? "paused" : "running",
+            }}
+          >
             {items.map((item, index) => (
               <span
                 key={`${item}-${index}`}

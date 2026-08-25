@@ -42,7 +42,7 @@ const themes: ThemeItem[] = [
     title: "Building TA Careers",
     subtitle: "From Recruiter to Strategic Partner",
     description:
-      "Navigating the evolving talent acquisition craft — developing executive influence, data fluency, and architecting long-term leadership in high-demand markets.",
+      "Navigating the modern talent acquisition profession — key skills, executive influence, and long-term career growth in high-demand markets.",
     image: topicImage,
     icon: `${R2_MEDIA_URL}/icons/career.png`,
     accentColor: "#0D7C7B",
@@ -55,7 +55,7 @@ const themes: ThemeItem[] = [
     title: "Candidate Experience",
     subtitle: "The Empathy Advantage",
     description:
-      "Engineering transparent, high-touch interview journeys that elevate employer brand prestige, respect candidate dignity, and build generational talent loyalty.",
+      "Designing transparent, empathetic interview journeys that elevate employer brand prestige and build lasting talent relationships.",
     image: topicImage,
     icon: `${R2_MEDIA_URL}/icons/people.png`,
     accentColor: "#159A99",
@@ -68,7 +68,7 @@ const themes: ThemeItem[] = [
     title: "Strategic Leadership Lessons",
     subtitle: "Leading Through Disruption",
     description:
-      "Candid playbooks from veteran HR leaders on agile workforce planning, culture transformation, and steering enterprise talent through national economic shifts.",
+      "Actionable insights from veteran HR heads on agile workforce planning, culture transformation, and steering talent through economic shifts.",
     image: topicImage,
     icon: `${R2_MEDIA_URL}/icons/people.png`,
     accentColor: "#0B5959",
@@ -78,8 +78,10 @@ const themes: ThemeItem[] = [
 export default function CoreConversationThemes() {
   const sliderRef = useRef<HTMLDivElement>(null);
 
-  // Single global hover state for synchronized row expansion
-  const [isSmallHovered, setIsSmallHovered] = useState(false);
+  // Synchronized diagonal expansion:
+  // isSwapped = false (Initial state): Cards 1 and 4 are expanded; Cards 2 and 3 are compact.
+  // isSwapped = true (Hovered on 2 or 3): Cards 2 and 3 expand; Cards 1 and 4 become compact.
+  const [isSwapped, setIsSwapped] = useState(false);
 
   const scrollCards = (direction: "left" | "right") => {
     sliderRef.current?.scrollBy({
@@ -141,60 +143,68 @@ export default function CoreConversationThemes() {
 
       {/* ── DESKTOP GRID: Editorial Flex Expansion with Atmospheric Details ── */}
       <div className="hidden w-full flex-col gap-6 xl:flex">
-        {/* Row 1 */}
+        {/* Row 1: Card 01 & Card 02 */}
         <div className="flex w-full gap-6">
+          {/* Card 01 (AI & Automation) - Expanded in initial state */}
           <div
+            onMouseEnter={() => setIsSwapped(false)}
+            onClick={() => setIsSwapped(false)}
             className={[
-              "min-w-0 transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[flex]",
-              isSmallHovered ? "flex-[620]" : "flex-[980]",
+              "min-w-0 transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+              isSwapped ? "flex-[635] cursor-pointer" : "flex-[970]",
             ].join(" ")}
           >
             <DesktopThemeCard
               item={themes[0]}
-              variant={isSmallHovered ? "small" : "large"}
+              variant={isSwapped ? "small" : "large"}
             />
           </div>
 
+          {/* Card 02 (Building TA Careers) - Expands on hover/click */}
           <div
-            onMouseEnter={() => setIsSmallHovered(true)}
-            onMouseLeave={() => setIsSmallHovered(false)}
+            onMouseEnter={() => setIsSwapped(true)}
+            onClick={() => setIsSwapped(true)}
             className={[
-              "min-w-0 cursor-pointer transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[flex]",
-              isSmallHovered ? "flex-[980]" : "flex-[620]",
+              "min-w-0 transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+              isSwapped ? "flex-[970]" : "flex-[635] cursor-pointer",
             ].join(" ")}
           >
             <DesktopThemeCard
               item={themes[1]}
-              variant={isSmallHovered ? "large" : "small"}
+              variant={isSwapped ? "large" : "small"}
             />
           </div>
         </div>
 
-        {/* Row 2 */}
+        {/* Row 2: Card 03 & Card 04 */}
         <div className="flex w-full gap-6">
+          {/* Card 03 (Candidate Experience) - Expands on hover/click */}
           <div
-            onMouseEnter={() => setIsSmallHovered(true)}
-            onMouseLeave={() => setIsSmallHovered(false)}
+            onMouseEnter={() => setIsSwapped(true)}
+            onClick={() => setIsSwapped(true)}
             className={[
-              "min-w-0 cursor-pointer transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[flex]",
-              isSmallHovered ? "flex-[980]" : "flex-[620]",
+              "min-w-0 transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+              isSwapped ? "flex-[970]" : "flex-[635] cursor-pointer",
             ].join(" ")}
           >
             <DesktopThemeCard
               item={themes[2]}
-              variant={isSmallHovered ? "large" : "small"}
+              variant={isSwapped ? "large" : "small"}
             />
           </div>
 
+          {/* Card 04 (Strategic Leadership) - Expanded in initial state */}
           <div
+            onMouseEnter={() => setIsSwapped(false)}
+            onClick={() => setIsSwapped(false)}
             className={[
-              "min-w-0 transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[flex]",
-              isSmallHovered ? "flex-[620]" : "flex-[980]",
+              "min-w-0 transition-[flex] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+              isSwapped ? "flex-[635] cursor-pointer" : "flex-[970]",
             ].join(" ")}
           >
             <DesktopThemeCard
               item={themes[3]}
-              variant={isSmallHovered ? "small" : "large"}
+              variant={isSwapped ? "small" : "large"}
             />
           </div>
         </div>
@@ -279,29 +289,15 @@ function DesktopThemeCard({
             </div>
           </div>
 
-          {/* Media Graphic Frame */}
-          <div className="relative z-10 w-[40%] shrink-0 p-6 pl-0">
-            <div className="relative h-full w-full overflow-hidden rounded-[20px] bg-[#12181F] shadow-sm">
-              {item.image && (
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="h-full w-full object-cover opacity-85 transition-transform duration-700 group-hover:scale-105"
-                />
-              )}
-
-              {/* Media Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-5 flex flex-col justify-end">
-                <div className="flex items-center gap-2">
-                  <span className="flex h-3 w-3 items-center justify-center rounded-full bg-[#159A99]">
-                    <span className="h-1.5 w-1.5 rounded-full bg-white animate-ping" />
-                  </span>
-                  <span className="font-geist text-[11px] font-bold uppercase tracking-widest text-white/90">
-                    VOTA MASTERCLASS
-                  </span>
-                </div>
-              </div>
-            </div>
+          {/* Image Frame */}
+          <div className="h-full w-[260px] shrink-0 overflow-hidden rounded-[20px] bg-gray-200 lg:w-[280px]">
+            <img
+              src={item.image}
+              alt={item.title}
+              loading="lazy"
+              decoding="async"
+              className="h-full w-full object-cover"
+            />
           </div>
         </>
       ) : (
@@ -370,6 +366,8 @@ function MobileThemeCard({ item }: { item: ThemeItem }) {
           <img
             src={item.image}
             alt={item.title}
+            loading="lazy"
+            decoding="async"
             className="h-full w-full object-cover"
           />
           <div className="absolute bottom-2.5 left-3 flex items-center gap-1.5 rounded-full bg-black/60 px-2.5 py-1 backdrop-blur-md">

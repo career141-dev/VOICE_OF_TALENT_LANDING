@@ -319,6 +319,9 @@ export default function SeriesSection() {
               <img
                 src={selectedEpisode.bannerImage}
                 alt={selectedEpisode.name}
+                loading="eager"
+                decoding="async"
+                fetchPriority="high"
                 className="absolute right-0 top-0 h-full w-[65%] max-w-[650px] object-cover object-[center_top] pointer-events-none z-0"
               />
 
