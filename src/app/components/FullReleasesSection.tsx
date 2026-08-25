@@ -326,14 +326,10 @@ export default function FullReleasesSection() {
                   className="absolute inset-0 h-full w-full object-contain bg-black"
                 />
               ) : (
-                <iframe
-                  key={`${selectedEpisode.id}-${selectedEpisode.videoId}`}
-                  src={`https://www.youtube.com/embed/${selectedEpisode.videoId || "aqz-KE-bpKQ"}?autoplay=1&mute=0&controls=1&rel=0&playsinline=1`}
-                  title={`${selectedEpisode.guest} — ${selectedEpisode.role}`}
-                  className="absolute inset-0 h-full w-full border-0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                />
+                <div className="relative flex flex-col items-center justify-center p-8 text-center text-white">
+                  <p className="font-geist text-2xl font-bold">{selectedEpisode.guest}</p>
+                  <p className="mt-2 font-geist text-sm text-white/70">Video release coming soon</p>
+                </div>
               )}
 
               {/* Close Video button */}

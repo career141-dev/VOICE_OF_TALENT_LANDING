@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import AnimatedCounter from "./AnimatedCounter";
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
 const votaLogo = `${R2_MEDIA_URL}/images/VOTA Background White.png`;
+const reelBackground = `${R2_MEDIA_URL}/images/reelThumbnail/reelthumbnail.png`;
 
 export interface SeriesEpisode {
   id: number;
@@ -147,11 +148,36 @@ export const seriesEpisodesData: SeriesEpisode[] = [
 ];
 
 export default function SeriesSection() {
-  // Default to Episode 2 (Mr. Ken Vijayakumar as shown in reference)
+  const sectionRef = useRef<HTMLElement>(null);
+  // Default to Episode 2 (Mr. Ken Vijayakumar)
   const [selectedEpisode, setSelectedEpisode] = useState<SeriesEpisode>(
     seriesEpisodesData[1] || seriesEpisodesData[0]
   );
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+  const [hasScrolledIn, setHasScrolledIn] = useState(false);
+
+  // Auto-play default video without sound when scrolled into view
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasScrolledIn) {
+          setIsPlaying(true);
+          setIsMuted(true);
+          setHasScrolledIn(true);
+        }
+      },
+      {
+        threshold: 0.25,
+      }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [hasScrolledIn]);
 
   useEffect(() => {
     const handleSelectEvent = (event: Event) => {
@@ -162,6 +188,7 @@ export default function SeriesSection() {
         if (targetEpisode) {
           setSelectedEpisode(targetEpisode);
           setIsPlaying(true);
+          setIsMuted(false);
         }
       }
     };
@@ -172,11 +199,13 @@ export default function SeriesSection() {
 
   const handleEpisodeSelect = (episode: SeriesEpisode) => {
     setSelectedEpisode(episode);
-    setIsPlaying(false);
+    setIsPlaying(true);
+    setIsMuted(false);
   };
 
   const handlePlay = () => {
     setIsPlaying(true);
+    setIsMuted(false);
   };
 
   const handleCloseVideo = () => {
@@ -186,6 +215,7 @@ export default function SeriesSection() {
   return (
     <section
       id="episodes"
+      ref={sectionRef}
       className="bg-[#f8f9fa] px-[8.7%] pt-14 pb-[88px] text-[#202020] max-[760px]:px-6 max-[760px]:pt-10 max-[760px]:pb-16"
       aria-labelledby="series-title"
     >
@@ -224,30 +254,53 @@ export default function SeriesSection() {
             <div className="relative h-full w-full bg-black min-h-[500px] sm:min-h-[520px] md:min-h-[540px] xl:min-h-[560px] flex items-center justify-center">
               {selectedEpisode.videoUrl ? (
                 <video
-                  key={selectedEpisode.videoUrl}
+                  key={`${selectedEpisode.videoUrl}-${isMuted}`}
                   src={selectedEpisode.videoUrl}
                   controls
                   autoPlay
+                  muted={isMuted}
+                  loop
                   playsInline
                   className="absolute inset-0 h-full w-full object-contain bg-black"
                 />
               ) : (
-                <iframe
-                  key={`${selectedEpisode.id}-${selectedEpisode.videoId}`}
-                  className="absolute inset-0 h-full w-full border-0"
-                  src={`https://www.youtube.com/embed/${selectedEpisode.videoId || "aqz-KE-bpKQ"}?autoplay=1&mute=0&controls=1&rel=0&playsinline=1`}
-                  title={`Featured Voice of Talent - ${selectedEpisode.name}`}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                />
+                <div className="relative flex flex-col items-center justify-center p-8 text-center text-white">
+                  <p className="font-geist text-2xl font-bold">{selectedEpisode.name}</p>
+                  <p className="mt-2 font-geist text-sm text-white/70">Video release coming soon</p>
+                </div>
               )}
+
+              {/* Mute/Unmute toggle button */}
+              <button
+                type="button"
+                onClick={() => setIsMuted((prev) => !prev)}
+                className="absolute top-4 left-4 z-20 flex items-center gap-1.5 rounded-full bg-black/75 px-3.5 py-2 font-geist text-xs font-semibold text-white backdrop-blur-md transition-all hover:bg-black cursor-pointer shadow-md"
+                aria-label={isMuted ? "Unmute video sound" : "Mute video sound"}
+              >
+                {isMuted ? (
+                  <>
+                    <svg className="h-4 w-4 text-[#159A99]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                    </svg>
+                    <span>Unmute</span>
+                  </>
+                ) : (
+                  <>
+                    <svg className="h-4 w-4 text-[#159A99]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                    </svg>
+                    <span>Mute</span>
+                  </>
+                )}
+              </button>
 
               {/* Close Video button */}
               <button
                 type="button"
                 onClick={handleCloseVideo}
                 aria-label="Close video player"
-                className="absolute top-4 right-4 z-20 flex items-center gap-1.5 rounded-full bg-black/70 px-4 py-2 font-geist text-xs font-semibold text-white backdrop-blur-md transition-all hover:bg-black"
+                className="absolute top-4 right-4 z-20 flex items-center gap-1.5 rounded-full bg-black/70 px-4 py-2 font-geist text-xs font-semibold text-white backdrop-blur-md transition-all hover:bg-black cursor-pointer"
               >
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
