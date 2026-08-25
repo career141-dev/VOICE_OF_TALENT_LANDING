@@ -1,46 +1,174 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import AnimatedCounter from "./AnimatedCounter";
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
-const video = `${R2_MEDIA_URL}/images/video.png`;
+const votaLogo = `${R2_MEDIA_URL}/images/VOTA Background White.png`;
 
-const episodeImages = [video, video, video, video, video];
+export interface SeriesEpisode {
+  id: number;
+  name: string;
+  role: string;
+  company: string;
+  duration: string;
+  videoId?: string;
+  videoUrl?: string;
+  bannerImage: string;
+}
+
+export const seriesEpisodesData: SeriesEpisode[] = [
+  {
+    id: 1,
+    name: "Mr. Patrick Pereira",
+    role: "Vice President Learning & Development",
+    company: "Aitken Spence Hotels",
+    duration: "14:20",
+    videoUrl: `${R2_MEDIA_URL}/videos/Mr.%20Pratrick%20Pereira.mp4`,
+    bannerImage: `${R2_MEDIA_URL}/images/speaker1.png`,
+  },
+  {
+    id: 2,
+    name: "Mr. Ken Vijayakumar",
+    role: "Senior General Manager, Human Resource & Sustainability",
+    company: "A. Baur & Co. (Pvt) Ltd",
+    duration: "12:48",
+    videoUrl: `${R2_MEDIA_URL}/videos/Mr.Ken.mp4`,
+    bannerImage: `${R2_MEDIA_URL}/images/speaker2.png`,
+  },
+  {
+    id: 3,
+    name: "Mr. Chamila C Perera",
+    role: "Former Managing Director, Head of Human Resources",
+    company: "HSBC Malaysia",
+    duration: "16:15",
+    videoUrl: `${R2_MEDIA_URL}/videos/Mr.%20Chamila%20C%20Perera.mp4`,
+    bannerImage: `${R2_MEDIA_URL}/images/speaker3.png`,
+  },
+  {
+    id: 4,
+    name: "Ms. Thrimuthi Dhanushka",
+    role: "Group Deputy General Manager, Human Resource & Administration",
+    company: "Ideal Group",
+    duration: "13:50",
+    videoUrl: `${R2_MEDIA_URL}/videos/Ms.Thrimuthi%20Dhanushka.mp4`,
+    bannerImage: `${R2_MEDIA_URL}/images/speaker4.png`,
+  },
+  {
+    id: 5,
+    name: "Ms. Surani Amarasinghe",
+    role: "Director, Country People Partnering, Sri Lanka",
+    company: "LSEG (London Stock Exchange Group)",
+    duration: "15:30",
+    videoUrl: `${R2_MEDIA_URL}/videos/Ms.%20Surani%20Amarasinghe.mp4`,
+    bannerImage: `${R2_MEDIA_URL}/images/speaker5.png`,
+  },
+  {
+    id: 6,
+    name: "Mr. Arshaq Farally",
+    role: "Chief People Officer, Sri Lanka",
+    company: "Daraz",
+    duration: "11:45",
+    videoUrl: `${R2_MEDIA_URL}/videos/Mr.%20Arshaq%20Farally.mp4`,
+    bannerImage: `${R2_MEDIA_URL}/images/speaker6.png`,
+  },
+  {
+    id: 7,
+    name: "Mr. Danushka Seneth",
+    role: "Head of Human Resources / AGM",
+    company: "Janashakthi Insurance PLC",
+    duration: "14:10",
+    videoId: "aqz-KE-bpKQ",
+    bannerImage: `${R2_MEDIA_URL}/images/speaker7.png`,
+  },
+  {
+    id: 8,
+    name: "Ms. Hasanthi De Saram",
+    role: "Director / Senior HR Consultant",
+    company: "(Former Director HR - Asiri Health)",
+    duration: "17:05",
+    videoUrl: `${R2_MEDIA_URL}/videos/Ms.%20Hasanthi.mp4`,
+    bannerImage: `${R2_MEDIA_URL}/images/speaker8.png`,
+  },
+  {
+    id: 9,
+    name: "Mr. Ashan Ransilige",
+    role: "Chief Executive Officer",
+    company: "Link Natural Products (Pvt.) Ltd",
+    duration: "15:12",
+    videoUrl: `${R2_MEDIA_URL}/videos/Mr.%20Ashan%20Ransilige.mp4`,
+    bannerImage: `${R2_MEDIA_URL}/images/speaker9.png`,
+  },
+  {
+    id: 10,
+    name: "Mr. Indika Ranathunga",
+    role: "Chief Operating Officer",
+    company: "Allied Commercial Fertillizers",
+    duration: "12:35",
+    videoId: "aqz-KE-bpKQ",
+    bannerImage: `${R2_MEDIA_URL}/images/speaker10.png`,
+  },
+  {
+    id: 11,
+    name: "Ms. Chamindra Perera",
+    role: "Human Resources Director",
+    company: "GRI Sri Lanka",
+    duration: "14:50",
+    videoId: "aqz-KE-bpKQ",
+    bannerImage: `${R2_MEDIA_URL}/images/speaker11.png`,
+  },
+  {
+    id: 12,
+    name: "Ms. Chandima Bambarenda",
+    role: "Group Head of Human Resources",
+    company: "Pyramid Wilmar Group",
+    duration: "13:40",
+    videoId: "aqz-KE-bpKQ",
+    bannerImage: `${R2_MEDIA_URL}/images/speaker12.png`,
+  },
+  {
+    id: 13,
+    name: "Mr. Gehan Samuel",
+    role: "Manager of Human Resources Development",
+    company: "MAS Holdings Silueta",
+    duration: "16:22",
+    videoId: "aqz-KE-bpKQ",
+    bannerImage: `${R2_MEDIA_URL}/images/speaker13.png`,
+  },
+  {
+    id: 14,
+    name: "Mr. Kanishka Munasinghe",
+    role: "General Manager, Human Resources",
+    company: "Port City BPO",
+    duration: "15:05",
+    videoId: "aqz-KE-bpKQ",
+    bannerImage: `${R2_MEDIA_URL}/images/speaker14.png`,
+  },
+];
 
 export default function SeriesSection() {
-  const [isInView, setIsInView] = useState(false);
-  const [selectedVideoId, setSelectedVideoId] = useState("aqz-KE-bpKQ");
+  // Default to Episode 2 (Mr. Ken Vijayakumar as shown in reference)
+  const [selectedEpisode, setSelectedEpisode] = useState<SeriesEpisode>(
+    seriesEpisodesData[1] || seriesEpisodesData[0]
+  );
+  const [isPlaying, setIsPlaying] = useState(false);
 
-  const sectionRef = useRef<HTMLElement>(null);
+  const handleEpisodeSelect = (episode: SeriesEpisode) => {
+    setSelectedEpisode(episode);
+    setIsPlaying(false);
+  };
 
-  useEffect(() => {
-    const section = sectionRef.current;
+  const handlePlay = () => {
+    setIsPlaying(true);
+  };
 
-    if (!section) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsInView(entry.isIntersecting);
-      },
-      {
-        threshold: 0.5,
-      }
-    );
-
-    observer.observe(section);
-
-    return () => observer.unobserve(section);
-  }, []);
-
-  const handleVideoSelect = (videoId = "aqz-KE-bpKQ") => {
-    setSelectedVideoId(videoId);
+  const handleCloseVideo = () => {
+    setIsPlaying(false);
   };
 
   return (
     <section
       id="episodes"
-      ref={sectionRef}
       className="bg-[#f8f9fa] px-[8.7%] pt-14 pb-[88px] text-[#202020] max-[760px]:px-6 max-[760px]:pt-10 max-[760px]:pb-16"
       aria-labelledby="series-title"
     >
@@ -48,7 +176,7 @@ export default function SeriesSection() {
       <div className="mb-12 flex items-center justify-between gap-8 xl:gap-24 max-[760px]:flex-col max-[760px]:items-center max-[760px]:gap-6">
         <p
           id="series-title"
-          className="m-0 max-w-[880px] text-[26px] font-medium leading-[1.3] text-[#333] xl:text-[28px] max-[1024px]:text-[24px] max-[760px]:text-center max-[760px]:text-[22px]"
+          className="m-0 max-w-[880px] font-geist text-[26px] font-medium leading-[1.3] text-[#333] xl:text-[28px] max-[1024px]:text-[24px] max-[760px]:text-center max-[760px]:text-[22px]"
         >
           This is more than a video series — It is a platform for leaders to
           <br className="hidden xl:block" />
@@ -62,56 +190,108 @@ export default function SeriesSection() {
 
         {/* Counter Block Centered on Mobile View */}
         <div className="shrink-0 text-right max-[760px]:w-full max-[760px]:text-center">
-          <p className="m-0 text-[72px] font-semibold leading-none tracking-tight text-[#222] max-[1024px]:text-[56px] max-[760px]:text-[46px]">
+          <p className="m-0 font-geist text-[72px] font-semibold leading-none tracking-tight text-[#222] max-[1024px]:text-[56px] max-[760px]:text-[46px]">
             <AnimatedCounter to={150} suffix="K+" />
           </p>
 
-          <p className="mt-3 text-[16px] font-medium uppercase tracking-widest text-[#888] max-[1024px]:text-[13px] max-[760px]:text-[10px]">
+          <p className="mt-3 font-geist text-[16px] font-medium uppercase tracking-widest text-[#888] max-[1024px]:text-[13px] max-[760px]:text-[10px]">
             Viewers worldwide
           </p>
         </div>
       </div>
 
-      <div className="grid gap-8 min-[1025px]:grid-cols-[minmax(0,1fr)_400px]">
-        {/* Main Video */}
-        <article className="group relative min-h-[500px] overflow-hidden rounded-[24px] bg-[#202020] text-white max-[1024px]:min-h-[440px] max-[760px]:min-h-[330px]">
-          {isInView ? (
-            <iframe
-              key={selectedVideoId}
-              className="absolute inset-0 h-full w-full border-0"
-              src={`https://www.youtube.com/embed/${selectedVideoId}?autoplay=1&mute=1&controls=1&rel=0&playsinline=1`}
-              title="Featured Voice of Talent video"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-            />
+      <div className="grid gap-8 min-[1025px]:grid-cols-[minmax(0,1fr)_420px] xl:grid-cols-[minmax(0,1fr)_460px]">
+        {/* Main Featured Video / Poster */}
+        <article className="group relative min-h-[500px] sm:min-h-[520px] md:min-h-[540px] xl:min-h-[560px] overflow-hidden rounded-[28px] md:rounded-[32px] bg-[#159A99] shadow-xl">
+          {isPlaying ? (
+            <div className="relative h-full w-full bg-black min-h-[500px] sm:min-h-[520px] md:min-h-[540px] xl:min-h-[560px] flex items-center justify-center">
+              {selectedEpisode.videoUrl ? (
+                <video
+                  key={selectedEpisode.videoUrl}
+                  src={selectedEpisode.videoUrl}
+                  controls
+                  autoPlay
+                  playsInline
+                  className="absolute inset-0 h-full w-full object-contain bg-black"
+                />
+              ) : (
+                <iframe
+                  key={`${selectedEpisode.id}-${selectedEpisode.videoId}`}
+                  className="absolute inset-0 h-full w-full border-0"
+                  src={`https://www.youtube.com/embed/${selectedEpisode.videoId || "aqz-KE-bpKQ"}?autoplay=1&mute=0&controls=1&rel=0&playsinline=1`}
+                  title={`Featured Voice of Talent - ${selectedEpisode.name}`}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+              )}
+
+              {/* Close Video button */}
+              <button
+                type="button"
+                onClick={handleCloseVideo}
+                aria-label="Close video player"
+                className="absolute top-4 right-4 z-20 flex items-center gap-1.5 rounded-full bg-black/70 px-4 py-2 font-geist text-xs font-semibold text-white backdrop-blur-md transition-all hover:bg-black"
+              >
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                Close Video
+              </button>
+            </div>
           ) : (
-            <>
+            <div
+              className="relative h-full w-full min-h-[500px] sm:min-h-[520px] md:min-h-[540px] xl:min-h-[560px] flex flex-col justify-between p-6 sm:p-8 md:p-10"
+              style={{
+                background: "radial-gradient(71.47% 191.86% at 92.83% 52.77%, rgba(21, 154, 153, 0) 0%, #159A99 100%), #FFFFFF",
+              }}
+            >
+              {/* Speaker Photo filling the right half */}
               <img
-                src={video}
-                alt="Featured voice of talent"
-                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                src={selectedEpisode.bannerImage}
+                alt={selectedEpisode.name}
+                loading="eager"
+                decoding="async"
+                fetchPriority="high"
+                className="absolute right-0 top-0 h-full w-[65%] max-w-[650px] object-cover object-[center_top] pointer-events-none z-0"
               />
 
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+              {/* Dark Gradient Overlay at the bottom for crystal clear text readability */}
+              <div
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-[60%] z-[1]"
+                style={{
+                  background: "linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.45) 45%, rgba(0, 0, 0, 0.88) 100%)",
+                }}
+              />
 
-              <div className="absolute inset-x-0 bottom-0 p-10 max-[760px]:p-6">
-                <p className="m-0 text-[24px] font-bold tracking-wide">
-                  Mr. Chathura Sampath
+              {/* Top-Left: VOTA Logo Badge */}
+              <div className="relative z-10">
+                <img
+                  src={votaLogo}
+                  alt="VOTA - Voice of Talent Acquisition"
+                  className="h-[44px] sm:h-[50px] w-auto max-w-[150px] rounded-[14px] sm:rounded-[18px] object-contain shadow-md"
+                />
+              </div>
+
+              {/* Bottom-Left: Speaker Details & Play Button */}
+              <div className="relative z-10 max-w-[85%] sm:max-w-[70%] md:max-w-[60%] pb-2">
+                <h3 className="font-geist text-[26px] sm:text-[32px] md:text-[36px] font-bold leading-tight text-white drop-shadow-md">
+                  {selectedEpisode.name}
+                </h3>
+
+                <p className="mt-2 font-geist text-[14px] sm:text-[15px] md:text-[16px] font-normal leading-snug text-white/90 drop-shadow">
+                  {selectedEpisode.role},<br />
+                  {selectedEpisode.company}
                 </p>
 
-                <p className="mt-2 text-[14px] text-white/70">
-                  Korem ipsum dolor sit amet, consectetur adipiscing elit.
-                </p>
-
-                <div className="mt-8 flex items-center gap-5">
+                <div className="mt-7 sm:mt-9 flex items-center gap-4 sm:gap-5">
                   <button
                     type="button"
-                    onClick={() => handleVideoSelect()}
-                    className="flex h-[56px] w-[56px] items-center justify-center rounded-full bg-white shadow-lg shadow-[#159a99]/30 transition-transform hover:scale-105"
-                    aria-label="Play video"
+                    onClick={handlePlay}
+                    className="flex h-[56px] w-[56px] sm:h-[60px] sm:w-[60px] items-center justify-center rounded-full bg-white shadow-xl shadow-[#159a99]/40 transition-transform duration-300 hover:scale-110 active:scale-95 group/btn cursor-pointer"
+                    aria-label={`Play episode video of ${selectedEpisode.name}`}
                   >
                     <svg
-                      className="ml-1 h-6 w-6 text-[#159a99]"
+                      className="ml-1 h-6 w-6 sm:h-7 sm:w-7 text-[#159a99] transition-transform duration-300 group-hover/btn:scale-110"
                       fill="currentColor"
                       viewBox="0 0 24 24"
                       aria-hidden="true"
@@ -120,97 +300,162 @@ export default function SeriesSection() {
                     </svg>
                   </button>
 
-                  <div className="flex items-center gap-3 text-[14px] font-medium text-white">
+                  <div className="flex items-center gap-3 font-geist text-[15px] sm:text-[16px] font-medium text-white drop-shadow">
                     <span>Watch Video</span>
-                    <span className="text-white/40">|</span>
-                    <span>12:48</span>
+                    <span className="text-white/50">|</span>
+                    <span>{selectedEpisode.duration}</span>
                   </div>
                 </div>
               </div>
-            </>
+            </div>
           )}
         </article>
 
-        {/* Desktop Playlist */}
-        <div className="hidden max-h-[500px] flex-col gap-5 overflow-y-auto pr-6 min-[1025px]:flex [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-black [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar]:w-1.5">
-          {episodeImages.map((image, index) => (
-            <EpisodeCard
-              key={`desktop-${index}`}
-              image={image}
-              index={index}
-              onSelect={handleVideoSelect}
-              desktop
-            />
-          ))}
+        {/* Desktop Playlist: 14 Episodes with Custom Black Scrollbar */}
+        <div className="hidden max-h-[500px] sm:max-h-[520px] md:max-h-[540px] xl:max-h-[560px] flex-col gap-3.5 overflow-y-auto pr-3 min-[1025px]:flex [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-black [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar]:w-1.5">
+          {seriesEpisodesData.map((episode, index) => {
+            const isSelected = selectedEpisode.id === episode.id;
+
+            return (
+              <article
+                key={`desktop-${episode.id}-${index}`}
+                onClick={() => handleEpisodeSelect(episode)}
+                className={`group flex cursor-pointer items-center gap-4 rounded-[22px] p-3 transition-all duration-300 ${isSelected
+                  ? "border-[1.5px] border-[#159A99] bg-white shadow-md shadow-[#159A99]/10"
+                  : "border border-transparent bg-[#F2F4F7]/70 hover:border-[#D0D7DE] hover:bg-white hover:shadow-sm"
+                  }`}
+              >
+                {/* Thumbnail styled like the selected widget */}
+                <div
+                  className="relative h-[92px] w-[148px] shrink-0 overflow-hidden rounded-[16px] shadow-sm"
+                  style={{
+                    background: "radial-gradient(71.47% 191.86% at 92.83% 52.77%, rgba(21, 154, 153, 0) 0%, #159A99 100%), #FFFFFF",
+                  }}
+                >
+                  {/* Speaker photo */}
+                  <img
+                    src={episode.bannerImage}
+                    alt={episode.name}
+                    loading="lazy"
+                    decoding="async"
+                    className="absolute right-0 top-0 h-full w-[70%] object-cover object-[center_top] transition-transform duration-500 group-hover:scale-105"
+                  />
+
+                  {/* Gradient shadow */}
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
+
+                  {/* VOTA Logo on thumbnail */}
+                  <img
+                    src={votaLogo}
+                    alt="VOTA"
+                    className="absolute top-1.5 left-1.5 h-[16px] w-auto max-w-[50px] rounded-[5px] object-contain z-10 shadow-sm"
+                  />
+
+                  {/* Duration */}
+                  <span className="absolute bottom-1.5 right-1.5 z-10 rounded-md bg-black/80 px-1.5 py-0.5 font-geist text-[10px] font-medium text-white">
+                    {episode.duration}
+                  </span>
+                </div>
+
+                {/* Info */}
+                <div className="min-w-0 flex-1">
+                  <span
+                    className={`inline-block rounded-full border px-2.5 py-1 font-geist text-[8.5px] font-bold uppercase tracking-wider transition-colors ${isSelected
+                      ? "border-[#159A99] bg-[#159A99] text-white"
+                      : "border-gray-200 bg-white text-black group-hover:border-gray-300"
+                      }`}
+                  >
+                    Explore VOTA
+                  </span>
+
+                  <p
+                    className={`mt-1.5 font-geist text-[14px] font-bold leading-[1.3] transition-colors line-clamp-1 ${isSelected ? "text-[#159A99]" : "text-[#222] group-hover:text-[#159A99]"
+                      }`}
+                  >
+                    {episode.name}
+                  </p>
+
+                  <p className="mt-0.5 line-clamp-2 font-geist text-[12px] font-normal leading-[1.35] text-[#666]">
+                    {episode.role} · {episode.company}
+                  </p>
+                </div>
+              </article>
+            );
+          })}
         </div>
 
-        {/* Tablet/Mobile Playlist */}
-        <div className="flex gap-4 overflow-x-auto pb-3 min-[1025px]:hidden [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {episodeImages.map((image, index) => (
-            <EpisodeCard
-              key={`responsive-${index}`}
-              image={image}
-              index={index}
-              onSelect={handleVideoSelect}
-            />
-          ))}
+        {/* Tablet/Mobile Playlist: Horizontal Swipeable 14 Episodes */}
+        <div className="flex gap-4 overflow-x-auto pb-4 pt-1 min-[1025px]:hidden snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {seriesEpisodesData.map((episode, index) => {
+            const isSelected = selectedEpisode.id === episode.id;
+
+            return (
+              <article
+                key={`responsive-${episode.id}-${index}`}
+                onClick={() => handleEpisodeSelect(episode)}
+                className={`group w-[220px] shrink-0 snap-start cursor-pointer rounded-[22px] p-3 transition-all duration-300 ${isSelected
+                  ? "border-[1.5px] border-[#159A99] bg-white shadow-md"
+                  : "border border-transparent bg-[#F2F4F7]/80 hover:bg-white"
+                  }`}
+              >
+                {/* Mobile Thumbnail styled like the selected widget */}
+                <div
+                  className="relative h-[115px] w-full overflow-hidden rounded-[16px] shadow-sm"
+                  style={{
+                    background: "radial-gradient(71.47% 191.86% at 92.83% 52.77%, rgba(21, 154, 153, 0) 0%, #159A99 100%), #FFFFFF",
+                  }}
+                >
+                  {/* Speaker photo */}
+                  <img
+                    src={episode.bannerImage}
+                    alt={episode.name}
+                    loading="lazy"
+                    decoding="async"
+                    className="absolute right-0 top-0 h-full w-[70%] object-cover object-[center_top] transition-transform duration-500 group-hover:scale-105"
+                  />
+
+                  {/* Gradient shadow */}
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
+
+                  {/* VOTA Logo on thumbnail */}
+                  <img
+                    src={votaLogo}
+                    alt="VOTA"
+                    className="absolute top-2 left-2 h-[18px] w-auto max-w-[55px] rounded-[5px] object-contain z-10 shadow-sm"
+                  />
+
+                  {/* Duration */}
+                  <span className="absolute bottom-2 right-2 z-10 rounded-md bg-black/80 px-1.5 py-0.5 font-geist text-[10px] font-medium text-white">
+                    {episode.duration}
+                  </span>
+                </div>
+
+                <div className="pt-2.5">
+                  <span
+                    className={`inline-block rounded-full border px-2.5 py-0.5 font-geist text-[8.5px] font-bold uppercase tracking-wider ${isSelected
+                      ? "border-[#159A99] bg-[#159A99] text-white"
+                      : "border-gray-200 bg-white text-black"
+                      }`}
+                  >
+                    Explore VOTA
+                  </span>
+
+                  <p
+                    className={`mt-1.5 font-geist text-[13.5px] font-bold leading-tight line-clamp-1 ${isSelected ? "text-[#159A99]" : "text-[#222]"
+                      }`}
+                  >
+                    {episode.name}
+                  </p>
+
+                  <p className="mt-1 line-clamp-2 font-geist text-[11.5px] font-normal leading-[1.35] text-[#666]">
+                    {episode.role} · {episode.company}
+                  </p>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>
-  );
-}
-
-function EpisodeCard({
-  image,
-  index,
-  onSelect,
-  desktop = false,
-}: {
-  image: string;
-  index: number;
-  onSelect: (videoId?: string) => void;
-  desktop?: boolean;
-}) {
-  return (
-    <article
-      onClick={() => onSelect("aqz-KE-bpKQ")}
-      className={
-        desktop
-          ? "group flex cursor-pointer items-center gap-5"
-          : "group w-[190px] shrink-0 cursor-pointer"
-      }
-    >
-      <div className="relative shrink-0 overflow-hidden rounded-[16px]">
-        <img
-          src={image}
-          alt={`Episode ${index + 1}`}
-          className={
-            desktop
-              ? "h-[110px] w-[180px] object-cover transition-transform duration-500 group-hover:scale-105"
-              : "h-[118px] w-[190px] object-cover transition-transform duration-500 group-hover:scale-105"
-          }
-        />
-
-        <span className="absolute bottom-2 right-2 rounded-md bg-black/80 px-1.5 py-0.5 text-[10px] font-medium text-white">
-          12:48
-        </span>
-      </div>
-
-      <div className={desktop ? "min-w-0 flex-1" : "pt-3"}>
-        <span className="inline-block rounded-full border border-gray-200 bg-white px-3 py-1.5 text-[8px] font-bold uppercase tracking-wider text-black">
-          Explore VOTA
-        </span>
-
-        <p
-          className={
-            desktop
-              ? "mt-3 text-[14px] font-medium leading-[1.4] text-[#444] transition-colors group-hover:text-black"
-              : "mt-2 line-clamp-3 text-[13px] font-medium leading-[1.4] text-[#444] transition-colors group-hover:text-black"
-          }
-        >
-          Qorem ipsum dolor sit amet, consectetur adipiscing elit.
-        </p>
-      </div>
-    </article>
   );
 }

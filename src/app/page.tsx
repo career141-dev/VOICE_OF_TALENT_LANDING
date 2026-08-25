@@ -39,6 +39,9 @@ export default function Home() {
           <img
             className="h-full w-full object-cover"
             src={backgroundImage}
+            loading="eager"
+            decoding="async"
+            fetchPriority="high"
             alt=""
           />
         </div>
@@ -57,6 +60,8 @@ export default function Home() {
           <img
             className="absolute left-[-19.25%] top-[-32%] h-[130%] w-[119.22%] max-w-none object-cover blur-[2px]"
             src={microphoneImage}
+            loading="eager"
+            decoding="async"
             alt=""
           />
         </div>
@@ -116,6 +121,8 @@ export default function Home() {
               <img
                 className="w-full h-auto object-contain"
                 src={portraitImage}
+                loading="lazy"
+                decoding="async"
                 alt="A member of the Voice of Talent community"
               />
             </div>

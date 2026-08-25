@@ -12,7 +12,8 @@ interface VoiceItem {
   name: string;
   role: string;
   company: string;
-  quote: string;
+  quote?: string;
+  bulletPoints?: string[];
   avatar: string;
   bannerImage: string;
 }
@@ -23,7 +24,10 @@ const voicesData: VoiceItem[] = [
     name: 'Mr. Patrick Pereira',
     role: 'Vice President Learning & Development',
     company: 'Aitken Spence Hotels',
-    quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
+    bulletPoints: [
+      'How do you see Talent Acquisition contributing to overall business success?',
+      'What makes Talent Acquisition a future ready career path?',
+    ],
     avatar: `${R2_MEDIA_URL}/images/speaker1.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker1.png`,
   },
@@ -32,7 +36,10 @@ const voicesData: VoiceItem[] = [
     name: 'Mr. Ken Vijayakumar',
     role: 'Senior General Manager, Human Resource & Sustainability',
     company: 'A. Baur & Co. (Pvt) Ltd',
-    quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
+    bulletPoints: [
+      'How do you see Talent Acquisition contributing to overall business success?',
+      'How do you define Talent Acquisition in today’s context?',
+    ],
     avatar: `${R2_MEDIA_URL}/images/speaker2.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker2.png`,
   },
@@ -41,7 +48,10 @@ const voicesData: VoiceItem[] = [
     name: 'Mr. Chamila C Perera',
     role: 'Former Managing Director, Head of Human Resources',
     company: 'HSBC Malaysia',
-    quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
+    bulletPoints: [
+      'In your opinion, why is there a growing need for skilled Talent Acquisition professionals in Sri Lanka?',
+      'What makes Talent Acquisition a future ready career path?',
+    ],
     avatar: `${R2_MEDIA_URL}/images/speaker3.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker3.png`,
   },
@@ -50,7 +60,10 @@ const voicesData: VoiceItem[] = [
     name: 'Ms. Thrimuthi Dhanushka',
     role: 'Group Deputy General Manager, Human Resource & Administration',
     company: 'Ideal Group',
-    quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
+    bulletPoints: [
+      'In your view, why is Talent Acquisition becoming increasingly important for organizations?',
+      'How do you define Talent Acquisition in today’s context?',
+    ],
     avatar: `${R2_MEDIA_URL}/images/speaker4.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker4.png`,
   },
@@ -59,7 +72,10 @@ const voicesData: VoiceItem[] = [
     name: 'Ms. Surani Amarasinghe',
     role: 'Director, Country People Partnering, Sri Lanka',
     company: 'LSEG (London Stock Exchange Group)',
-    quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
+    bulletPoints: [
+      'What key skills do you believe are essential to succeed in talent acquisition?',
+      'How do you define Talent Acquisition in today’s context?',
+    ],
     avatar: `${R2_MEDIA_URL}/images/speaker5.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker5.png`,
   },
@@ -68,7 +84,10 @@ const voicesData: VoiceItem[] = [
     name: 'Mr. Arshaq Farally',
     role: 'Chief People Officer, Sri Lanka',
     company: 'Daraz',
-    quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
+    bulletPoints: [
+      'How do you define Talent Acquisition in today’s context?',
+      'How does Talent Acquisition contribute to building and strengthening organizational culture?',
+    ],
     avatar: `${R2_MEDIA_URL}/images/speaker6.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker6.png`,
   },
@@ -77,7 +96,10 @@ const voicesData: VoiceItem[] = [
     name: 'Mr. Danushka Seneth',
     role: 'Head of Human Resources / AGM',
     company: 'Janashakthi Insurance PLC',
-    quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
+    bulletPoints: [
+      'How does a career in Talent Acquisition support individuals in achieving their broader career aspirations?',
+      'How does Talent Acquisition contribute to building and strengthening organizational culture?',
+    ],
     avatar: `${R2_MEDIA_URL}/images/speaker7.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker7.png`,
   },
@@ -86,7 +108,10 @@ const voicesData: VoiceItem[] = [
     name: 'Ms. Hasanthi De Saram',
     role: 'Director / Senior HR Consultant',
     company: '(Former Director HR - Asiri Health)',
-    quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
+    bulletPoints: [
+      'What message would you like to share with the next generation aspiring to build a career in Talent Acquisition?',
+      'How do you see talent acquisition contributing to overall business success?',
+    ],
     avatar: `${R2_MEDIA_URL}/images/speaker8.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker8.png`,
   },
@@ -95,52 +120,70 @@ const voicesData: VoiceItem[] = [
     name: 'Mr. Ashan Ransilige',
     role: 'Chief Executive Officer',
     company: 'Link Natural Products (Pvt.) Ltd',
-    quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
+    bulletPoints: [
+      'How does a career in Talent Acquisition support individuals in achieving their broader career aspirations?',
+      'How does Talent Acquisition contribute to building and strengthening organizational culture?',
+    ],
     avatar: `${R2_MEDIA_URL}/images/speaker9.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker9.png`,
   },
   {
     id: 10,
-    name: 'Speaker 10',
-    role: 'Strategic HR Partner',
-    company: 'Financial Services',
-    quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
+    name: 'Mr. Indika Ranathunga',
+    role: 'Chief Operating Officer',
+    company: 'Allied Commercial Fertillizers',
+    bulletPoints: [
+      'How does a career in Talent Acquisition support individuals in achieving their broader career aspirations?',
+      'How does Talent Acquisition contribute to building and strengthening organizational culture?',
+    ],
     avatar: `${R2_MEDIA_URL}/images/speaker10.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker10.png`,
   },
   {
     id: 11,
-    name: 'Speaker 11',
-    role: 'Head of Learning & Development',
-    company: 'Global Brands',
-    quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
+    name: 'Ms. Chamindra Perera',
+    role: 'Human Resources Director',
+    company: 'GRI Sri Lanka',
+    bulletPoints: [
+      'How does a career in Talent Acquisition support individuals in achieving their broader career aspirations?',
+      'How does Talent Acquisition contribute to building and strengthening organizational culture?',
+    ],
     avatar: `${R2_MEDIA_URL}/images/speaker11.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker11.png`,
   },
   {
     id: 12,
-    name: 'Speaker 12',
-    role: 'Director of People Strategy',
-    company: 'Digital Solutions',
-    quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
+    name: 'Ms. Chandima Bambarenda',
+    role: 'Group Head of Human Resources',
+    company: 'Pyramid Wilmar Group',
+    bulletPoints: [
+      'How does a career in Talent Acquisition support individuals in achieving their broader career aspirations?',
+      'How does Talent Acquisition contribute to building and strengthening organizational culture?',
+    ],
     avatar: `${R2_MEDIA_URL}/images/speaker12.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker12.png`,
   },
   {
     id: 13,
-    name: 'Speaker 13',
-    role: 'Senior TA Specialist',
-    company: 'Global Ventures',
-    quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
+    name: 'Mr. Gehan Samuel',
+    role: 'Manager of Human Resources Development',
+    company: 'MAS Holdings Silueta',
+    bulletPoints: [
+      'How does a career in Talent Acquisition support individuals in achieving their broader career aspirations?',
+      'How does Talent Acquisition contribute to building and strengthening organizational culture?',
+    ],
     avatar: `${R2_MEDIA_URL}/images/speaker13.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker13.png`,
   },
   {
     id: 14,
-    name: 'Speaker 14',
-    role: 'Chief People Officer',
-    company: 'Enterprise Network',
-    quote: 'Attracting globally-minded engineering talent means building a culture of radical autonomy from day one.',
+    name: 'Mr. Kanishka Munasinghe',
+    role: 'General Manager, Human Resources',
+    company: 'Port City BPO',
+    bulletPoints: [
+      'How does a career in Talent Acquisition support individuals in achieving their broader career aspirations?',
+      'How does Talent Acquisition contribute to building and strengthening organizational culture?',
+    ],
     avatar: `${R2_MEDIA_URL}/images/speaker14.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker14.png`,
   },
@@ -253,6 +296,9 @@ export default function VoicesSlider() {
           <img
             src={item.bannerImage}
             alt={item.name}
+            loading={item.id <= 2 ? "eager" : "lazy"}
+            decoding="async"
+            fetchPriority={item.id <= 2 ? "high" : "low"}
             className="absolute right-0 top-0 h-full w-[65%] object-cover object-[center_top] pointer-events-none z-0"
           />
 
@@ -270,10 +316,21 @@ export default function VoicesSlider() {
           </div>
         </div>
 
-        <div className="px-[32px] pt-[32px] pb-[20px] flex-1 flex flex-col justify-center">
-          <p className="font-geist text-[22px] font-normal leading-[150%] text-[#666]">
-            "{item.quote}"
-          </p>
+        <div className="px-[32px] pt-[28px] pb-[16px] flex-1 flex flex-col justify-center">
+          {item.bulletPoints && item.bulletPoints.length > 0 ? (
+            <ul className="flex flex-col gap-4 font-geist text-[#555]">
+              {item.bulletPoints.map((point, idx) => (
+                <li key={idx} className="flex items-start gap-3 text-[17px] lg:text-[19px] font-normal leading-[1.45]">
+                  <span className="text-[#777] text-[20px] leading-[1.1] select-none shrink-0">•</span>
+                  <span>{point}</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="font-geist text-[22px] font-normal leading-[150%] text-[#666]">
+              "{item.quote}"
+            </p>
+          )}
         </div>
 
         <div className="h-[111px] shrink-0 border-t-[1.6px] border-[#E0E0E0] mx-[32px] flex items-center">
@@ -319,6 +376,8 @@ export default function VoicesSlider() {
             <img
               src={item.avatar}
               alt={item.name}
+              loading={item.id <= 2 ? "eager" : "lazy"}
+              decoding="async"
               className="w-[84px] h-[84px] rounded-full object-cover flex-shrink-0"
             />
           </div>
@@ -407,6 +466,8 @@ export default function VoicesSlider() {
                 <img
                   src={currentMobileSpeaker.bannerImage}
                   alt={currentMobileSpeaker.name}
+                  loading="lazy"
+                  decoding="async"
                   className="absolute right-0 top-0 h-full w-[62%] object-cover object-[center_top] pointer-events-none z-0"
                 />
 
@@ -428,11 +489,22 @@ export default function VoicesSlider() {
                 </div>
               </div>
 
-              {/* Middle Quote Section */}
+              {/* Middle Quote / Bullet Section */}
               <div className="px-6 sm:px-7 py-5 sm:py-6 flex-1 flex flex-col justify-center">
-                <p className="font-geist text-[15px] sm:text-[16px] md:text-[17px] font-normal leading-[1.55] text-[#555]">
-                  "{currentMobileSpeaker.quote}"
-                </p>
+                {currentMobileSpeaker.bulletPoints && currentMobileSpeaker.bulletPoints.length > 0 ? (
+                  <ul className="flex flex-col gap-3 font-geist text-[#555]">
+                    {currentMobileSpeaker.bulletPoints.map((point, idx) => (
+                      <li key={idx} className="flex items-start gap-2.5 text-[13.5px] sm:text-[14.5px] font-normal leading-[1.45]">
+                        <span className="text-[#777] text-[16px] leading-[1.1] select-none shrink-0">•</span>
+                        <span>{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="font-geist text-[15px] sm:text-[16px] md:text-[17px] font-normal leading-[1.55] text-[#555]">
+                    "{currentMobileSpeaker.quote}"
+                  </p>
+                )}
               </div>
 
               {/* Bottom Action Section */}

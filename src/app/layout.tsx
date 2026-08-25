@@ -31,6 +31,15 @@ export default function RootLayout({
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
+        {R2_MEDIA_URL ? (
+          <>
+            <link rel="preconnect" href={R2_MEDIA_URL} crossOrigin="anonymous" />
+            <link rel="dns-prefetch" href={R2_MEDIA_URL} />
+            <link rel="preload" as="image" href={`${R2_MEDIA_URL}/images/hero-background.png`} />
+            <link rel="preload" as="image" href={`${R2_MEDIA_URL}/images/speaker1.png`} />
+            <link rel="preload" as="image" href={`${R2_MEDIA_URL}/images/speaker2.png`} />
+          </>
+        ) : null}
         <link
           href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Geist:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
           rel="stylesheet"

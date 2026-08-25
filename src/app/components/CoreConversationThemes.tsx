@@ -253,6 +253,8 @@ function DesktopThemeCard({
             <img
               src={item.image}
               alt={item.title}
+              loading="lazy"
+              decoding="async"
               className="h-full w-full object-cover"
             />
           </div>
@@ -309,6 +311,8 @@ function MobileThemeCard({ item }: { item: ThemeItem }) {
           <img
             src={item.image}
             alt={item.title}
+            loading="lazy"
+            decoding="async"
             className="h-full w-full object-cover"
           />
           <div className="absolute bottom-2.5 left-3 flex items-center gap-1.5 rounded-full bg-black/60 px-2.5 py-1 backdrop-blur-md">
