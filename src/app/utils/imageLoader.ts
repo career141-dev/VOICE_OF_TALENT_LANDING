@@ -7,26 +7,10 @@ const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/
  */
 export function getOptimizedImageUrl(
   src: string,
-  width?: number,
-  quality: number = 80
+  _width?: number,
+  _quality: number = 80
 ): string {
   if (!src) return "";
-
-  // If src is already a full URL or doesn't start with R2 base, return as-is
-  if (src.includes("/cdn-cgi/image/")) {
-    return src;
-  }
-
-  // If R2 URL is provided, format Cloudflare Edge image transformation parameters
-  if (R2_MEDIA_URL && src.startsWith(R2_MEDIA_URL)) {
-    const relativePath = src.replace(R2_MEDIA_URL, "").replace(/^\/+/, "");
-    const params: string[] = ["format=auto", `quality=${quality}`];
-    if (width) {
-      params.push(`width=${width}`);
-    }
-    // Return Cloudflare Edge transform path with fallback to direct R2 URL
-    return `${R2_MEDIA_URL}/cdn-cgi/image/${params.join(",")}/${relativePath}`;
-  }
-
+  // Return clean R2 media URL directly to ensure 100% image loading reliability
   return src;
 }
