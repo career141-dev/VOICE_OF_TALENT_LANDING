@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AnimatedCounter from "./AnimatedCounter";
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
@@ -152,6 +152,23 @@ export default function SeriesSection() {
     seriesEpisodesData[1] || seriesEpisodesData[0]
   );
   const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => {
+    const handleSelectEvent = (event: Event) => {
+      const customEvent = event as CustomEvent<{ episodeId: number }>;
+      const episodeId = customEvent.detail?.episodeId;
+      if (episodeId) {
+        const targetEpisode = seriesEpisodesData.find((ep) => ep.id === episodeId);
+        if (targetEpisode) {
+          setSelectedEpisode(targetEpisode);
+          setIsPlaying(true);
+        }
+      }
+    };
+
+    window.addEventListener("vota-select-episode", handleSelectEvent);
+    return () => window.removeEventListener("vota-select-episode", handleSelectEvent);
+  }, []);
 
   const handleEpisodeSelect = (episode: SeriesEpisode) => {
     setSelectedEpisode(episode);

@@ -85,7 +85,7 @@ const voicesData: VoiceItem[] = [
     role: 'Chief People Officer, Sri Lanka',
     company: 'Daraz',
     bulletPoints: [
-      'How do you define Talent Acquisition in today’s context?',
+      'How does a career in Talent Acquisition support individuals in achieving their broader career aspirations?',
       'How does Talent Acquisition contribute to building and strengthening organizational culture?',
     ],
     avatar: `${R2_MEDIA_URL}/images/speaker6.png`,
@@ -97,8 +97,8 @@ const voicesData: VoiceItem[] = [
     role: 'Head of Human Resources / AGM',
     company: 'Janashakthi Insurance PLC',
     bulletPoints: [
-      'How does a career in Talent Acquisition support individuals in achieving their broader career aspirations?',
-      'How does Talent Acquisition contribute to building and strengthening organizational culture?',
+      "How does working in talent acquisition help broaden an individual's mindset?",
+      'How Important is the Talent Acquisition Function within an Organization',
     ],
     avatar: `${R2_MEDIA_URL}/images/speaker7.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker7.png`,
@@ -133,8 +133,8 @@ const voicesData: VoiceItem[] = [
     role: 'Chief Operating Officer',
     company: 'Allied Commercial Fertillizers',
     bulletPoints: [
-      'How does a career in Talent Acquisition support individuals in achieving their broader career aspirations?',
-      'How does Talent Acquisition contribute to building and strengthening organizational culture?',
+      'From your perspective, how does Talent Acquisition',
+      'How do you see Talent Acquisition contributing to overall business success?',
     ],
     avatar: `${R2_MEDIA_URL}/images/speaker10.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker10.png`,
@@ -145,8 +145,8 @@ const voicesData: VoiceItem[] = [
     role: 'Human Resources Director',
     company: 'GRI Sri Lanka',
     bulletPoints: [
-      'How does a career in Talent Acquisition support individuals in achieving their broader career aspirations?',
-      'How does Talent Acquisition contribute to building and strengthening organizational culture?',
+      'What advice would you offer to someone considering a career in Talent Acquisition?',
+      'How do you see Talent Acquisition contributing to overall business success?',
     ],
     avatar: `${R2_MEDIA_URL}/images/speaker11.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker11.png`,
@@ -157,7 +157,7 @@ const voicesData: VoiceItem[] = [
     role: 'Group Head of Human Resources',
     company: 'Pyramid Wilmar Group',
     bulletPoints: [
-      'How does a career in Talent Acquisition support individuals in achieving their broader career aspirations?',
+      'What makes Talent Acquisition a future ready career path?',
       'How does Talent Acquisition contribute to building and strengthening organizational culture?',
     ],
     avatar: `${R2_MEDIA_URL}/images/speaker12.png`,
@@ -169,8 +169,8 @@ const voicesData: VoiceItem[] = [
     role: 'Manager of Human Resources Development',
     company: 'MAS Holdings Silueta',
     bulletPoints: [
-      'How does a career in Talent Acquisition support individuals in achieving their broader career aspirations?',
-      'How does Talent Acquisition contribute to building and strengthening organizational culture?',
+      'What is your perspective on developing Talent Acquisition professionals who are globally competitive?',
+      'In your opinion, why is there a growing need for skilled Talent Acquisition professionals in Sri Lanka?',
     ],
     avatar: `${R2_MEDIA_URL}/images/speaker13.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker13.png`,
@@ -181,8 +181,8 @@ const voicesData: VoiceItem[] = [
     role: 'General Manager, Human Resources',
     company: 'Port City BPO',
     bulletPoints: [
-      'How does a career in Talent Acquisition support individuals in achieving their broader career aspirations?',
-      'How does Talent Acquisition contribute to building and strengthening organizational culture?',
+      'In your opinion, why is there a growing need for skilled Talent Acquisition professionals in Sri Lanka?',
+      'How Important is hands-on experience in building a successful career in Talent Acquisition?',
     ],
     avatar: `${R2_MEDIA_URL}/images/speaker14.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker14.png`,
@@ -222,6 +222,21 @@ export default function VoicesSlider() {
     return () => clearInterval(interval);
   }, [isPaused, nextMobile]);
 
+  const handleWatchConversation = (e: React.MouseEvent, speakerId: number) => {
+    e.preventDefault();
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(
+        new CustomEvent("vota-select-episode", {
+          detail: { episodeId: speakerId },
+        })
+      );
+      const episodesSection = document.getElementById("episodes");
+      if (episodesSection) {
+        episodesSection.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
+
   /* ── Desktop Card ── */
   const renderDesktopCard = (item: VoiceItem, key: string) => (
     <div
@@ -236,7 +251,7 @@ export default function VoicesSlider() {
         bg-[#F5F7FA] 
         cursor-pointer 
         w-[334px] 
-        h-[510px] 
+        h-[508px] 
         shrink-0
         rounded-[29.98px] 
         border-[1.62px] 
@@ -248,7 +263,7 @@ export default function VoicesSlider() {
         ease-[cubic-bezier(0.25,1,0.5,1)]
         
         hover:w-[563px] 
-        hover:h-[598px] 
+        hover:h-[596px] 
         hover:-translate-y-[88px] 
         hover:shadow-2xl
         hover:z-30
@@ -306,7 +321,7 @@ export default function VoicesSlider() {
           </div>
 
           <div className="relative z-10 max-w-[48%] pb-1">
-            <h3 className="font-geist text-[24px] lg:text-[28px] font-bold leading-tight text-white drop-shadow-md">{item.name}</h3>
+            <h3 className="font-geist text-[22px] lg:text-[26px] font-bold leading-tight text-white drop-shadow-md">{item.name}</h3>
             <p className="mt-1.5 font-geist text-[13px] lg:text-[14px] font-normal leading-snug text-white/90">
               {item.role},<br />{item.company}
             </p>
@@ -331,7 +346,11 @@ export default function VoicesSlider() {
         </div>
 
         <div className="h-[111px] shrink-0 border-t-[1.6px] border-[#E0E0E0] mx-[32px] flex items-center">
-          <a href="#episodes" className="flex items-center gap-2 font-geist text-[16.513px] font-semibold leading-normal text-[#159A99] uppercase transition-all hover:gap-3">
+          <a
+            href="#episodes"
+            onClick={(e) => handleWatchConversation(e, item.id)}
+            className="flex items-center gap-2 font-geist text-[16.513px] font-semibold leading-normal text-[#159A99] uppercase transition-all hover:gap-3 cursor-pointer"
+          >
             WATCH CONVERSATION
             <img src={arrowRightTeal} alt="Arrow Right" className="h-[18px] w-[18px] object-contain" />
           </a>
@@ -367,7 +386,7 @@ export default function VoicesSlider() {
 
         <div className="absolute inset-x-8 top-[250px]">
           <div className="flex items-center justify-between gap-2">
-            <h3 className="line-clamp-2 font-geist text-[35.629px] font-normal leading-normal text-black">
+            <h3 className="line-clamp-2 font-geist text-[33.629px] font-normal leading-normal text-black">
               {item.name}
             </h3>
             <img
@@ -394,7 +413,7 @@ export default function VoicesSlider() {
         <span className="inline-flex items-center rounded-[123.833px] border-[1.238px] border-[rgba(21,154,153,0.20)] bg-[rgba(21,154,153,0.10)] px-[14.86px] py-[7.43px] font-geist text-[12px] md:text-[13.622px] font-semibold leading-normal uppercase text-[#159A99] mb-3">
           AN INDUSTRY-LED VIDEO SERIES BY CAREER141
         </span>
-        <h2 className="text-center font-geist text-[28px] sm:text-[36px] md:text-[46px] font-extrabold leading-[110%] text-[#262626] capitalize">
+        <h2 className="text-center font-geist text-[22px] sm:text-[30px] md:text-[30px] font-extrabold leading-[110%] text-[#262626] capitalize">
           Meet The Voices Behind The Industry
         </h2>
       </div>
@@ -473,7 +492,7 @@ export default function VoicesSlider() {
 
                 {/* Speaker Name & Role on Left Half */}
                 <div className="relative z-10 max-w-[48%] pb-1">
-                  <h3 className="mb-1 font-geist text-[19px] sm:text-[22px] md:text-[25px] font-bold leading-tight text-white drop-shadow-md">
+                  <h3 className="mb-1 font-geist text-[17px] sm:text-[20px] md:text-[23px] font-bold leading-tight text-white drop-shadow-md">
                     {currentMobileSpeaker.name}
                   </h3>
                   <p className="font-geist text-[12px] sm:text-[13px] md:text-[13.5px] font-normal leading-snug text-white/90 mt-1">
@@ -504,7 +523,8 @@ export default function VoicesSlider() {
               <div className="h-[58px] sm:h-[64px] shrink-0 border-t border-[#E0E0E0] mx-6 sm:mx-7 flex items-center">
                 <a
                   href="#episodes"
-                  className="flex items-center gap-2 font-geist text-[13px] sm:text-[14px] font-semibold uppercase text-[#159A99] tracking-wide transition-all hover:gap-3"
+                  onClick={(e) => handleWatchConversation(e, currentMobileSpeaker.id)}
+                  className="flex items-center gap-2 font-geist text-[13px] sm:text-[14px] font-semibold uppercase text-[#159A99] tracking-wide transition-all hover:gap-3 cursor-pointer"
                 >
                   WATCH CONVERSATION
                   <img src={arrowRightTeal} alt="" className="h-3.5 w-3.5 object-contain" />
