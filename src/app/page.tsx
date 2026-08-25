@@ -16,8 +16,8 @@ import VotaBannerSection from "./components/VotaBanner";
 import { getOptimizedImageUrl } from "./utils/imageLoader";
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
 
-const backgroundImage = getOptimizedImageUrl(`${R2_MEDIA_URL}/images/hero-background.png`, 1920);
-const microphoneImage = getOptimizedImageUrl(`${R2_MEDIA_URL}/images/microphone.png`, 900);
+const backgroundImage = getOptimizedImageUrl(`${R2_MEDIA_URL}/images/hero-background.webp`, 1920);
+const microphoneImage = getOptimizedImageUrl(`${R2_MEDIA_URL}/images/microphone.webp`, 900);
 const votaLogo = `${R2_MEDIA_URL}/icons/vota-logo.png`;
 const arrowUpRight = `${R2_MEDIA_URL}/icons/arrow-up-right.svg`;
 const arrowRight = `${R2_MEDIA_URL}/icons/arrow-right.svg`;

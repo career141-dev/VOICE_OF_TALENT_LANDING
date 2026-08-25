@@ -36,7 +36,7 @@ export default function RootLayout({
           <>
             <link rel="preconnect" href={R2_MEDIA_URL} crossOrigin="anonymous" />
             <link rel="dns-prefetch" href={R2_MEDIA_URL} />
-            <link rel="preload" as="image" href={getOptimizedImageUrl(`${R2_MEDIA_URL}/images/hero-background.png`, 1920)} />
+            <link rel="preload" as="image" href={getOptimizedImageUrl(`${R2_MEDIA_URL}/images/hero-background.webp`, 1920)} />
             <link rel="preload" as="image" href={getOptimizedImageUrl(`${R2_MEDIA_URL}/images/speaker1.png`, 800)} />
             <link rel="preload" as="image" href={getOptimizedImageUrl(`${R2_MEDIA_URL}/images/speaker2.png`, 800)} />
           </>
