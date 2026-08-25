@@ -33,9 +33,6 @@ function Arrow({ source }: { source: string }) {
 }
 
 export default function Home() {
-  const [isBgLoaded, setIsBgLoaded] = useState(false);
-  const [isMicLoaded, setIsMicLoaded] = useState(false);
-
   return (
     <>
       <main
@@ -44,13 +41,12 @@ export default function Home() {
         {/* Background */}
         <div className="absolute inset-0 z-0" aria-hidden="true">
           <img
-            className={`h-full w-full object-cover transition-opacity duration-700 ease-out ${isBgLoaded ? "opacity-100" : "opacity-0"}`}
+            className="h-full w-full object-cover"
             src={backgroundImage}
             loading="eager"
             decoding="async"
             fetchPriority="high"
             sizes="100vw"
-            onLoad={() => setIsBgLoaded(true)}
             alt=""
           />
         </div>
@@ -67,11 +63,10 @@ export default function Home() {
           aria-hidden="true"
         >
           <img
-            className={`absolute left-[-19.25%] top-[-32%] h-[130%] w-[119.22%] max-w-none object-cover blur-[2px] transition-opacity duration-700 ease-out ${isMicLoaded ? "opacity-100" : "opacity-0"}`}
+            className="absolute left-[-19.25%] top-[-32%] h-[130%] w-[119.22%] max-w-none object-cover blur-[2px]"
             src={microphoneImage}
             loading="eager"
             decoding="async"
-            onLoad={() => setIsMicLoaded(true)}
             alt=""
           />
         </div>
