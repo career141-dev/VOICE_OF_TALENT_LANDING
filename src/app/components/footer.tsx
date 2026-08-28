@@ -59,10 +59,8 @@ export default function Footer() {
       <div className="w-full px-4 sm:px-8 md:px-12 lg:px-[8.7%]">
         <div
           className="
-            mx-auto
             flex
             w-full
-            max-w-[1636px]
             flex-col
             items-center
             gap-12
@@ -159,11 +157,9 @@ export default function Footer() {
       <div className="w-full bg-[#159A99] px-4 sm:px-8 md:px-12 lg:px-[8.7%]">
         <div
           className="
-            mx-auto
             flex
             min-h-[85px]
             w-full
-            max-w-[1636px]
             flex-col
             items-center
             justify-center
