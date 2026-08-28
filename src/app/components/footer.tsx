@@ -56,128 +56,126 @@ export default function Footer() {
   return (
     <footer className="w-full overflow-hidden bg-white">
       {/* Main footer */}
-      <div
-        className="
-          mx-auto
-          grid
-          w-full
-          max-w-[1600px]
-          grid-cols-1
-          gap-12
-          px-6
-          py-10
-          text-center
-          md:grid-cols-[minmax(0,1.7fr)_minmax(170px,0.65fr)_minmax(220px,0.7fr)]
-          md:items-start
-          md:gap-14
-          md:px-10
-          md:py-16
-          md:text-left
-          lg:px-[8.7%]
-          lg:py-10
-        "
-      >
-        {/* Logo */}
-        <div className="flex justify-center md:justify-start">
-          <img
-            src={footerLogo}
-            alt="VOTA — Voice of Talent Acquisition"
-            className="h-auto w-[300px] max-w-full object-contain sm:w-[360px] lg:w-[460px]"
-          />
-        </div>
+      <div className="w-full px-4 sm:px-8 md:px-12 lg:px-[8.7%]">
+        <div
+          className="
+            mx-auto
+            flex
+            w-full
+            max-w-[1636px]
+            flex-col
+            items-center
+            gap-12
+            py-10
+            text-center
+            md:flex-row
+            md:items-start
+            md:justify-between
+            md:gap-10
+            md:py-16
+            md:text-left
+            lg:py-14
+          "
+        >
+          {/* Logo */}
+          <div className="flex shrink-0 justify-center md:justify-start">
+            <img
+              src={footerLogo}
+              alt="VOTA — Voice of Talent Acquisition"
+              className="h-auto w-[280px] max-w-full object-contain sm:w-[340px] md:w-[380px] lg:w-[460px]"
+            />
+          </div>
 
-        {/* Series map */}
-        <nav aria-label="Series map" className="flex flex-col items-center md:items-start">
-          <h2 className="font-['Geist'] text-[18px] font-bold uppercase leading-none text-[#262626]">
-            Series Map
-          </h2>
+          {/* Series map */}
+          <nav aria-label="Series map" className="flex flex-col items-center md:items-start">
+            <h2 className="font-['Geist'] text-[18px] font-bold uppercase leading-none text-[#262626]">
+              Series Map
+            </h2>
 
-          <ul className="mt-7 space-y-5">
-            {seriesLinks.map((link) => (
-              <li key={link.label}>
+            <ul className="mt-7 space-y-5">
+              {seriesLinks.map((link) => (
+                <li key={link.label}>
+                  <a
+                    href={link.href}
+                    className="font-['Geist'] text-[17px] leading-none text-[#666666] transition-colors duration-200 hover:text-[#159A99]"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* Social links */}
+          <div className="flex flex-col items-center md:items-start">
+            <h2 className="font-['Geist'] text-[18px] font-bold uppercase leading-none text-[#262626]">
+              Follow Us
+            </h2>
+
+            <div className="mt-7 flex flex-wrap items-center justify-center gap-4 md:justify-start">
+              {socialLinks.map((social) => (
                 <a
-                  href={link.href}
-                  className="font-['Geist'] text-[17px] leading-none text-[#666666] transition-colors duration-200 hover:text-[#159A99]"
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`Follow VOTA on ${social.label}`}
+                  className="
+                    group
+                    flex
+                    h-[42px]
+                    w-[42px]
+                    shrink-0
+                    items-center
+                    justify-center
+                    rounded-[8px]
+                    
+                    /* Base State */
+                    bg-white
+                    border
+                    border-[#E0E0E0]
+                    text-[#555555] /* Icon color when inactive */
+                    
+                    /* Hover State */
+                    transition-all
+                    duration-300
+                    hover:-translate-y-1
+                    hover:bg-[#159A99]
+                    hover:border-[#159A99]
+                    hover:text-white /* Icon turns purely white instantly */
+                    hover:shadow-md
+                  "
                 >
-                  {link.label}
+                  {/* Renders the inline SVG perfectly without filter glitches */}
+                  {social.icon}
                 </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        {/* Social links */}
-        <div className="flex flex-col items-center md:items-start">
-          <h2 className="font-['Geist'] text-[18px] font-bold uppercase leading-none text-[#262626]">
-            Follow Us
-          </h2>
-
-          <div className="mt-7 flex flex-wrap items-center justify-center gap-4 md:justify-start">
-            {socialLinks.map((social) => (
-              <a
-                key={social.label}
-                href={social.href}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={`Follow VOTA on ${social.label}`}
-                className="
-                  group
-                  flex
-                  h-[42px]
-                  w-[42px]
-                  shrink-0
-                  items-center
-                  justify-center
-                  rounded-[8px]
-                  
-                  /* Base State */
-                  bg-white
-                  border
-                  border-[#E0E0E0]
-                  text-[#555555] /* Icon color when inactive */
-                  
-                  /* Hover State */
-                  transition-all
-                  duration-300
-                  hover:-translate-y-1
-                  hover:bg-[#159A99]
-                  hover:border-[#159A99]
-                  hover:text-white /* Icon turns purely white instantly */
-                  hover:shadow-md
-                "
-              >
-                {/* Renders the inline SVG perfectly without filter glitches */}
-                {social.icon}
-              </a>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
       {/* Bottom teal bar */}
-      <div className="bg-[#159A99]">
+      <div className="w-full bg-[#159A99] px-4 sm:px-8 md:px-12 lg:px-[8.7%]">
         <div
           className="
             mx-auto
             flex
             min-h-[85px]
             w-full
-            max-w-[1600px]
+            max-w-[1636px]
             flex-col
             items-center
             justify-center
             gap-4
-            px-6
             py-5
             text-center
             text-white
             md:flex-row
             md:items-center
             md:justify-between
-            md:px-12
             md:py-0
             md:text-left
-            lg:px-[8.7%]
           "
         >
           <p className="font-['Geist'] text-[16px]">

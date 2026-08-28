@@ -43,12 +43,18 @@ body {
 }
 
 /* Headings default to Geist */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: "Geist", sans-serif;
 }
 
 /* Hero Heading uses Cal Sans exclusively */
-.hero-heading, .font-cal {
+.hero-heading,
+.font-cal {
   font-family: "Cal Sans", sans-serif !important;
 }
 
@@ -64,6 +70,7 @@ h1, h2, h3, h4, h5, h6 {
   from {
     transform: translateX(0%);
   }
+
   to {
     transform: translateX(-50%);
   }
@@ -79,7 +86,7 @@ h1, h2, h3, h4, h5, h6 {
 .marquee-track {
   display: flex;
   width: max-content;
-  animation: marquee-scroll 38s linear infinite;
+  animation: marquee-scroll 60s linear infinite;
   will-change: transform;
 }
 
@@ -96,9 +103,3 @@ h1, h2, h3, h4, h5, h6 {
   content-visibility: auto;
   contain-intrinsic-size: 1px 800px;
 }
-
-
-
-
-
-
