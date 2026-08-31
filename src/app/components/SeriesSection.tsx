@@ -79,7 +79,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     role: "Head of Human Resources / AGM",
     company: "Janashakthi Insurance PLC",
     duration: "14:10",
-    videoId: "aqz-KE-bpKQ",
+    videoUrl: `${R2_MEDIA_URL}/videos/Mr.%20Danushka.mp4`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker7.png`,
   },
   {
@@ -106,7 +106,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     role: "Chief Operating Officer",
     company: "Allied Commercial Fertillizers",
     duration: "12:35",
-    videoId: "aqz-KE-bpKQ",
+    videoUrl: `${R2_MEDIA_URL}/videos/Mr.Indiaka%20Ranathunga.mp4`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker10.png`,
   },
   {
@@ -115,7 +115,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     role: "Human Resources Director",
     company: "GRI Sri Lanka",
     duration: "14:50",
-    videoId: "aqz-KE-bpKQ",
+    videoUrl: `${R2_MEDIA_URL}/videos/Ms.%20Chamindra.mp4`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker11.png`,
   },
   {
@@ -124,7 +124,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     role: "Group Head of Human Resources",
     company: "Pyramid Wilmar Group",
     duration: "13:40",
-    videoId: "aqz-KE-bpKQ",
+    videoUrl: `${R2_MEDIA_URL}/videos/Ms.%20Chandima.mp4`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker12.png`,
   },
   {
@@ -133,7 +133,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     role: "Manager of Human Resources Development",
     company: "MAS Holdings Silueta",
     duration: "16:22",
-    videoId: "aqz-KE-bpKQ",
+    videoUrl: `${R2_MEDIA_URL}/videos/Mr.%20Gehan.mp4`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker13.png`,
   },
   {
@@ -142,7 +142,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     role: "General Manager, Human Resources",
     company: "Port City BPO",
     duration: "15:05",
-    videoId: "aqz-KE-bpKQ",
+    videoUrl: `${R2_MEDIA_URL}/videos/Mr.%20Kanishka.mp4`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker14.png`,
   },
 ];
