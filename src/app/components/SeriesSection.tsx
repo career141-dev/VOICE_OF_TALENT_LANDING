@@ -70,7 +70,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     role: "Chief People Officer, Sri Lanka",
     company: "Daraz",
     duration: "11:45",
-    videoUrl: `${R2_MEDIA_URL}/videos/Mr.%20Arshaq%20Farally.mp4`,
+    videoUrl: `${R2_MEDIA_URL}/videos/Mr.Arshaq%20Farally%2002.mp4`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker6.png`,
   },
   {
@@ -97,7 +97,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     role: "Chief Executive Officer",
     company: "Link Natural Products (Pvt.) Ltd",
     duration: "15:12",
-    videoUrl: `${R2_MEDIA_URL}/videos/Mr.%20Ashan%20Ransilige.mp4`,
+    videoUrl: `${R2_MEDIA_URL}/videos/Mr.%20Ashan%20Ransilige%2002.mp4`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker9.png`,
   },
   {
@@ -106,7 +106,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     role: "Chief Operating Officer",
     company: "Allied Commercial Fertillizers",
     duration: "12:35",
-    videoUrl: `${R2_MEDIA_URL}/videos/Mr.Indiaka%20Ranathunga.mp4`,
+    videoUrl: `${R2_MEDIA_URL}/videos/Mr.Indiaka%20Ranathunga%2002.mp4`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker10.png`,
   },
   {

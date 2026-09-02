@@ -88,7 +88,7 @@ const episodes: Episode[] = [
     guest: "MR. ARSHAQ FARALLY",
     role: "Chief People Officer, Sri Lanka",
     company: "Daraz",
-    videoUrl: `${R2_MEDIA_URL}/videos/Mr.%20Arshaq%20Farally.mp4`,
+    videoUrl: `${R2_MEDIA_URL}/videos/Mr.Arshaq%20Farally%2002.mp4`,
     reels: [
       `${R2_MEDIA_URL}/videos/reels/01%20Mr.%20Arshaq.mp4`,
       `${R2_MEDIA_URL}/videos/reels/02%20Mr.%20Arshaq.mp4`,
@@ -127,7 +127,7 @@ const episodes: Episode[] = [
     guest: "MR. ASHAN RANSILIGE",
     role: "Chief Executive Officer",
     company: "Link Natural Products (Pvt.) Ltd",
-    videoUrl: `${R2_MEDIA_URL}/videos/Mr.%20Ashan%20Ransilige.mp4`,
+    videoUrl: `${R2_MEDIA_URL}/videos/Mr.%20Ashan%20Ransilige%2002.mp4`,
     reels: [
       `${R2_MEDIA_URL}/videos/reels/01%20Mr.%20Ashan.mp4`,
       `${R2_MEDIA_URL}/videos/reels/02%20Mr.%20Ashan.mp4`,
@@ -140,7 +140,7 @@ const episodes: Episode[] = [
     guest: "MR. INDIKA RANATHUNGA",
     role: "Chief Operating Officer",
     company: "Allied Commercial Fertillizers",
-    videoUrl: `${R2_MEDIA_URL}/videos/Mr.Indiaka%20Ranathunga.mp4`,
+    videoUrl: `${R2_MEDIA_URL}/videos/Mr.Indiaka%20Ranathunga%2002.mp4`,
     reels: [
       `${R2_MEDIA_URL}/videos/reels/01%20Mr.%20Indika.mp4`,
       `${R2_MEDIA_URL}/videos/reels/02%20Mr.%20Indika.mp4`,
