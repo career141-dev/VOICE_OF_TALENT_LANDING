@@ -91,33 +91,46 @@ export default function Home() {
           </p>
 
           <HeroCTAs />
+
+          {/* People */}
+          <div className="mt-7 sm:mt-9 flex justify-center" aria-label="Meet the people behind Voice of Talent">
+            <a
+              href="#speakers"
+              onClick={scrollToSpeakers}
+              className="group flex items-center rounded-[100px] border-2 border-white/80 bg-black/30 p-1 backdrop-blur-md transition-all duration-300 hover:scale-105 hover:border-white hover:bg-black/50 cursor-pointer shadow-lg"
+            >
+              <div className="relative h-[38px] w-[38px] sm:h-[46px] sm:w-[46px] overflow-hidden rounded-full border-2 border-white bg-[#159A99]/30">
+                <img className="h-full w-full object-cover object-top" src={speakerImage1} alt="Mr. Patrick Pereira" />
+              </div>
+              <div className="relative -ml-3 sm:-ml-4 h-[38px] w-[38px] sm:h-[46px] sm:w-[46px] overflow-hidden rounded-full border-2 border-white bg-[#159A99]/30">
+                <img className="h-full w-full object-cover object-top" src={speakerImage4} alt="Ms. Thrimuthi Dhanushka" />
+              </div>
+              <div className="relative -ml-3 sm:-ml-4 h-[38px] w-[38px] sm:h-[46px] sm:w-[46px] overflow-hidden rounded-full border-2 border-white bg-[#159A99]/30">
+                <img className="h-full w-full object-cover object-top" src={speakerImage2} alt="Mr. Ken Vijayakumar" />
+              </div>
+              <div
+                className="relative -ml-3 sm:-ml-4 flex h-[38px] w-[38px] sm:h-[46px] sm:w-[46px] items-center justify-center rounded-full transition-transform duration-300 group-hover:rotate-45"
+              >
+                <img className="h-full w-full object-contain" src={arrowAngle} alt="Go to speakers" />
+              </div>
+            </a>
+          </div>
         </div>
 
-        {/* People */}
+        {/* Powered by Career141 */}
         <div
-          className="absolute bottom-[7%] left-1/2 z-[10] flex -translate-x-1/2 max-[760px]:bottom-[4%]"
-          aria-label="Meet the people behind Voice of Talent"
+          className="absolute bottom-[7%] left-1/2 z-[10] flex -translate-x-1/2 items-center justify-center gap-2.5 sm:gap-3.5 max-[760px]:bottom-[4%]"
         >
-          <a
-            href="#speakers"
-            onClick={scrollToSpeakers}
-            className="group flex items-center rounded-[100px] border-2 border-white/80 bg-black/30 p-1 backdrop-blur-md transition-all duration-300 hover:scale-105 hover:border-white hover:bg-black/50 cursor-pointer shadow-lg"
-          >
-            <div className="relative h-[38px] w-[38px] sm:h-[46px] sm:w-[46px] overflow-hidden rounded-full border-2 border-white bg-[#159A99]/30">
-              <img className="h-full w-full object-cover object-top" src={speakerImage1} alt="Mr. Patrick Pereira" />
-            </div>
-            <div className="relative -ml-3 sm:-ml-4 h-[38px] w-[38px] sm:h-[46px] sm:w-[46px] overflow-hidden rounded-full border-2 border-white bg-[#159A99]/30">
-              <img className="h-full w-full object-cover object-top" src={speakerImage4} alt="Ms. Thrimuthi Dhanushka" />
-            </div>
-            <div className="relative -ml-3 sm:-ml-4 h-[38px] w-[38px] sm:h-[46px] sm:w-[46px] overflow-hidden rounded-full border-2 border-white bg-[#159A99]/30">
-              <img className="h-full w-full object-cover object-top" src={speakerImage2} alt="Mr. Ken Vijayakumar" />
-            </div>
-            <div
-              className="relative -ml-3 sm:-ml-4 flex h-[38px] w-[38px] sm:h-[46px] sm:w-[46px] items-center justify-center rounded-full transition-transform duration-300 group-hover:rotate-45"
-            >
-              <img className="h-full w-full object-contain" src={arrowAngle} alt="Go to speakers" />
-            </div>
-          </a>
+          <span className="font-['Quicksand'] text-[18px] sm:text-[22px] md:text-[26px] font-normal leading-none text-white select-none drop-shadow translate-y-[4px] sm:translate-y-[6px] md:translate-y-[8px]">
+            Powered by
+          </span>
+          <img
+            src="https://talentsuite-southernchapter.career141.com/IMAGES/Artboard%205%402x%204.svg"
+            alt="Career141 | 20 Years of Excellence"
+            className="h-[52px] sm:h-[64px] md:h-[76px] lg:h-[86px] w-auto object-contain drop-shadow"
+            loading="lazy"
+            decoding="async"
+          />
         </div>
       </main>
 

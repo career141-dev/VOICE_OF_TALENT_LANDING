@@ -151,6 +151,8 @@ export default function SeriesSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const isManuallyClosedRef = useRef(false);
+  const isManuallyPausedRef = useRef(false);
+  const wasPlayingBeforeScrollOutRef = useRef(true);
 
   // Default to Episode 2 (Mr. Ken Vijayakumar)
   const [selectedEpisode, setSelectedEpisode] = useState<SeriesEpisode>(
@@ -163,15 +165,46 @@ export default function SeriesSection() {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [episodeDurations, setEpisodeDurations] = useState<Record<number, string>>({});
 
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const formatTime = (seconds: number) => {
-    if (isNaN(seconds) || seconds < 0) return "00:00";
+    if (isNaN(seconds) || seconds <= 0) return "00:00";
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
+
+  // Preload actual video durations for all playlist episodes
+  useEffect(() => {
+    const videoElements: HTMLVideoElement[] = [];
+
+    seriesEpisodesData.forEach((episode) => {
+      if (episode.videoUrl) {
+        const vid = document.createElement("video");
+        vid.preload = "metadata";
+        vid.src = episode.videoUrl;
+        vid.onloadedmetadata = () => {
+          if (vid.duration && !isNaN(vid.duration) && vid.duration > 0) {
+            setEpisodeDurations((prev) => ({
+              ...prev,
+              [episode.id]: formatTime(vid.duration),
+            }));
+          }
+        };
+        videoElements.push(vid);
+      }
+    });
+
+    return () => {
+      videoElements.forEach((vid) => {
+        vid.src = "";
+        vid.removeAttribute("src");
+        vid.load();
+      });
+    };
+  }, []);
 
   const resetControlsTimeout = () => {
     if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
@@ -185,10 +218,14 @@ export default function SeriesSection() {
   const togglePlayPause = () => {
     if (!videoRef.current) return;
     if (videoRef.current.paused) {
+      isManuallyPausedRef.current = false;
+      wasPlayingBeforeScrollOutRef.current = true;
       videoRef.current.play().catch(() => {});
       setIsPaused(false);
       resetControlsTimeout();
     } else {
+      isManuallyPausedRef.current = true;
+      wasPlayingBeforeScrollOutRef.current = false;
       videoRef.current.pause();
       setIsPaused(true);
       setShowControls(true);
@@ -233,40 +270,43 @@ export default function SeriesSection() {
     }
   }, [isMuted]);
 
-  // Auto-play/resume video when scrolled into view (desktop autoplays, mobile stays paused), pause when scrolled away
+  // Ensure newly mounted video starts playing if entered while not manually paused
+  useEffect(() => {
+    if (isPlaying && videoRef.current && !isManuallyPausedRef.current) {
+      videoRef.current.play().catch(() => {});
+      setIsPaused(false);
+      resetControlsTimeout();
+    }
+  }, [isPlaying, selectedEpisode]);
+
+  // Auto-play video when scrolled into this section, stop/pause when scrolled away
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        const isMobile = window.innerWidth < 1024;
         if (entry.isIntersecting) {
-          if (!isManuallyClosedRef.current) {
+          // Play video when user enters this section (if not manually closed/paused)
+          if (!isManuallyClosedRef.current && !isManuallyPausedRef.current && wasPlayingBeforeScrollOutRef.current) {
             setIsPlaying(true);
-            if (isMobile) {
-              // On mobile, stay paused on entry with controls ready until user taps
-              if (videoRef.current) {
-                videoRef.current.pause();
-                setIsPaused(true);
-                setShowControls(true);
-              }
-            } else {
-              // On desktop, auto-play / resume
-              if (videoRef.current && videoRef.current.paused) {
-                videoRef.current.play().catch(() => {});
-                setIsPaused(false);
-                resetControlsTimeout();
-              }
+            if (videoRef.current) {
+              videoRef.current.play().catch(() => {});
+              setIsPaused(false);
+              resetControlsTimeout();
             }
           }
         } else {
+          // Immediately stop/pause video when user scrolls away from this section
           if (videoRef.current && !videoRef.current.paused) {
+            wasPlayingBeforeScrollOutRef.current = true;
             videoRef.current.pause();
             setIsPaused(true);
             setShowControls(true);
+          } else if (videoRef.current && videoRef.current.paused) {
+            wasPlayingBeforeScrollOutRef.current = false;
           }
         }
       },
       {
-        threshold: 0.2,
+        threshold: 0.25,
       }
     );
 
@@ -285,6 +325,8 @@ export default function SeriesSection() {
         const targetEpisode = seriesEpisodesData.find((ep) => ep.id === episodeId);
         if (targetEpisode) {
           isManuallyClosedRef.current = false;
+          isManuallyPausedRef.current = false;
+          wasPlayingBeforeScrollOutRef.current = true;
           setSelectedEpisode(targetEpisode);
           setIsPlaying(true);
           setIsMuted(false);
@@ -302,6 +344,8 @@ export default function SeriesSection() {
 
   const handleEpisodeSelect = (episode: SeriesEpisode) => {
     isManuallyClosedRef.current = false;
+    isManuallyPausedRef.current = false;
+    wasPlayingBeforeScrollOutRef.current = true;
     setSelectedEpisode(episode);
     setIsPlaying(true);
     setIsMuted(false);
@@ -313,6 +357,8 @@ export default function SeriesSection() {
 
   const handlePlay = () => {
     isManuallyClosedRef.current = false;
+    isManuallyPausedRef.current = false;
+    wasPlayingBeforeScrollOutRef.current = true;
     setIsPlaying(true);
     setIsMuted(false);
     setIsPaused(false);
@@ -322,6 +368,8 @@ export default function SeriesSection() {
 
   const handleCloseVideo = () => {
     isManuallyClosedRef.current = true;
+    isManuallyPausedRef.current = true;
+    wasPlayingBeforeScrollOutRef.current = false;
     setIsPlaying(false);
     setIsPaused(false);
   };
@@ -330,7 +378,7 @@ export default function SeriesSection() {
     <section
       id="episodes"
       ref={sectionRef}
-      className="bg-[#f8f9fa] px-[8.7%] pt-14 pb-[88px] text-[#202020] max-[760px]:px-6 max-[760px]:pt-10 max-[760px]:pb-16"
+      className="bg-[#f8f9fa] px-6 sm:px-10 lg:px-12 xl:px-[5.5%] 2xl:px-[7%] pt-14 pb-[88px] text-[#202020] max-[760px]:px-6 max-[760px]:pt-10 max-[760px]:pb-16"
       aria-labelledby="series-title"
     >
       {/* Header */}
@@ -361,7 +409,7 @@ export default function SeriesSection() {
         </div>
       </div>
 
-      <div className="grid gap-8 min-[1025px]:grid-cols-[minmax(0,1fr)_420px] xl:grid-cols-[minmax(0,1fr)_460px]">
+      <div className="grid gap-6 xl:gap-7 min-[1025px]:grid-cols-[minmax(0,1fr)_290px] xl:grid-cols-[minmax(0,1fr)_320px] 2xl:grid-cols-[minmax(0,1fr)_350px]">
         {/* Main Featured Video / Poster */}
         <article className="group relative min-h-[500px] sm:min-h-[520px] md:min-h-[540px] xl:min-h-[560px] overflow-hidden rounded-[28px] md:rounded-[32px] bg-[#159A99] shadow-xl">
           {isPlaying ? (
@@ -385,6 +433,8 @@ export default function SeriesSection() {
                     playsInline
                     onTimeUpdate={handleTimeUpdate}
                     onLoadedMetadata={handleLoadedMetadata}
+                    onDurationChange={handleLoadedMetadata}
+                    onCanPlay={handleLoadedMetadata}
                     onPlay={() => {
                       setIsPaused(false);
                       resetControlsTimeout();
@@ -586,7 +636,7 @@ export default function SeriesSection() {
                 loading="eager"
                 decoding="async"
                 fetchPriority="high"
-                className="absolute right-0 top-0 h-full w-[65%] max-w-[650px] object-cover object-[center_top] pointer-events-none z-0"
+                className="absolute -right-20 sm:-right-36 md:-right-48 lg:-right-60 xl:-right-72 -bottom-20 sm:-bottom-28 md:-bottom-36 lg:-bottom-44 xl:-bottom-48 h-[112%] sm:h-[116%] md:h-[120%] xl:h-[125%] w-auto max-w-none object-contain object-right-bottom pointer-events-none z-0"
               />
 
               {/* Dark Gradient Overlay at the bottom for crystal clear text readability */}
@@ -598,11 +648,11 @@ export default function SeriesSection() {
               />
 
               {/* Top-Left: VOTA Logo Badge */}
-              <div className="relative z-10">
+              <div className="relative z-10 pt-2 sm:pt-3 md:pt-4">
                 <img
                   src={votaLogo}
                   alt="VOTA - Voice of Talent Acquisition"
-                  className="h-[44px] sm:h-[50px] w-auto max-w-[150px] rounded-[14px] sm:rounded-[18px] object-contain shadow-md"
+                  className="h-[68px] sm:h-[78px] md:h-[88px] xl:h-[96px] w-auto max-w-[280px] rounded-[18px] sm:rounded-[22px] object-contain shadow-md"
                 />
               </div>
 
@@ -637,7 +687,7 @@ export default function SeriesSection() {
                   <div className="flex items-center gap-3 font-geist text-[15px] sm:text-[16px] font-medium text-white drop-shadow">
                     <span>Watch Video</span>
                     <span className="text-white/50">|</span>
-                    <span>{selectedEpisode.duration}</span>
+                    <span>{episodeDurations[selectedEpisode.id] || selectedEpisode.duration}</span>
                   </div>
                 </div>
               </div>
@@ -661,7 +711,7 @@ export default function SeriesSection() {
               >
                 {/* Thumbnail styled like the selected widget */}
                 <div
-                  className="relative h-[92px] w-[148px] shrink-0 overflow-hidden rounded-[16px] shadow-sm"
+                  className="relative h-[84px] w-[124px] xl:h-[88px] xl:w-[132px] shrink-0 overflow-hidden rounded-[14px] shadow-sm"
                   style={{
                     background: "radial-gradient(71.47% 191.86% at 92.83% 52.77%, rgba(21, 154, 153, 0) 0%, #159A99 100%), #FFFFFF",
                   }}
@@ -685,7 +735,7 @@ export default function SeriesSection() {
 
                   {/* Duration */}
                   <span className="absolute bottom-1.5 right-1.5 z-10 rounded-md bg-black/80 px-1.5 py-0.5 font-geist text-[10px] font-medium text-white">
-                    {episode.duration}
+                    {episodeDurations[episode.id] || episode.duration}
                   </span>
                 </div>
 
@@ -756,7 +806,7 @@ export default function SeriesSection() {
 
                   {/* Duration */}
                   <span className="absolute bottom-2 right-2 z-10 rounded-md bg-black/80 px-1.5 py-0.5 font-geist text-[10px] font-medium text-white">
-                    {episode.duration}
+                    {episodeDurations[episode.id] || episode.duration}
                   </span>
                 </div>
 

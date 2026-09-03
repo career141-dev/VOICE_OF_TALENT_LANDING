@@ -4,6 +4,7 @@ import React from "react";
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
 const footerLogo = `${R2_MEDIA_URL}/images/footer.png`;
+const artboardImage = "https://talentsuite-southernchapter.career141.com/IMAGES/Artboard%204%402x%205%201.svg";
 
 const seriesLinks = [
   { label: "About", href: "#mission" },
@@ -148,6 +149,17 @@ export default function Footer() {
                   {social.icon}
                 </a>
               ))}
+            </div>
+
+            {/* Career141 / VOTA Logo */}
+            <div className="mt-8 flex justify-center md:justify-start -ml-12 sm:-ml-18 md:-ml-24 lg:-ml-28 xl:-ml-32">
+              <img
+                src={artboardImage}
+                alt="Career141 and VOTA"
+                loading="lazy"
+                decoding="async"
+                className="h-auto w-[200px] sm:w-[260px] md:w-[320px] lg:w-[380px]"
+              />
             </div>
           </div>
         </div>
