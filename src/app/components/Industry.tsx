@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
 
@@ -14,10 +14,72 @@ export function IndustryVoicesSection() {
     "ONE FUTURE.",
   ];
 
+  const sectionRef = useRef<HTMLElement>(null);
+  const itemRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const [activeIndex, setActiveIndex] = useState<number>(0);
+  const activeIndexRef = useRef<number>(0);
+  const isVisibleRef = useRef<boolean>(true);
+
   const [dragOffset, setDragOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const startXRef = useRef(0);
   const currentDragRef = useRef(0);
+
+  // Pause rAF when offscreen
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisibleRef.current = entry.isIntersecting;
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Track and continuously interpolate word styling based on proximity to center
+  useEffect(() => {
+    let animId: number;
+
+    const checkCenter = () => {
+      if (isVisibleRef.current && itemRefs.current.length > 0) {
+        const screenCenter = window.innerWidth / 2;
+        // Radius of smooth influence area around screen center
+        const radius = Math.min(window.innerWidth * 0.42, 400);
+
+        itemRefs.current.forEach((el) => {
+          if (!el) return;
+          const rect = el.getBoundingClientRect();
+          const wordCenter = rect.left + rect.width / 2;
+          const dist = Math.abs(wordCenter - screenCenter);
+          const rawProximity = Math.max(0, 1 - dist / radius);
+          // S-curve ease-in-out for silky organic transition
+          const smooth = 0.5 - 0.5 * Math.cos(rawProximity * Math.PI);
+
+          const opacity = 0.45 + 0.55 * smooth;
+          const scale = 1 + 0.05 * smooth;
+          const translateY = -2.5 * smooth;
+          const r = Math.round(166 + (255 - 166) * smooth);
+          const g = Math.round(185 + (255 - 185) * smooth);
+          const b = Math.round(185 + (255 - 185) * smooth);
+
+          el.style.opacity = opacity.toFixed(3);
+          el.style.transform = `translateY(${translateY.toFixed(2)}px) scale(${scale.toFixed(3)})`;
+          el.style.color = `rgb(${r}, ${g}, ${b})`;
+        });
+      }
+
+      animId = requestAnimationFrame(checkCenter);
+    };
+
+    animId = requestAnimationFrame(checkCenter);
+
+    return () => cancelAnimationFrame(animId);
+  }, []);
 
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     setIsDragging(true);
@@ -47,7 +109,7 @@ export function IndustryVoicesSection() {
   };
 
   return (
-    <section className="relative w-full overflow-hidden bg-[#0A5B5B]">
+    <section ref={sectionRef} className="relative w-full overflow-hidden bg-[#0A5B5B]">
       <div
         className="
           relative
@@ -72,12 +134,13 @@ export function IndustryVoicesSection() {
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
           onPointerCancel={handlePointerUp}
-          className={`absolute left-0 top-[20%] z-10 w-full overflow-hidden select-none touch-pan-y ${
+          className={`absolute left-0 top-[18%] sm:top-[19%] z-10 w-full overflow-hidden select-none touch-pan-y py-6 sm:py-8 -my-6 sm:-my-8 ${
             isDragging ? "cursor-grabbing" : "cursor-grab"
           }`}
         >
+          {/* Single Unified Marquee Track */}
           <div
-            className="industry-marquee flex w-max whitespace-nowrap"
+            className="industry-marquee flex w-max whitespace-nowrap py-3 sm:py-4 items-center"
             style={{
               transform: `translateX(${dragOffset}px)`,
               animationPlayState: isDragging ? "paused" : "running",
@@ -86,20 +149,28 @@ export function IndustryVoicesSection() {
             {items.map((item, index) => (
               <span
                 key={`${item}-${index}`}
+                ref={(el) => {
+                  itemRefs.current[index] = el;
+                }}
                 className="
-                  industry-word
                   inline-block
                   origin-center
-                  will-change-transform
-                  mr-10
+                  mr-6
+                  sm:mr-8
+                  lg:mr-10
                   font-['Geist']
                   text-[48px]
                   font-bold
                   uppercase
-                  leading-none
+                  leading-[1.15]
                   tracking-[-0.04em]
                   sm:text-[72px]
                   lg:text-[110px]
+                  py-2
+                  transform-gpu
+                  will-change-[transform,opacity,color]
+                  text-[#a6b9b9]
+                  opacity-45
                 "
               >
                 {item}
@@ -121,24 +192,6 @@ export function IndustryVoicesSection() {
             animation: industry-marquee 18s linear infinite;
           }
 
-          .industry-word {
-            color: #a6b9b9;
-            opacity: 0.72;
-            transform: scale(1);
-          }
-
-          .industry-word:nth-child(3n + 1) {
-            animation: word-one 18s linear infinite;
-          }
-
-          .industry-word:nth-child(3n + 2) {
-            animation: word-two 18s linear infinite;
-          }
-
-          .industry-word:nth-child(3n + 3) {
-            animation: word-three 18s linear infinite;
-          }
-
           @keyframes industry-marquee {
             from {
               transform: translateX(0);
@@ -149,105 +202,9 @@ export function IndustryVoicesSection() {
             }
           }
 
-          /*
-            Only phrase 1 is white from 0% through 29%.
-            It fades out completely by 33%.
-          */
-          @keyframes word-one {
-            0%,
-            28% {
-              color: #ffffff;
-              opacity: 1;
-              transform: scale(1.045);
-            }
-
-            3% {
-              transform: scale(1.1);
-            }
-
-            33%,
-            100% {
-              color: #a6b9b9;
-              opacity: 0.72;
-              transform: scale(1);
-            }
-          }
-
-          /*
-            Phrase 2 does not become white until phrase 1
-            has completed its fade-out.
-          */
-          @keyframes word-two {
-            0%,
-            33% {
-              color: #a6b9b9;
-              opacity: 0.72;
-              transform: scale(1);
-            }
-
-            37% {
-              color: #ffffff;
-              opacity: 1;
-              transform: scale(1.1);
-            }
-
-            41%,
-            61% {
-              color: #ffffff;
-              opacity: 1;
-              transform: scale(1.045);
-            }
-
-            66%,
-            100% {
-              color: #a6b9b9;
-              opacity: 0.72;
-              transform: scale(1);
-            }
-          }
-
-          /*
-            Phrase 3 begins only after phrase 2 has returned
-            fully to gray.
-          */
-          @keyframes word-three {
-            0%,
-            66% {
-              color: #a6b9b9;
-              opacity: 0.72;
-              transform: scale(1);
-            }
-
-            70% {
-              color: #ffffff;
-              opacity: 1;
-              transform: scale(1.1);
-            }
-
-            74%,
-            94% {
-              color: #ffffff;
-              opacity: 1;
-              transform: scale(1.045);
-            }
-
-            100% {
-              color: #a6b9b9;
-              opacity: 0.72;
-              transform: scale(1);
-            }
-          }
-
           @media (prefers-reduced-motion: reduce) {
-            .industry-marquee,
-            .industry-word {
+            .industry-marquee {
               animation: none;
-            }
-
-            .industry-word:nth-child(2) {
-              color: #ffffff;
-              opacity: 1;
-              transform: scale(1.045);
             }
           }
         `}

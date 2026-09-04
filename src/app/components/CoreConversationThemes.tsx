@@ -38,7 +38,7 @@ const themes: ThemeItem[] = [
     id: 2,
     number: "02",
     tag: "CAREER BLUEPRINTS",
-    title: "Building a meaningful career in TA",
+    title: "Building a meaningful career in Talent Acquisition",
     subtitle: "Mastery, Growth & Executive Influence",
     description:
       "Navigating the talent acquisition profession with purpose — developing key competencies, stakeholder trust, and sustainable career progression in competitive markets.",
@@ -479,9 +479,8 @@ function DesktopThemeCard({
             alt={item.title}
             loading="lazy"
             decoding="async"
-            className={`absolute inset-0 h-full w-[230px] xl:w-[260px] max-w-none object-cover transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-              imageIndex === idx ? "opacity-100 scale-100 z-10" : "opacity-0 scale-105 pointer-events-none z-0"
-            }`}
+            className={`absolute inset-0 h-full w-[230px] xl:w-[260px] max-w-none object-cover transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${imageIndex === idx ? "opacity-100 scale-100 z-10" : "opacity-0 scale-105 pointer-events-none z-0"
+              }`}
           />
         ))}
       </div>
@@ -523,11 +522,10 @@ function MobileThemeCard({ item }: { item: ThemeItem }) {
             alt={item.title}
             loading="lazy"
             decoding="async"
-            className={`absolute inset-0 h-full w-full object-cover transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-              imageIndex === idx
+            className={`absolute inset-0 h-full w-full object-cover transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${imageIndex === idx
                 ? "opacity-100 scale-100 z-10"
                 : "opacity-0 scale-105 pointer-events-none z-0"
-            }`}
+              }`}
           />
         ))}
       </div>

@@ -411,7 +411,7 @@ export default function SeriesSection() {
 
       <div className="grid gap-6 xl:gap-7 min-[1025px]:grid-cols-[minmax(0,1fr)_290px] xl:grid-cols-[minmax(0,1fr)_320px] 2xl:grid-cols-[minmax(0,1fr)_350px]">
         {/* Main Featured Video / Poster */}
-        <article className="group relative min-h-[500px] sm:min-h-[520px] md:min-h-[540px] xl:min-h-[560px] overflow-hidden rounded-[28px] md:rounded-[32px] max-[760px]:shadow-none max-[760px]:border-0 max-[760px]:ring-0 shadow-xl border-none outline-none">
+        <article className="group relative w-full min-h-[500px] sm:min-h-[520px] min-[1025px]:min-h-0 min-[1025px]:aspect-video overflow-hidden rounded-[28px] md:rounded-[32px] max-[760px]:shadow-none max-[760px]:border-0 max-[760px]:ring-0 shadow-xl border-none outline-none bg-black">
           {isPlaying ? (
             <div
               onClick={handleContainerClick}
@@ -419,7 +419,7 @@ export default function SeriesSection() {
                 setShowControls(true);
                 resetControlsTimeout();
               }}
-              className="relative h-full w-full min-h-[500px] sm:min-h-[520px] md:min-h-[540px] xl:min-h-[560px] flex items-center justify-center cursor-pointer select-none overflow-hidden bg-black border-none outline-none"
+              className="relative h-full w-full min-h-[500px] sm:min-h-[520px] min-[1025px]:min-h-0 flex items-center justify-center cursor-pointer select-none overflow-hidden bg-black border-none outline-none"
             >
               {selectedEpisode.videoUrl ? (
                 <>
@@ -443,13 +443,14 @@ export default function SeriesSection() {
                       setIsPaused(true);
                       setShowControls(true);
                     }}
-                    className="absolute inset-0 h-full w-full object-contain pointer-events-none border-none outline-none"
+                    className="absolute inset-0 h-full w-full object-contain min-[1025px]:object-cover pointer-events-none border-none outline-none"
                   />
 
                   {/* Top Controls: Mute/Unmute & Close Video */}
                   <div
-                    className={`absolute top-4 inset-x-4 z-20 flex items-center justify-between transition-opacity duration-300 ${showControls ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-                      }`}
+                    className={`absolute top-4 inset-x-4 z-20 flex items-center justify-between transition-opacity duration-300 ${
+                      showControls ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                    }`}
                   >
                     {/* Mute/Unmute toggle button */}
                     <button
@@ -499,8 +500,9 @@ export default function SeriesSection() {
 
                   {/* Center Play / Pause Button Overlay */}
                   <div
-                    className={`absolute inset-0 z-10 flex items-center justify-center transition-all duration-300 pointer-events-none ${showControls ? "opacity-100" : "opacity-0"
-                      }`}
+                    className={`absolute inset-0 z-10 flex items-center justify-center transition-all duration-300 pointer-events-none ${
+                      showControls ? "opacity-100" : "opacity-0"
+                    }`}
                   >
                     <button
                       type="button"
@@ -525,8 +527,9 @@ export default function SeriesSection() {
 
                   {/* Bottom Scrubber & Duration Control Bar */}
                   <div
-                    className={`absolute inset-x-0 bottom-0 z-20 flex flex-col justify-end bg-gradient-to-t from-black/90 via-black/50 to-transparent p-4 sm:p-6 transition-opacity duration-300 ${showControls ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-                      }`}
+                    className={`absolute inset-x-0 bottom-0 z-20 flex flex-col justify-end bg-gradient-to-t from-black/90 via-black/50 to-transparent p-4 sm:p-6 transition-opacity duration-300 ${
+                      showControls ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                    }`}
                     onClick={(e) => e.stopPropagation()}
                   >
                     {/* Interactive Scrubber Bar */}
@@ -621,7 +624,7 @@ export default function SeriesSection() {
             </div>
           ) : (
             <div
-              className="relative h-full w-full min-h-[500px] sm:min-h-[520px] md:min-h-[540px] xl:min-h-[560px] flex flex-col justify-between p-6 sm:p-8 md:p-10"
+              className="relative h-full w-full min-h-[500px] sm:min-h-[520px] min-[1025px]:min-h-0 flex flex-col justify-between p-6 sm:p-8 md:p-10"
               style={{
                 background: "radial-gradient(71.47% 191.86% at 92.83% 52.77%, rgba(21, 154, 153, 0) 0%, #159A99 100%), #FFFFFF",
               }}

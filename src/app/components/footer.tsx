@@ -10,7 +10,7 @@ const seriesLinks = [
   { label: "About", href: "#mission" },
   { label: "Speakers", href: "#speakers" },
   { label: "Episodes", href: "#episodes" },
-  { label: "Partners", href: "#speakers" },
+  { label: "Partners", href: "#full-releases" },
 ];
 
 // Swapped string image URLs for actual inline SVG paths to guarantee flawless hover colors
@@ -191,19 +191,13 @@ export default function Footer() {
           </p>
 
           <div className="flex items-center justify-center gap-7">
-            <a
-              href="#privacy"
-              className="font-['Geist'] text-[16px] transition-opacity hover:opacity-75"
-            >
+            <span className="font-['Geist'] text-[16px]">
               Privacy Strategy
-            </a>
+            </span>
 
-            <a
-              href="#terms"
-              className="font-['Geist'] text-[16px] transition-opacity hover:opacity-75"
-            >
+            <span className="font-['Geist'] text-[16px]">
               Terms of Service
-            </a>
+            </span>
           </div>
         </div>
       </div>

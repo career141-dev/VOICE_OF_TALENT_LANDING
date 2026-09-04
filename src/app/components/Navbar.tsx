@@ -11,7 +11,7 @@ const NAV_ITEMS = [
   { label: "Home", href: "#top", section: "top" },
   { label: "Speakers", href: "#speakers", section: "speakers" },
   { label: "Episodes", href: "#episodes", section: "episodes" },
-  { label: "Partners", href: "#speakers", section: "speakers" },
+  { label: "Partners", href: "#full-releases", section: "full-releases" },
 ];
 
 const PILL_DURATION = 320; // ms — pill animates first, then scroll happens
