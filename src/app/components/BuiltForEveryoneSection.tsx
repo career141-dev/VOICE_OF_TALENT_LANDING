@@ -59,8 +59,8 @@ export default function BuiltForEveryoneSection() {
           <article
             key={`desktop-${audience.number}`}
             style={{
-              height: "510px",
-              borderRadius: "29.98px",
+              height: "345px",
+              borderRadius: "28px",
               borderWidth: "1.62px",
               opacity: 1,
             }}
@@ -74,25 +74,26 @@ export default function BuiltForEveryoneSection() {
               overflow-hidden
               border-[#E0E0E0]
               bg-[#F5F7FA]
-              p-8
+              p-7
+              xl:p-8
               transition-all
               duration-500
               ease-out
               hover:-translate-y-1.5
               hover:border-[#159A99]
               hover:bg-[#159A99]
-              hover:shadow-[0_20px_40px_-10px_rgba(21,154,153,0.3)]
+              hover:shadow-[0_20px_40px_-10px_rgba(21,154,153,0.35)]
             "
           >
             {/* Number exits upward on hover */}
             <span
               className="
                 absolute
-                left-8
-                top-10
+                left-7
+                top-6
                 select-none
                 font-geist
-                text-[108px]
+                text-[88px]
                 font-bold
                 leading-none
                 tracking-[-0.08em]
@@ -100,8 +101,11 @@ export default function BuiltForEveryoneSection() {
                 transition-all
                 duration-500
                 ease-[cubic-bezier(0.22,1,0.36,1)]
-                group-hover:-translate-y-12
+                group-hover:-translate-y-10
                 group-hover:opacity-0
+                xl:left-8
+                xl:top-7
+                xl:text-[96px]
               "
             >
               {audience.number}
@@ -111,46 +115,53 @@ export default function BuiltForEveryoneSection() {
             <h3
               className="
                 absolute
-                left-8
-                right-8
-                top-[365px]
+                left-7
+                right-7
+                top-[225px]
                 font-geist
-                text-[26px]
-                font-normal
-                leading-[1.2]
+                text-[25px]
+                font-semibold
+                leading-[1.25]
                 tracking-[-0.03em]
-                text-black
+                text-[#161616]
                 transition-all
                 duration-700
                 ease-[cubic-bezier(0.22,1,0.36,1)]
-                group-hover:top-10
-                group-hover:font-medium
+                group-hover:top-7
                 group-hover:text-white
-                xl:text-[30px]
+                xl:left-8
+                xl:right-8
+                xl:top-[220px]
+                xl:group-hover:top-8
+                xl:text-[27px]
               "
             >
               {audience.title}
             </h3>
 
-            {/* Description appears on hover */}
+            {/* Description appears smoothly under Title on hover */}
             <p
               className="
                 absolute
-                bottom-14
-                left-8
-                right-8
-                translate-y-6
+                top-[106px]
+                left-7
+                right-7
+                translate-y-3
                 font-geist
-                text-[17px]
-                leading-[1.65]
-                text-white/90
+                text-[16px]
+                leading-[1.58]
+                text-white/95
                 opacity-0
                 transition-all
-                delay-150
+                delay-100
                 duration-500
                 ease-[cubic-bezier(0.22,1,0.36,1)]
                 group-hover:translate-y-0
                 group-hover:opacity-100
+                xl:top-[112px]
+                xl:left-8
+                xl:right-8
+                xl:text-[17px]
               "
             >
               {audience.description}
@@ -177,7 +188,8 @@ export default function BuiltForEveryoneSection() {
                   justify-between
                   overflow-hidden
                   rounded-[24px]
-                  p-6
+                  p-5
+                  sm:p-6
                   transition-all
                   duration-500
                   ease-out
@@ -200,7 +212,7 @@ export default function BuiltForEveryoneSection() {
               </span>
 
               {/* Top Tag & Number */}
-              <div className="relative z-10 mb-4 flex items-center justify-between">
+              <div className="relative z-10 mb-3 flex items-center justify-between">
                 <span
                   className={[
                     "rounded-full px-3 py-1 font-geist text-[11px] font-bold uppercase tracking-wider transition-colors duration-500",
@@ -213,11 +225,11 @@ export default function BuiltForEveryoneSection() {
                 </span>
               </div>
 
-              {/* Content */}
+              {/* Content with tight gap between heading and description */}
               <div className="relative z-10">
                 <h3
                   className={[
-                    "font-geist text-[21px] font-bold leading-tight transition-colors duration-500",
+                    "font-geist text-[20px] sm:text-[21px] font-bold leading-tight transition-colors duration-500",
                     isActive ? "text-white" : "text-[#161616]",
                   ].join(" ")}
                 >
@@ -226,8 +238,8 @@ export default function BuiltForEveryoneSection() {
 
                 <p
                   className={[
-                    "mt-2.5 font-geist text-[14px] leading-relaxed transition-colors duration-500",
-                    isActive ? "text-white/90" : "text-[#57606A]",
+                    "mt-2 font-geist text-[14.5px] sm:text-[15px] leading-relaxed transition-colors duration-500",
+                    isActive ? "text-white" : "text-[#57606A]",
                   ].join(" ")}
                 >
                   {audience.description}

@@ -241,6 +241,7 @@ export default function VoicesSlider() {
   const renderDesktopCard = (item: VoiceItem, key: string) => (
     <div
       key={key}
+      style={{ transform: "translateZ(0)" }}
       className="
         group 
         relative
@@ -250,51 +251,57 @@ export default function VoicesSlider() {
         overflow-hidden 
         bg-[#F5F7FA] 
         cursor-pointer 
-        w-[334px] 
-        h-[508px] 
+        w-[325px]
+        min-[1400px]:w-[334px] 
+        h-[385px] 
         shrink-0
-        rounded-[29.98px] 
+        rounded-[28px] 
         border-[1.62px] 
         border-[#E0E0E0] 
         shadow-sm
         
         transition-all 
-        duration-[700ms] 
-        ease-[cubic-bezier(0.25,1,0.5,1)]
+        duration-700 
+        ease-[cubic-bezier(0.22,1,0.36,1)]
+        will-change-[width,height,transform]
         
-        hover:w-[563px] 
-        hover:h-[596px] 
-        hover:-translate-y-[88px] 
+        hover:w-[540px]
+        min-[1400px]:hover:w-[563px] 
+        hover:h-[570px] 
+        hover:-translate-y-[92px] 
         hover:shadow-2xl
         hover:z-30
       "
     >
-      {/* Active Hover State View */}
+      {/* Active Hover State View - Fixed dimensions prevent text reflow and eliminate jitter/shaking */}
       <div className="
         absolute
-        inset-0
+        left-0
+        top-0
+        w-[540px]
+        min-[1400px]:w-[563px]
+        h-[570px]
         flex 
         flex-col 
-        h-full 
         justify-between 
-        w-full
         
         opacity-0 
-        group-hover:opacity-100
+        pointer-events-none
         
         transition-opacity 
-        duration-[600ms] 
-        ease-in-out 
-        delay-[200ms]
+        duration-200 
+        ease-out
+        
+        group-hover:opacity-100
+        group-hover:pointer-events-auto
+        group-hover:duration-400
+        group-hover:delay-150
         
         z-10
         bg-[#F5F7FA]
-        
-        pointer-events-none
-        group-hover:pointer-events-auto
       ">
         <div
-          className="relative h-[310px] overflow-hidden p-[28px] lg:p-[32px] flex flex-col justify-between text-white shrink-0 rounded-[28px] border border-transparent"
+          className="relative h-[290px] overflow-hidden p-[26px] lg:p-[30px] flex flex-col justify-between text-white shrink-0 rounded-[28px] border border-transparent"
           style={{
             background: "radial-gradient(71.47% 191.86% at 92.83% 52.77%, rgba(21, 154, 153, 0) 0%, #159A99 100%), #FFFFFF",
           }}
@@ -328,28 +335,28 @@ export default function VoicesSlider() {
           </div>
         </div>
 
-        <div className="px-[32px] pt-[28px] pb-[16px] flex-1 flex flex-col justify-center">
+        <div className="px-[28px] pt-[20px] pb-[12px] flex-1 flex flex-col justify-center">
           {item.bulletPoints && item.bulletPoints.length > 0 ? (
-            <ul className="flex flex-col gap-4 font-geist text-[#555]">
+            <ul className="flex flex-col gap-3.5 font-geist text-[#555]">
               {item.bulletPoints.map((point, idx) => (
-                <li key={idx} className="flex items-start gap-3 text-[17px] lg:text-[19px] font-normal leading-[1.45]">
-                  <span className="text-[#777] text-[20px] leading-[1.1] select-none shrink-0">•</span>
+                <li key={idx} className="flex items-start gap-3 text-[16px] lg:text-[18px] font-normal leading-[1.45]">
+                  <span className="text-[#777] text-[18px] leading-[1.1] select-none shrink-0">•</span>
                   <span>{point}</span>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="font-geist text-[22px] font-normal leading-[150%] text-[#666]">
+            <p className="font-geist text-[20px] font-normal leading-[150%] text-[#666]">
               "{item.quote}"
             </p>
           )}
         </div>
 
-        <div className="h-[111px] shrink-0 border-t-[1.6px] border-[#E0E0E0] mx-[32px] flex items-center">
+        <div className="h-[90px] shrink-0 border-t-[1.6px] border-[#E0E0E0] mx-[28px] flex items-center">
           <a
             href="#episodes"
             onClick={(e) => handleWatchConversation(e, item.id)}
-            className="flex items-center gap-2 font-geist text-[16.513px] font-semibold leading-normal text-[#159A99] uppercase transition-all hover:gap-3 cursor-pointer"
+            className="flex items-center gap-2 font-geist text-[15.5px] font-semibold leading-normal text-[#159A99] uppercase transition-all hover:gap-3 cursor-pointer"
           >
             WATCH CONVERSATION
             <img src={arrowRightTeal} alt="Arrow Right" className="h-[18px] w-[18px] object-contain" />
@@ -357,26 +364,34 @@ export default function VoicesSlider() {
         </div>
       </div>
 
-      {/* Normal View */}
+      {/* Normal View - Locked to resting card width (334px) so text NEVER reflows or shakes during shrink/expand */}
       <div className="
         absolute
-        inset-0
+        left-0
+        top-0
+        w-[325px]
+        min-[1400px]:w-[334px]
+        h-[385px]
         flex 
-        h-full 
         flex-col 
-        p-8
+        justify-between
+        p-7
+        xl:p-8
         
         opacity-100 
-        group-hover:opacity-0
+        pointer-events-auto
         
         transition-opacity 
-        duration-[500ms] 
+        duration-300 
         ease-in-out
+        delay-100
+        
+        group-hover:opacity-0
+        group-hover:pointer-events-none
+        group-hover:duration-200
+        group-hover:delay-0
         
         z-0
-        
-        pointer-events-auto
-        group-hover:pointer-events-none
       ">
         <div>
           <span className={badgeClasses}>
@@ -384,22 +399,23 @@ export default function VoicesSlider() {
           </span>
         </div>
 
-        <div className="absolute inset-x-8 top-[250px]">
-          <div className="flex items-center justify-between gap-2">
-            <h3 className="line-clamp-2 font-geist text-[33.629px] font-normal leading-normal text-black">
+        {/* Content Block: Uniform horizontal baseline alignment across 2-line & 3-line cards */}
+        <div className="mt-auto flex flex-col gap-3.5 xl:gap-4">
+          <div className="flex items-center justify-between gap-3 min-h-[58px] xl:min-h-[62px]">
+            <h3 className="font-geist text-[23px] xl:text-[25px] font-normal leading-[1.22] text-black">
               {item.name}
             </h3>
             <img
               src={item.avatar}
               alt={item.name}
-              className="w-[84px] h-[84px] rounded-full object-cover flex-shrink-0"
+              className="w-[76px] h-[76px] xl:w-[80px] xl:h-[80px] rounded-full object-cover shrink-0 shadow-md"
             />
           </div>
-        </div>
 
-        <p className="absolute inset-x-8 bottom-[84px] line-clamp-2 font-geist text-[22.673px] font-light leading-[150%] text-[#666]">
-          {item.role} · {item.company}
-        </p>
+          <p className="min-h-[68px] xl:min-h-[72px] font-geist text-[16px] xl:text-[17px] font-light leading-[1.4] text-[#666666]">
+            {item.role} · {item.company}
+          </p>
+        </div>
       </div>
     </div>
   );
