@@ -402,6 +402,16 @@ function DesktopThemeCard({
   const isLarge = variant === "large";
   const [imageIndex, setImageIndex] = useState(0);
 
+  // Auto-cycle dual images smoothly so all 14 speakers are continuously showcased in animation
+  useEffect(() => {
+    const delay = 3000 + (item.id % 4) * 400;
+    const timer = setInterval(() => {
+      setImageIndex((prev) => (prev === 0 ? 1 : 0));
+    }, delay);
+
+    return () => clearInterval(timer);
+  }, [item.id]);
+
   const handleHover = () => {
     setImageIndex((prev) => (prev === 0 ? 1 : 0));
   };
@@ -410,61 +420,71 @@ function DesktopThemeCard({
     <article
       onMouseEnter={handleHover}
       style={{ borderWidth: "1.62px" }}
-      className={[
-        "relative flex h-[335px] w-full overflow-hidden rounded-[30px] border-[#E3E8EC] bg-[#F7F9FA] p-8 lg:p-9",
-        "transition-all duration-500 ease-out opacity-100",
-        isLarge ? "flex-row justify-between gap-6" : "flex-col justify-between",
-      ].join(" ")}
+      className="relative flex h-[335px] w-full items-center justify-between overflow-hidden rounded-[30px] border-[#E3E8EC] bg-[#F7F9FA] p-7 xl:p-8 transition-colors duration-500"
     >
-      {isLarge ? (
-        <>
-          {/* Main Info Column */}
-          <div className="flex flex-1 flex-col justify-between pr-4">
-            <h3 className="max-w-[400px] font-geist text-[26px] font-medium leading-tight text-[#161616] lg:text-[32px]">
+      {/* ── Left Content Block (Locked Width = Zero Text Reflow) ── */}
+      <div
+        className={[
+          "flex h-full flex-col justify-between shrink-0",
+          "w-[310px] xl:w-[340px]",
+          "transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] origin-left",
+          isLarge ? "scale-100 opacity-100" : "scale-[0.96] opacity-95",
+        ].join(" ")}
+      >
+        {isLarge ? (
+          <>
+            {/* Expanded State: Title at top, Description at bottom, No Icon (User Branch Style) */}
+            <h3 className="font-geist text-[24px] xl:text-[27px] font-medium leading-snug text-[#161616]">
               {item.title}
             </h3>
 
-            <p className="max-w-[420px] font-geist text-[18px] leading-relaxed text-[#7D8590]">
+            <p className="font-geist text-[14px] xl:text-[15px] leading-relaxed text-[#7D8590]">
               {item.description}
             </p>
-          </div>
+          </>
+        ) : (
+          <>
+            {/* Compact State: Icon at top (Exact User Branch Style: h-12 w-12 bg-[#E0F2F1]), Title & Description at bottom */}
+            <div className="flex h-12 w-12 items-center justify-center rounded-[14px] bg-[#E0F2F1]">
+              <img src={item.icon} alt="" className="object-contain" />
+            </div>
 
-          {/* Image Frame with Dual Hoverable Speaker Images */}
-          <div className="relative h-full w-[260px] shrink-0 overflow-hidden rounded-[20px] bg-gray-100 lg:w-[280px]">
-            {item.images.map((src, idx) => (
-              <img
-                key={src + idx}
-                src={src}
-                alt={item.title}
-                loading="lazy"
-                decoding="async"
-                className={`absolute inset-0 h-full w-full object-cover transition-all duration-500 ease-out ${
-                  imageIndex === idx ? "opacity-100 scale-100 z-10" : "opacity-0 scale-105 pointer-events-none z-0"
-                }`}
-              />
-            ))}
-          </div>
-        </>
-      ) : (
-        /* Compressed Compact Card */
-        <div className="flex h-full w-full flex-col pt-3 lg:pt-4">
-          {/* Icon Header */}
-          <div className="flex h-12 w-12 items-center justify-center rounded-[14px] bg-[#E0F2F1]">
-            <img src={item.icon} alt="" className="object-contain" />
-          </div>
+            <div className="flex flex-col gap-2">
+              <h3 className="font-geist text-[22px] xl:text-[24px] font-medium leading-snug text-[#161616]">
+                {item.title}
+              </h3>
 
-          {/* Text Container */}
-          <div className="mt-auto">
-            <h3 className="font-geist text-[32px] font-medium leading-snug text-[#161616] lg:text-[26px]">
-              {item.title}
-            </h3>
+              <p className="font-geist text-[14px] xl:text-[15px] leading-relaxed text-[#7D8590]">
+                {item.description}
+              </p>
+            </div>
+          </>
+        )}
+      </div>
 
-            <p className="mt-2.5 line-clamp-2 font-geist text-[18px] leading-relaxed text-[#7D8590]">
-              {item.description}
-            </p>
-          </div>
-        </div>
-      )}
+      {/* ── Right Image Container (Smooth Reveal on Expansion from dev branch) ── */}
+      <div
+        className={[
+          "relative h-full shrink-0 overflow-hidden rounded-[20px] bg-gray-100",
+          "transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+          isLarge
+            ? "w-[230px] xl:w-[260px] opacity-100 translate-x-0 ml-4 xl:ml-6"
+            : "w-0 opacity-0 translate-x-8 ml-0 pointer-events-none",
+        ].join(" ")}
+      >
+        {item.images.map((src, idx) => (
+          <img
+            key={src + idx}
+            src={src}
+            alt={item.title}
+            loading="lazy"
+            decoding="async"
+            className={`absolute inset-0 h-full w-[230px] xl:w-[260px] max-w-none object-cover transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              imageIndex === idx ? "opacity-100 scale-100 z-10" : "opacity-0 scale-105 pointer-events-none z-0"
+            }`}
+          />
+        ))}
+      </div>
     </article>
   );
 }
