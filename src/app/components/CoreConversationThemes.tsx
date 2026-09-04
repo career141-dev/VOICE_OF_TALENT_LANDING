@@ -380,56 +380,52 @@ function DesktopThemeCard({
   return (
     <article
       style={{ borderWidth: "1.62px" }}
-      className={[
-        "relative flex h-[335px] w-full overflow-hidden rounded-[30px] border-[#E3E8EC] bg-[#F7F9FA] p-8 lg:p-9",
-        "transition-all duration-500 ease-out opacity-100",
-        isLarge ? "flex-row justify-between gap-6" : "flex-col justify-between",
-      ].join(" ")}
+      className="relative flex h-[335px] w-full items-center justify-between overflow-hidden rounded-[30px] border-[#E3E8EC] bg-[#F7F9FA] p-7 xl:p-8 transition-colors duration-500"
     >
-      {isLarge ? (
-        <>
-          {/* Main Info Column */}
-          <div className="flex flex-1 flex-col justify-between pr-4">
-            <h3 className="max-w-[400px] font-geist text-[26px] font-medium leading-tight text-[#161616] lg:text-[32px]">
-              {item.title}
-            </h3>
-
-            <p className="max-w-[420px] font-geist text-[18px] leading-relaxed text-[#7D8590]">
-              {item.description}
-            </p>
-          </div>
-
-          {/* Image Frame */}
-          <div className="h-full w-[260px] shrink-0 overflow-hidden rounded-[20px] bg-gray-200 lg:w-[280px]">
-            <img
-              src={item.image}
-              alt={item.title}
-              loading="lazy"
-              decoding="async"
-              className="h-full w-full object-cover"
-            />
-          </div>
-        </>
-      ) : (
-        /* Compressed Compact Card */
-        <div className="flex h-full w-full flex-col pt-3 lg:pt-4">
-          {/* Icon Header */}
-          <div className="flex h-12 w-12 items-center justify-center rounded-[14px] bg-[#E0F2F1]">
-            <img src={item.icon} alt="" className="object-contain" />
-          </div>
-
-          {/* Text Container */}
-          <div className="mt-auto">
-            <h3 className="font-geist text-[32px] font-medium leading-snug text-[#161616] lg:text-[26px]">
-              {item.title}
-            </h3>
-
-            <p className="mt-2.5 line-clamp-2 font-geist text-[18px] leading-relaxed text-[#7D8590]">
-              {item.description}
-            </p>
-          </div>
+      {/* ── Left Content Block (Locked Width = Zero Text Reflow) ── */}
+      <div
+        className={[
+          "flex h-full flex-col justify-between shrink-0",
+          "w-[310px] xl:w-[340px]",
+          "transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] origin-left",
+          isLarge ? "scale-100 opacity-100" : "scale-[0.96] opacity-95",
+        ].join(" ")}
+      >
+        {/* Icon Header */}
+        <div className="flex h-11 w-11 items-center justify-center rounded-[14px] bg-[#E0F2F1] shadow-xs">
+          <img src={item.icon} alt="" className="h-5 w-5 object-contain" />
         </div>
-      )}
+
+        {/* Text Container: Title & Description */}
+        <div className="flex flex-col gap-2.5">
+          <h3 className="font-geist text-[22px] xl:text-[25px] font-medium leading-snug text-[#161616]">
+            {item.title}
+          </h3>
+
+          <p className="font-geist text-[14px] xl:text-[15px] leading-relaxed text-[#7D8590]">
+            {item.description}
+          </p>
+        </div>
+      </div>
+
+      {/* ── Right Image Container (Smooth Reveal on Expansion) ── */}
+      <div
+        className={[
+          "relative h-full shrink-0 overflow-hidden rounded-[20px] bg-gray-100",
+          "transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+          isLarge
+            ? "w-[230px] xl:w-[260px] opacity-100 translate-x-0 ml-4 xl:ml-6"
+            : "w-0 opacity-0 translate-x-8 ml-0 pointer-events-none",
+        ].join(" ")}
+      >
+        <img
+          src={item.image}
+          alt={item.title}
+          loading="lazy"
+          decoding="async"
+          className="h-full w-[230px] xl:w-[260px] max-w-none object-cover"
+        />
+      </div>
     </article>
   );
 }
