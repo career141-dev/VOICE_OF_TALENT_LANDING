@@ -131,7 +131,7 @@ const voicesData: VoiceItem[] = [
     id: 10,
     name: 'Mr. Indika Ranathunga',
     role: 'Chief Operating Officer',
-    company: 'Allied Commercial Fertillizers',
+    company: 'Allied Commercial Fertilizers',
     bulletPoints: [
       'From your perspective, how does Talent Acquisition',
       'How do you see Talent Acquisition contributing to overall business success?',

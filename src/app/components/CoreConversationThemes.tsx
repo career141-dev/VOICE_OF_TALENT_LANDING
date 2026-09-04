@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
 
@@ -14,7 +14,7 @@ type ThemeItem = {
   subtitle: string;
   description: string;
   icon: string;
-  image: string;
+  images: [string, string];
   accentColor: string;
 };
 
@@ -27,7 +27,10 @@ const themes: ThemeItem[] = [
     subtitle: "From Transactional to Transformational",
     description:
       "How modern talent teams are evolving from operational recruiters into strategic advisors who shape workforce strategy and long-term organizational success.",
-    image: `${R2_MEDIA_URL}/images/core%20section/core1.png`,
+    images: [
+      "https://talentsuite.career141.com/images/p1.svg",
+      "https://talentsuite.career141.com/images/p2.svg",
+    ],
     icon: `${R2_MEDIA_URL}/icons/career.png`,
     accentColor: "#159A99",
   },
@@ -39,7 +42,10 @@ const themes: ThemeItem[] = [
     subtitle: "Mastery, Growth & Executive Influence",
     description:
       "Navigating the talent acquisition profession with purpose — developing key competencies, stakeholder trust, and sustainable career progression in competitive markets.",
-    image: `${R2_MEDIA_URL}/images/core%20section/core2.png`,
+    images: [
+      "https://talentsuite.career141.com/images/p3.svg",
+      "https://talentsuite.career141.com/images/p4.svg",
+    ],
     icon: `${R2_MEDIA_URL}/icons/career.png`,
     accentColor: "#0D7C7B",
   },
@@ -51,7 +57,10 @@ const themes: ThemeItem[] = [
     subtitle: "Unlocking Hidden Capabilities",
     description:
       "Evaluating mindset, problem-solving ability, and culture-add to discover exceptional talent beyond conventional credentials and traditional job qualifications.",
-    image: `${R2_MEDIA_URL}/images/core%20section/core3.png`,
+    images: [
+      "https://talentsuite.career141.com/images/p5.svg",
+      "https://talentsuite.career141.com/images/p6.svg",
+    ],
     icon: `${R2_MEDIA_URL}/icons/people.png`,
     accentColor: "#159A99",
   },
@@ -63,7 +72,10 @@ const themes: ThemeItem[] = [
     subtitle: "The Empathy Advantage",
     description:
       "Designing transparent, empathetic interview journeys that elevate employer brand prestige, respect applicant time, and build lasting professional relationships.",
-    image: `${R2_MEDIA_URL}/images/core%20section/core4.png`,
+    images: [
+      "https://talentsuite.career141.com/images/p7.svg",
+      "https://talentsuite.career141.com/images/p8.svg",
+    ],
     icon: `${R2_MEDIA_URL}/icons/people.png`,
     accentColor: "#0B5959",
   },
@@ -75,7 +87,10 @@ const themes: ThemeItem[] = [
     subtitle: "People as the Ultimate Growth Engine",
     description:
       "Understanding how visionary hiring directly drives bottom-line profitability, fuels market expansion, and establishes sustainable competitive differentiation.",
-    image: `${R2_MEDIA_URL}/images/core%20section/core5.png`,
+    images: [
+      "https://talentsuite.career141.com/images/p9.svg",
+      "https://talentsuite.career141.com/images/p10.svg",
+    ],
     icon: `${R2_MEDIA_URL}/icons/career.png`,
     accentColor: "#159A99",
   },
@@ -87,7 +102,10 @@ const themes: ThemeItem[] = [
     subtitle: "Algorithm Meets Human Intuition",
     description:
       "Leveraging smart automation and AI-driven screening to optimize hiring velocity while fiercely safeguarding the vital human touch in decision-making.",
-    image: `${R2_MEDIA_URL}/images/core%20section/core6.png`,
+    images: [
+      "https://talentsuite.career141.com/images/p11.svg",
+      "https://talentsuite.career141.com/images/p12.svg",
+    ],
     icon: `${R2_MEDIA_URL}/icons/career.png`,
     accentColor: "#0D7C7B",
   },
@@ -99,7 +117,10 @@ const themes: ThemeItem[] = [
     subtitle: "Wisdom from Veteran HR Heads",
     description:
       "Unfiltered leadership insights on navigating disruption, building resilient team cultures, and guiding talent through dynamic economic shifts.",
-    image: `${R2_MEDIA_URL}/images/core%20section/core7.png`,
+    images: [
+      "https://talentsuite.career141.com/images/p13.svg",
+      "https://talentsuite.career141.com/images/p14.svg",
+    ],
     icon: `${R2_MEDIA_URL}/icons/people.png`,
     accentColor: "#159A99",
   },
@@ -111,7 +132,10 @@ const themes: ThemeItem[] = [
     subtitle: "Building Global Competitiveness",
     description:
       "Empowering the next generation of local professionals with globally competitive skills, adaptable mindsets, and cross-industry opportunities.",
-    image: `${R2_MEDIA_URL}/images/core%20section/core8.png`,
+    images: [
+      "https://talentsuite.career141.com/images/p1.svg",
+      "https://talentsuite.career141.com/images/p14.svg",
+    ],
     icon: `${R2_MEDIA_URL}/icons/people.png`,
     accentColor: "#0B5959",
   },
@@ -376,9 +400,15 @@ function DesktopThemeCard({
   variant: "large" | "small";
 }) {
   const isLarge = variant === "large";
+  const [imageIndex, setImageIndex] = useState(0);
+
+  const handleHover = () => {
+    setImageIndex((prev) => (prev === 0 ? 1 : 0));
+  };
 
   return (
     <article
+      onMouseEnter={handleHover}
       style={{ borderWidth: "1.62px" }}
       className={[
         "relative flex h-[335px] w-full overflow-hidden rounded-[30px] border-[#E3E8EC] bg-[#F7F9FA] p-8 lg:p-9",
@@ -399,15 +429,20 @@ function DesktopThemeCard({
             </p>
           </div>
 
-          {/* Image Frame */}
-          <div className="h-full w-[260px] shrink-0 overflow-hidden rounded-[20px] bg-gray-200 lg:w-[280px]">
-            <img
-              src={item.image}
-              alt={item.title}
-              loading="lazy"
-              decoding="async"
-              className="h-full w-full object-cover"
-            />
+          {/* Image Frame with Dual Hoverable Speaker Images */}
+          <div className="relative h-full w-[260px] shrink-0 overflow-hidden rounded-[20px] bg-gray-100 lg:w-[280px]">
+            {item.images.map((src, idx) => (
+              <img
+                key={src + idx}
+                src={src}
+                alt={item.title}
+                loading="lazy"
+                decoding="async"
+                className={`absolute inset-0 h-full w-full object-cover transition-all duration-500 ease-out ${
+                  imageIndex === idx ? "opacity-100 scale-100 z-10" : "opacity-0 scale-105 pointer-events-none z-0"
+                }`}
+              />
+            ))}
           </div>
         </>
       ) : (
@@ -436,48 +471,56 @@ function DesktopThemeCard({
 
 /* ── Mobile / Tablet Card Component ── */
 function MobileThemeCard({ item }: { item: ThemeItem }) {
+  const [imageIndex, setImageIndex] = useState(0);
+
+  // Auto-cycle dual images smoothly like web view, plus allow tap to cycle
+  useEffect(() => {
+    const delay = 2800 + (item.id % 4) * 400;
+    const timer = setInterval(() => {
+      setImageIndex((prev) => (prev === 0 ? 1 : 0));
+    }, delay);
+
+    return () => clearInterval(timer);
+  }, [item.id]);
+
+  const handleToggle = () => {
+    setImageIndex((prev) => (prev === 0 ? 1 : 0));
+  };
+
   return (
     <article
+      onClick={handleToggle}
+      onMouseEnter={handleToggle}
       style={{ borderWidth: "1.62px" }}
-      className="relative flex h-[420px] w-full flex-col justify-between overflow-hidden rounded-[30px] border-[#E3E8EC] bg-white p-6 opacity-100 shadow-sm"
+      className="group relative flex h-[485px] w-full flex-col overflow-hidden rounded-[28px] border-[#E3E8EC] bg-white p-5 sm:p-6 opacity-100 shadow-sm transition-all duration-300 hover:shadow-md cursor-pointer select-none"
     >
-      {/* Watermark */}
-      <span
-        className="pointer-events-none absolute right-4 top-2 select-none font-geist text-[90px] font-black leading-none text-[#F2F6F8]"
-        aria-hidden="true"
-      >
-        {item.number}
-      </span>
-
-      {/* Top Header */}
-      <div className="relative z-10 flex items-center justify-between">
-        <div className="flex h-11 w-11 items-center justify-center rounded-[12px] border border-[rgba(21,154,153,0.20)] bg-[rgba(21,154,153,0.10)]">
-          <img src={item.icon} alt="" className="object-contain" />
-        </div>
-      </div>
-
-      {/* Image Banner */}
-      {item.image && (
-        <div className="relative z-10 my-3 h-[145px] w-full overflow-hidden rounded-[18px] shadow-sm">
+      {/* Increased Size Image Banner with Smooth Dual Speaker Image Animation */}
+      <div className="relative z-10 h-[215px] w-full shrink-0 overflow-hidden rounded-[20px] bg-gray-100 shadow-sm">
+        {item.images.map((src, idx) => (
           <img
-            src={item.image}
+            key={src + idx}
+            src={src}
             alt={item.title}
             loading="lazy"
             decoding="async"
-            className="h-full w-full object-cover"
+            className={`absolute inset-0 h-full w-full object-cover transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              imageIndex === idx
+                ? "opacity-100 scale-100 z-10"
+                : "opacity-0 scale-105 pointer-events-none z-0"
+            }`}
           />
-        </div>
-      )}
+        ))}
+      </div>
 
-      {/* Content */}
-      <div className="relative z-10">
-        <h3 className="font-geist text-[19px] font-bold leading-snug text-[#161616]">
+      {/* Content - Full text displayed with tight spacing */}
+      <div className="relative z-10 flex flex-col pt-3.5">
+        <h3 className="font-geist text-[18px] sm:text-[19px] font-bold leading-[1.25] text-[#161616]">
           {item.title}
         </h3>
-        <p className="mt-1 font-geist text-[12px] font-medium text-[#159A99]">
+        <p className="mt-1 font-geist text-[12px] font-semibold tracking-wide text-[#159A99]">
           {item.subtitle}
         </p>
-        <p className="mt-2 line-clamp-2 font-geist text-[13px] leading-relaxed text-[#57606A]">
+        <p className="mt-2 font-geist text-[13px] leading-[1.48] text-[#57606A]">
           {item.description}
         </p>
       </div>

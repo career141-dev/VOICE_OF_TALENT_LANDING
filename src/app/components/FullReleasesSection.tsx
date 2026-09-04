@@ -139,7 +139,7 @@ const episodes: Episode[] = [
     number: "10",
     guest: "MR. INDIKA RANATHUNGA",
     role: "Chief Operating Officer",
-    company: "Allied Commercial Fertillizers",
+    company: "Allied Commercial Fertilizers",
     videoUrl: `${R2_MEDIA_URL}/videos/Mr.Indiaka%20Ranathunga%2002.mp4`,
     reels: [
       `${R2_MEDIA_URL}/videos/reels/01%20Mr.%20Indika.mp4`,

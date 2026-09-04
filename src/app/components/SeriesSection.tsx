@@ -104,7 +104,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     id: 10,
     name: "Mr. Indika Ranathunga",
     role: "Chief Operating Officer",
-    company: "Allied Commercial Fertillizers",
+    company: "Allied Commercial Fertilizers",
     duration: "12:35",
     videoUrl: `${R2_MEDIA_URL}/videos/Mr.Indiaka%20Ranathunga%2002.mp4`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker10.png`,
@@ -220,7 +220,7 @@ export default function SeriesSection() {
     if (videoRef.current.paused) {
       isManuallyPausedRef.current = false;
       wasPlayingBeforeScrollOutRef.current = true;
-      videoRef.current.play().catch(() => {});
+      videoRef.current.play().catch(() => { });
       setIsPaused(false);
       resetControlsTimeout();
     } else {
@@ -273,7 +273,7 @@ export default function SeriesSection() {
   // Ensure newly mounted video starts playing if entered while not manually paused
   useEffect(() => {
     if (isPlaying && videoRef.current && !isManuallyPausedRef.current) {
-      videoRef.current.play().catch(() => {});
+      videoRef.current.play().catch(() => { });
       setIsPaused(false);
       resetControlsTimeout();
     }
@@ -288,7 +288,7 @@ export default function SeriesSection() {
           if (!isManuallyClosedRef.current && !isManuallyPausedRef.current && wasPlayingBeforeScrollOutRef.current) {
             setIsPlaying(true);
             if (videoRef.current) {
-              videoRef.current.play().catch(() => {});
+              videoRef.current.play().catch(() => { });
               setIsPaused(false);
               resetControlsTimeout();
             }
@@ -411,7 +411,7 @@ export default function SeriesSection() {
 
       <div className="grid gap-6 xl:gap-7 min-[1025px]:grid-cols-[minmax(0,1fr)_290px] xl:grid-cols-[minmax(0,1fr)_320px] 2xl:grid-cols-[minmax(0,1fr)_350px]">
         {/* Main Featured Video / Poster */}
-        <article className="group relative min-h-[500px] sm:min-h-[520px] md:min-h-[540px] xl:min-h-[560px] overflow-hidden rounded-[28px] md:rounded-[32px] bg-[#159A99] shadow-xl">
+        <article className="group relative min-h-[500px] sm:min-h-[520px] md:min-h-[540px] xl:min-h-[560px] overflow-hidden rounded-[28px] md:rounded-[32px] max-[760px]:shadow-none max-[760px]:border-0 max-[760px]:ring-0 shadow-xl border-none outline-none">
           {isPlaying ? (
             <div
               onClick={handleContainerClick}
@@ -419,7 +419,7 @@ export default function SeriesSection() {
                 setShowControls(true);
                 resetControlsTimeout();
               }}
-              className="relative h-full w-full bg-black min-h-[500px] sm:min-h-[520px] md:min-h-[540px] xl:min-h-[560px] flex items-center justify-center cursor-pointer select-none overflow-hidden"
+              className="relative h-full w-full min-h-[500px] sm:min-h-[520px] md:min-h-[540px] xl:min-h-[560px] flex items-center justify-center cursor-pointer select-none overflow-hidden bg-black border-none outline-none"
             >
               {selectedEpisode.videoUrl ? (
                 <>
@@ -443,14 +443,13 @@ export default function SeriesSection() {
                       setIsPaused(true);
                       setShowControls(true);
                     }}
-                    className="absolute inset-0 h-full w-full object-contain bg-black pointer-events-none"
+                    className="absolute inset-0 h-full w-full object-contain pointer-events-none border-none outline-none"
                   />
 
                   {/* Top Controls: Mute/Unmute & Close Video */}
                   <div
-                    className={`absolute top-4 inset-x-4 z-20 flex items-center justify-between transition-opacity duration-300 ${
-                      showControls ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-                    }`}
+                    className={`absolute top-4 inset-x-4 z-20 flex items-center justify-between transition-opacity duration-300 ${showControls ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                      }`}
                   >
                     {/* Mute/Unmute toggle button */}
                     <button
@@ -500,9 +499,8 @@ export default function SeriesSection() {
 
                   {/* Center Play / Pause Button Overlay */}
                   <div
-                    className={`absolute inset-0 z-10 flex items-center justify-center transition-all duration-300 pointer-events-none ${
-                      showControls ? "opacity-100" : "opacity-0"
-                    }`}
+                    className={`absolute inset-0 z-10 flex items-center justify-center transition-all duration-300 pointer-events-none ${showControls ? "opacity-100" : "opacity-0"
+                      }`}
                   >
                     <button
                       type="button"
@@ -527,9 +525,8 @@ export default function SeriesSection() {
 
                   {/* Bottom Scrubber & Duration Control Bar */}
                   <div
-                    className={`absolute inset-x-0 bottom-0 z-20 flex flex-col justify-end bg-gradient-to-t from-black/90 via-black/50 to-transparent p-4 sm:p-6 transition-opacity duration-300 ${
-                      showControls ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-                    }`}
+                    className={`absolute inset-x-0 bottom-0 z-20 flex flex-col justify-end bg-gradient-to-t from-black/90 via-black/50 to-transparent p-4 sm:p-6 transition-opacity duration-300 ${showControls ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                      }`}
                     onClick={(e) => e.stopPropagation()}
                   >
                     {/* Interactive Scrubber Bar */}
@@ -629,19 +626,19 @@ export default function SeriesSection() {
                 background: "radial-gradient(71.47% 191.86% at 92.83% 52.77%, rgba(21, 154, 153, 0) 0%, #159A99 100%), #FFFFFF",
               }}
             >
-              {/* Speaker Photo filling the right half */}
+              {/* Speaker Photo - Centered & sized for mobile, right-aligned for desktop */}
               <img
                 src={selectedEpisode.bannerImage}
                 alt={selectedEpisode.name}
                 loading="eager"
                 decoding="async"
                 fetchPriority="high"
-                className="absolute -right-20 sm:-right-36 md:-right-48 lg:-right-60 xl:-right-72 -bottom-20 sm:-bottom-28 md:-bottom-36 lg:-bottom-44 xl:-bottom-48 h-[112%] sm:h-[116%] md:h-[120%] xl:h-[125%] w-auto max-w-none object-contain object-right-bottom pointer-events-none z-0"
+                className="absolute left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 right-auto sm:-right-36 md:-right-48 lg:-right-60 xl:-right-72 bottom-0 sm:-bottom-28 md:-bottom-36 lg:-bottom-44 xl:-bottom-48 h-[65%] sm:h-[116%] md:h-[120%] xl:h-[125%] w-auto max-w-none object-contain object-bottom sm:object-right-bottom pointer-events-none z-0"
               />
 
               {/* Dark Gradient Overlay at the bottom for crystal clear text readability */}
               <div
-                className="pointer-events-none absolute inset-x-0 bottom-0 h-[60%] z-[1]"
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-[65%] sm:h-[60%] z-[1]"
                 style={{
                   background: "linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.45) 45%, rgba(0, 0, 0, 0.88) 100%)",
                 }}
@@ -657,7 +654,7 @@ export default function SeriesSection() {
               </div>
 
               {/* Bottom-Left: Speaker Details & Play Button */}
-              <div className="relative z-10 max-w-[85%] sm:max-w-[70%] md:max-w-[60%] pb-2">
+              <div className="relative z-10 max-w-full sm:max-w-[70%] md:max-w-[60%] pb-2">
                 <h3 className="font-geist text-[26px] sm:text-[32px] md:text-[36px] font-bold leading-tight text-white drop-shadow-md">
                   {selectedEpisode.name}
                 </h3>

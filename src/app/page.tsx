@@ -23,7 +23,6 @@ const arrowUpRight = `${R2_MEDIA_URL}/icons/arrow-up-right.svg`;
 const arrowRight = `${R2_MEDIA_URL}/icons/arrow-right.svg`;
 const arrowRightDark = `${R2_MEDIA_URL}/icons/arrow-right-dark.svg`;
 const arrowAngle = `${R2_MEDIA_URL}/icons/arrow-angle.svg`;
-const portraitImage = getOptimizedImageUrl(`${R2_MEDIA_URL}/images/portrait.png`, 500);
 const speakerImage1 = `${R2_MEDIA_URL}/images/speaker1.png`;
 const speakerImage2 = `${R2_MEDIA_URL}/images/speaker2.png`;
 const speakerImage4 = `${R2_MEDIA_URL}/images/speaker4.png`;
@@ -45,7 +44,7 @@ export default function Home() {
   return (
     <>
       <main
-        className="hero-frame isolate relative min-h-[900px] overflow-hidden bg-[#050505] bg-[radial-gradient(ellipse_at_center,rgba(21,154,153,0.22)_0%,#050505_75%)] max-[760px]:min-h-[670px]"
+        className="hero-frame isolate relative min-h-[900px] overflow-hidden bg-[#050505] bg-[radial-gradient(ellipse_at_center,rgba(21,154,153,0.22)_0%,#050505_75%)] max-[760px]:min-h-[730px]"
         data-node-id="1:845">
         {/* Background */}
         <div className="absolute inset-0 z-0" aria-hidden="true">
@@ -119,7 +118,7 @@ export default function Home() {
 
         {/* Powered by Career141 */}
         <div
-          className="absolute bottom-[7%] left-1/2 z-[10] flex -translate-x-1/2 items-center justify-center gap-2.5 sm:gap-3.5 max-[760px]:bottom-[4%]"
+          className="absolute bottom-[7%] left-1/2 z-[10] flex -translate-x-1/2 items-center justify-center gap-2.5 sm:gap-3.5 max-[760px]:bottom-4"
         >
           <span className="font-['Quicksand'] text-[18px] sm:text-[22px] md:text-[26px] font-normal leading-none text-white select-none drop-shadow translate-y-[4px] sm:translate-y-[6px] md:translate-y-[8px]">
             Powered by
@@ -136,7 +135,7 @@ export default function Home() {
 
       <section
         id="mission"
-        className="relative overflow-hidden bg-white px-6 min-[1367px]:px-[8.7%] pt-14 pb-0 min-[1367px]:pt-[100px] min-[1367px]:pb-16 text-[#202020]"
+        className="relative overflow-hidden bg-white px-6 min-[1367px]:px-[8.7%] pt-14 pb-14 sm:pb-16 min-[1367px]:pt-[100px] min-[1367px]:pb-16 text-[#202020]"
         aria-labelledby="mission-title"
       >
         <div className="flex items-start justify-between gap-6 min-[1367px]:gap-20 flex-col min-[1367px]:flex-row">
@@ -145,16 +144,6 @@ export default function Home() {
           </p>
           <div className="relative w-full min-[1367px]:w-[min(100%,1081px)] text-left min-[1367px]:text-right">
             <MissionHeadline />
-
-            <div className="block -mt-7 sm:-mt-5 md:-mt-3 relative min-[1367px]:absolute min-[1367px]:left-[46%] min-[1367px]:top-[68px] min-[1367px]:mt-0 z-[2] w-[145px] sm:w-[170px] md:w-[190px] min-[1367px]:w-[210px] pointer-events-none">
-              <img
-                className="w-full h-auto object-contain"
-                src={portraitImage}
-                loading="lazy"
-                decoding="async"
-                alt="A member of the Voice of Talent community"
-              />
-            </div>
           </div>
         </div>
       </section>

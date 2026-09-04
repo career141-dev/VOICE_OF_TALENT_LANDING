@@ -81,12 +81,12 @@ export default function Footer() {
             <img
               src={footerLogo}
               alt="VOTA — Voice of Talent Acquisition"
-              className="h-auto w-[280px] max-w-full object-contain sm:w-[340px] md:w-[380px] lg:w-[460px]"
+              className="h-auto w-[240px] sm:w-[300px] md:w-[300px] lg:w-[400px] xl:w-[460px] max-w-full object-contain"
             />
           </div>
 
           {/* Series map */}
-          <nav aria-label="Series map" className="flex flex-col items-center md:items-start">
+          <nav aria-label="Series map" className="flex flex-col items-center md:items-start shrink-0">
             <h2 className="font-['Geist'] text-[18px] font-bold uppercase leading-none text-[#262626]">
               Series Map
             </h2>
@@ -105,8 +105,8 @@ export default function Footer() {
             </ul>
           </nav>
 
-          {/* Social links */}
-          <div className="flex flex-col items-center md:items-start">
+          {/* Social links & Partner Logo */}
+          <div className="flex flex-col items-center md:items-start shrink-0">
             <h2 className="font-['Geist'] text-[18px] font-bold uppercase leading-none text-[#262626]">
               Follow Us
             </h2>
@@ -152,13 +152,13 @@ export default function Footer() {
             </div>
 
             {/* Career141 / VOTA Logo */}
-            <div className="mt-8 flex justify-center md:justify-start -ml-12 sm:-ml-18 md:-ml-24 lg:-ml-28 xl:-ml-32">
+            <div className="mt-6 md:mt-7 flex justify-center md:justify-start">
               <img
                 src={artboardImage}
                 alt="Career141 and VOTA"
                 loading="lazy"
                 decoding="async"
-                className="h-auto w-[200px] sm:w-[260px] md:w-[320px] lg:w-[380px]"
+                className="h-auto w-[160px] sm:w-[190px] md:w-[200px] lg:w-[240px] xl:w-[270px] max-w-full object-contain"
               />
             </div>
           </div>
