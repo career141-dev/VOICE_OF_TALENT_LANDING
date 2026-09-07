@@ -314,11 +314,11 @@ export default function VoicesSlider() {
             }}
           />
 
-          {/* Speaker image filling the right side */}
+          {/* Speaker image filling the right side like SeriesSection */}
           <img
             src={item.bannerImage}
             alt={item.name}
-            className="absolute right-0 top-0 h-full w-[65%] object-cover object-[center_top] pointer-events-none z-0"
+            className="absolute right-0 bottom-0 h-full w-auto max-w-none object-contain object-right-bottom pointer-events-none z-0"
           />
 
           <div className="flex justify-between items-start z-10">
@@ -479,7 +479,7 @@ export default function VoicesSlider() {
             >
               {/* Top Banner with Teal Gradient & Clear Side-by-Side Speaker Image Layout */}
               <div
-                className="relative h-[215px] sm:h-[235px] md:h-[255px] overflow-hidden p-5 sm:p-6 md:p-7 flex flex-col justify-between text-white shrink-0 rounded-[24px]"
+                className="relative h-[220px] sm:h-[240px] md:h-[255px] overflow-hidden p-5 sm:p-6 md:p-7 flex flex-col justify-between text-white shrink-0 rounded-[24px]"
                 style={{
                   background: "radial-gradient(71.47% 191.86% at 92.83% 52.77%, rgba(21, 154, 153, 0) 0%, #159A99 100%), #FFFFFF",
                 }}
@@ -492,11 +492,11 @@ export default function VoicesSlider() {
                   }}
                 />
 
-                {/* Speaker Photo filling the right half */}
+                {/* Speaker Photo like SeriesSection thumbnail */}
                 <img
                   src={currentMobileSpeaker.bannerImage}
                   alt={currentMobileSpeaker.name}
-                  className="absolute right-0 top-0 h-full w-[62%] object-cover object-[center_top] pointer-events-none z-0"
+                  className="absolute right-0 bottom-0 h-full w-auto max-w-none object-contain object-right-bottom pointer-events-none z-0"
                 />
 
                 {/* Badge */}
@@ -550,34 +550,56 @@ export default function VoicesSlider() {
           </AnimatePresence>
         </div>
 
-        {/* Mobile Navigation Dots & Arrows */}
+        {/* Mobile Navigation Dots & Arrows (Dynamic 5-Dot Window) */}
         <div className="flex items-center justify-center gap-4 mt-4">
           <button
             onClick={prevMobile}
             aria-label="Previous speaker"
-            className="h-9 w-9 rounded-full bg-[#F2F2F2] border border-[#D6D6D6] flex items-center justify-center text-black active:scale-95 transition-transform"
+            className="h-9 w-9 rounded-full bg-[#F2F2F2] border border-[#D6D6D6] flex items-center justify-center text-black active:scale-95 transition-transform cursor-pointer"
           >
             <svg className="w-4 h-4 rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M9 5l7 7-7 7" />
             </svg>
           </button>
 
-          <div className="flex items-center gap-1.5">
-            {voicesData.map((_, dotIdx) => (
-              <button
-                key={`dot-${dotIdx}`}
-                onClick={() => goToSlide(dotIdx)}
-                aria-label={`Go to slide ${dotIdx + 1}`}
-                className={`h-2 rounded-full transition-all duration-300 ${activeMobileIndex === dotIdx ? "w-6 bg-[#159A99]" : "w-2 bg-[#D6D6D6]"
-                  }`}
-              />
-            ))}
+          <div className="flex items-center gap-1.5 h-3">
+            {(() => {
+              const total = voicesData.length;
+              const maxVisible = 5;
+              const half = Math.floor(maxVisible / 2);
+              let start = activeMobileIndex - half;
+              if (start < 0) start = 0;
+              if (start + maxVisible > total) start = Math.max(0, total - maxVisible);
+              const visibleIndices = Array.from({ length: Math.min(total, maxVisible) }, (_, i) => start + i);
+
+              return visibleIndices.map((dotIdx) => {
+                const isActive = activeMobileIndex === dotIdx;
+                const isEdgeSmall =
+                  (dotIdx === start && start > 0) ||
+                  (dotIdx === start + maxVisible - 1 && start + maxVisible < total);
+
+                return (
+                  <button
+                    key={`dot-${dotIdx}`}
+                    onClick={() => goToSlide(dotIdx)}
+                    aria-label={`Go to slide ${dotIdx + 1}`}
+                    className={`rounded-full transition-all duration-300 cursor-pointer ${
+                      isActive
+                        ? "w-6 h-2 bg-[#159A99]"
+                        : isEdgeSmall
+                        ? "w-1.5 h-1.5 bg-[#D6D6D6]"
+                        : "w-2 h-2 bg-[#D6D6D6] hover:bg-[#B0B0B0]"
+                    }`}
+                  />
+                );
+              });
+            })()}
           </div>
 
           <button
             onClick={nextMobile}
             aria-label="Next speaker"
-            className="h-9 w-9 rounded-full bg-[#F2F2F2] border border-[#D6D6D6] flex items-center justify-center text-black active:scale-95 transition-transform"
+            className="h-9 w-9 rounded-full bg-[#F2F2F2] border border-[#D6D6D6] flex items-center justify-center text-black active:scale-95 transition-transform cursor-pointer"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M9 5l7 7-7 7" />

@@ -272,7 +272,7 @@ export default function CoreConversationThemes() {
         />
       </div>
 
-      {/* ── DOWN DOT PAGINATION (All 8 Themes) ── */}
+      {/* ── DOWN DOT PAGINATION (Dynamic 5-Dot Window on Mobile, Full on Desktop) ── */}
       <div className="mt-10 lg:mt-12 flex items-center justify-center gap-2.5">
         <button
           type="button"
@@ -285,23 +285,63 @@ export default function CoreConversationThemes() {
           </svg>
         </button>
 
-        {themes.map((theme, idx) => {
-          const isActive = idx === activeIndex;
-          return (
-            <button
-              key={theme.id}
-              type="button"
-              onClick={() => handleSelectTheme(idx)}
-              aria-label={`Jump to theme: ${theme.title}`}
-              title={theme.title}
-              className={`transition-all duration-400 ease-out cursor-pointer rounded-full ${
-                isActive
-                  ? "w-8 h-2.5 bg-[#159A99] shadow-sm"
-                  : "w-2.5 h-2.5 bg-[#D5DCE2] hover:bg-[#9EADB7] hover:scale-125"
-              }`}
-            />
-          );
-        })}
+        {/* Mobile / Tablet: Dynamic 5-Dot Window (< 1024px) */}
+        <div className="flex lg:hidden items-center gap-2 h-3">
+          {(() => {
+            const total = themes.length;
+            const maxVisible = 5;
+            const half = Math.floor(maxVisible / 2);
+            let start = activeIndex - half;
+            if (start < 0) start = 0;
+            if (start + maxVisible > total) start = Math.max(0, total - maxVisible);
+            const visibleIndices = Array.from({ length: Math.min(total, maxVisible) }, (_, i) => start + i);
+
+            return visibleIndices.map((idx) => {
+              const isActive = idx === activeIndex;
+              const isEdgeSmall =
+                (idx === start && start > 0) ||
+                (idx === start + maxVisible - 1 && start + maxVisible < total);
+
+              return (
+                <button
+                  key={`mobile-theme-dot-${themes[idx].id}`}
+                  type="button"
+                  onClick={() => handleSelectTheme(idx)}
+                  aria-label={`Jump to theme: ${themes[idx].title}`}
+                  title={themes[idx].title}
+                  className={`transition-all duration-300 ease-out cursor-pointer rounded-full ${
+                    isActive
+                      ? "w-7 h-2.5 bg-[#159A99] shadow-sm"
+                      : isEdgeSmall
+                      ? "w-1.5 h-1.5 bg-[#D5DCE2]"
+                      : "w-2.5 h-2.5 bg-[#D5DCE2] hover:bg-[#9EADB7]"
+                  }`}
+                />
+              );
+            });
+          })()}
+        </div>
+
+        {/* Desktop: Full 8 Dots (>= 1024px) */}
+        <div className="hidden lg:flex items-center gap-2.5">
+          {themes.map((theme, idx) => {
+            const isActive = idx === activeIndex;
+            return (
+              <button
+                key={`desktop-theme-dot-${theme.id}`}
+                type="button"
+                onClick={() => handleSelectTheme(idx)}
+                aria-label={`Jump to theme: ${theme.title}`}
+                title={theme.title}
+                className={`transition-all duration-400 ease-out cursor-pointer rounded-full ${
+                  isActive
+                    ? "w-8 h-2.5 bg-[#159A99] shadow-sm"
+                    : "w-2.5 h-2.5 bg-[#D5DCE2] hover:bg-[#9EADB7] hover:scale-125"
+                }`}
+              />
+            );
+          })}
+        </div>
 
         <button
           type="button"

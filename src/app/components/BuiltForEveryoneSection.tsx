@@ -6,7 +6,7 @@ const audiences = [
   {
     number: "01",
     tag: "CAPABILITY",
-    title: "TA Professionals",
+    title: "Talent Acquisition Professionals",
     description:
       "Connect with peers, access practical insights, and build stronger talent acquisition capability.",
   },

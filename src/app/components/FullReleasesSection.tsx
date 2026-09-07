@@ -478,7 +478,7 @@ export default function FullReleasesSection() {
                       {/* 1. Back Photo: Big, Grayscale, Upper-Left (Desktop only) */}
                       <div className="pointer-events-none absolute inset-0 overflow-hidden hidden min-[1100px]:block">
                         <img
-                          src={`${R2_MEDIA_URL}/images/reelThumbnail/speaker${selectedEpisode.id}reel.png`}
+                          src={selectedEpisode.id === 7 ? "/images/reelThumbnail/speaker7reel.png" : `${R2_MEDIA_URL}/images/reelThumbnail/speaker${selectedEpisode.id}reel.png`}
                           alt=""
                           className="absolute -top-[2%] sm:-top-[2.5%] -left-[10%] sm:-left-[5%] h-[118%] w-[110%] object-cover object-[center_top] grayscale contrast-125 brightness-105 opacity-50 select-none transition-transform duration-700 group-hover:scale-105"
                           style={{
@@ -491,9 +491,9 @@ export default function FullReleasesSection() {
                       {/* 2. Front Photo: Full Color */}
                       <div className="pointer-events-none absolute inset-0 overflow-hidden">
                         <img
-                          src={`${R2_MEDIA_URL}/images/reelThumbnail/speaker${selectedEpisode.id}reel.png`}
+                          src={selectedEpisode.id === 7 ? "/images/reelThumbnail/speaker7reel.png" : `${R2_MEDIA_URL}/images/reelThumbnail/speaker${selectedEpisode.id}reel.png`}
                           alt={selectedEpisode.guest}
-                          className="absolute -bottom-[6%] right-[2%] sm:right-[6%] h-[75%] w-[65%] sm:w-[58%] object-cover object-[center_bottom] select-none drop-shadow-[0_20px_40px_rgba(0,0,0,0.85)] transition-transform duration-500 group-hover:scale-105"
+                          className="absolute -bottom-[6%] right-[2%] sm:right-[6%] h-[75%] w-[65%] sm:w-[58%] object-cover object-[center_bottom] select-none drop-shadow-[0_20px_40px_rgba(0,0,0,0.85)] transition-transform duration-500 group-hover:scale-105 max-[760px]:-bottom-[0.5%] max-[760px]:right-[-30%] max-[760px]:h-[77%] max-[760px]:w-auto max-[760px]:max-w-none max-[760px]:object-contain"
                         />
                       </div>
 

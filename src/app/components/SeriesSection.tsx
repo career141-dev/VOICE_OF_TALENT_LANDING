@@ -387,11 +387,11 @@ export default function SeriesSection() {
           id="series-title"
           className="m-0 max-w-[880px] font-geist text-[26px] font-medium leading-[1.3] text-[#333] xl:text-[28px] max-[1024px]:text-[24px] max-[760px]:text-center max-[760px]:text-[22px]"
         >
-          This is more than a video series — It is a platform for leaders to
+          This is more than a video series — It is a platform for leaders to{" "}
           <br className="hidden xl:block" />
           share, young professionals to{" "}
           <span className="text-[#159a99]">
-            learn, and the entire industry to
+            learn, and the entire industry to{" "}
             <br className="hidden xl:block" />
             move forward together.
           </span>

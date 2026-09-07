@@ -67,11 +67,11 @@ export default function Home() {
 
         {/* Microphone */}
         <div
-          className="pointer-events-none absolute left-[calc(25%+27px)] top-[26%] z-[4] h-[108.2%] w-[min(46.82vw,899px)] overflow-hidden [--microphone-shift:0%] animate-[microphone-rise_1.5s_cubic-bezier(.22,1,.36,1)_both] max-[760px]:left-[20%] max-[760px]:top-[34%] max-[760px]:h-[92%]"
+          className="pointer-events-none absolute left-[calc(25%+27px)] top-[26%] z-[4] h-[108.2%] w-[min(46.82vw,899px)] overflow-hidden [--microphone-shift:0%] animate-[microphone-rise_1.5s_cubic-bezier(.22,1,.36,1)_both] max-[760px]:left-1/2 max-[760px]:top-[35%] max-[760px]:z-[1] max-[760px]:h-[930px] max-[760px]:w-[620px] max-[760px]:overflow-visible max-[760px]:[--microphone-shift:-50%]"
           aria-hidden="true"
         >
           <img
-            className="absolute left-[-19.25%] top-[-32%] h-[130%] w-[119.22%] max-w-none object-cover blur-[2px]"
+            className="absolute left-[-19.25%] top-[-32%] h-[130%] w-[119.22%] max-w-none object-cover blur-[2px] max-[760px]:left-[-8%] max-[760px]:top-[-28%] max-[760px]:h-[930px] max-[760px]:w-[620px] max-[760px]:object-contain"
             src={microphoneImage}
             loading="eager"
             decoding="async"
@@ -86,7 +86,7 @@ export default function Home() {
           className="absolute left-1/2 top-[43%] z-[5] w-[min(92%,935px)] -translate-x-1/2 text-center max-[760px]:top-[45%]"
         >
           <p className="mx-auto mt-4 max-w-[781px] text-[clamp(14px,1.35vw,22px)] leading-[1.6] text-white max-[760px]:px-3 max-[760px]:text-[14px]">
-            The voices shaping Sri Lanka&apos;s talent story. Meet the people connecting talent with opportunity, building stronger organizations, and shaping the<br />future of work in Sri Lanka.
+            The voices shaping Sri Lanka&apos;s talent story. Meet the people connecting talent with opportunity, building stronger organizations, and shaping the{" "}<br />future of work in Sri Lanka.
           </p>
 
           <HeroCTAs />
