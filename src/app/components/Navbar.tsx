@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
 
-const votaLogo = `${R2_MEDIA_URL}/icons/vota-logo.png`;
+const votaLogo = "https://talentsuite.career141.com/images/HeaderLogo.svg";
 const arrowUpRight = `${R2_MEDIA_URL}/icons/arrow-up-right.svg`;
 
 const NAV_ITEMS = [
@@ -100,12 +100,12 @@ export default function Navbar() {
     >
       {/* Logo */}
       <a
-        className="relative block h-[54px] w-[160px] max-[760px]:origin-top-left max-[760px]:scale-[.72]"
+        className="relative block w-[160px] h-auto max-[760px]:origin-top-left max-[760px]:scale-[.72]"
         href="#top"
         aria-label="Voice of Talent home"
       >
         <img
-          className="block h-[54px] w-[160px] object-contain object-left-top"
+          className="block w-[160px] h-auto object-contain object-left-top"
           src={votaLogo}
           alt="VOTA - Voice of Talent Acquisition"
         />

@@ -18,6 +18,9 @@ interface VoiceItem {
   bannerImage: string;
 }
 
+const SPEAKER_SECTION_IMG_BASE = "https://talentsuite.career141.com/images/speakerSection";
+const SERIES_SECTION_IMG_BASE = "https://talentsuite.career141.com/images/seriesSection";
+
 const voicesData: VoiceItem[] = [
   {
     id: 1,
@@ -28,8 +31,8 @@ const voicesData: VoiceItem[] = [
       'What makes Talent Acquisition a future ready career path?',
       'How do you see Talent Acquisition contributing to overall business success?',
     ],
-    avatar: `${R2_MEDIA_URL}/images/speaker1.png`,
-    bannerImage: `${R2_MEDIA_URL}/images/speaker1.png`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r1.svg`,
+    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-01.svg`,
   },
   {
     id: 2,
@@ -40,8 +43,8 @@ const voicesData: VoiceItem[] = [
       'How do you define Talent Acquisition in today’s context?',
       'How do you see Talent Acquisition contributing to overall business success?',
     ],
-    avatar: `${R2_MEDIA_URL}/images/speaker2.png`,
-    bannerImage: `${R2_MEDIA_URL}/images/speaker2.png`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r2.svg`,
+    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-02.svg`,
   },
   {
     id: 3,
@@ -52,8 +55,8 @@ const voicesData: VoiceItem[] = [
       'What makes Talent Acquisition a future ready career path?',
       'In your opinion, why is there a growing need for skilled Talent Acquisition professionals in Sri Lanka?',
     ],
-    avatar: `${R2_MEDIA_URL}/images/speaker3.png`,
-    bannerImage: `${R2_MEDIA_URL}/images/speaker3.png`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r3.svg`,
+    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-03.svg`,
   },
   {
     id: 4,
@@ -64,8 +67,8 @@ const voicesData: VoiceItem[] = [
       'How do you define Talent Acquisition in today’s context?',
       'In your view, why is Talent Acquisition becoming increasingly important for organizations?',
     ],
-    avatar: `${R2_MEDIA_URL}/images/speaker4.png`,
-    bannerImage: `${R2_MEDIA_URL}/images/speaker4.png`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r4.svg`,
+    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-04.svg`,
   },
   {
     id: 5,
@@ -76,8 +79,8 @@ const voicesData: VoiceItem[] = [
       'How do you define Talent Acquisition in today’s context?',
       'What key skills do you believe are essential to succeed in talent acquisition?',
     ],
-    avatar: `${R2_MEDIA_URL}/images/speaker5.png`,
-    bannerImage: `${R2_MEDIA_URL}/images/speaker5.png`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r5.svg`,
+    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-05.svg`,
   },
   {
     id: 6,
@@ -88,8 +91,8 @@ const voicesData: VoiceItem[] = [
       'How does Talent Acquisition contribute to building and strengthening organizational culture?',
       'How does a career in Talent Acquisition support individuals in achieving their broader career aspirations?',
     ],
-    avatar: `${R2_MEDIA_URL}/images/speaker6.png`,
-    bannerImage: `${R2_MEDIA_URL}/images/speaker6.png`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r6.svg`,
+    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-06.svg`,
   },
   {
     id: 7,
@@ -97,11 +100,11 @@ const voicesData: VoiceItem[] = [
     role: 'Head of Human Resources / AGM',
     company: 'Janashakthi Insurance PLC',
     bulletPoints: [
-      'How Important is the Talent Acquisition Function within an Organization',
-      "How does working in talent acquisition help broaden an individual's mindset?",
+      'How important is the Talent Acquisition function within an organization?',
+      "How does working in Talent Acquisition help broaden an individual's mindset?",
     ],
-    avatar: `${R2_MEDIA_URL}/images/speaker7.png`,
-    bannerImage: `${R2_MEDIA_URL}/images/speaker7.png`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r7.svg`,
+    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-07.svg`,
   },
   {
     id: 8,
@@ -109,11 +112,11 @@ const voicesData: VoiceItem[] = [
     role: 'Director / Senior HR Consultant',
     company: '(Former Director HR - Asiri Health)',
     bulletPoints: [
-      'How do you see talent acquisition contributing to overall business success?',
+      'How do you see Talent Acquisition contributing to overall business success?',
       'What message would you like to share with the next generation aspiring to build a career in Talent Acquisition?',
     ],
-    avatar: `${R2_MEDIA_URL}/images/speaker8.png`,
-    bannerImage: `${R2_MEDIA_URL}/images/speaker8.png`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r8.svg`,
+    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-08.svg`,
   },
   {
     id: 9,
@@ -124,8 +127,8 @@ const voicesData: VoiceItem[] = [
       'How does Talent Acquisition contribute to building and strengthening organizational culture?',
       'How does a career in Talent Acquisition support individuals in achieving their broader career aspirations?',
     ],
-    avatar: `${R2_MEDIA_URL}/images/speaker9.png`,
-    bannerImage: `${R2_MEDIA_URL}/images/speaker9.png`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r9.svg`,
+    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-09.svg`,
   },
   {
     id: 10,
@@ -136,8 +139,8 @@ const voicesData: VoiceItem[] = [
       'How do you see Talent Acquisition contributing to overall business success?',
       'From your perspective, how does Talent Acquisition differ from traditional HR roles?',
     ],
-    avatar: `${R2_MEDIA_URL}/images/speaker10.png`,
-    bannerImage: `${R2_MEDIA_URL}/images/speaker10.png`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r10.svg`,
+    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-10.svg`,
   },
   {
     id: 11,
@@ -148,8 +151,8 @@ const voicesData: VoiceItem[] = [
       'How do you see Talent Acquisition contributing to overall business success?',
       'What advice would you offer to someone considering a career in Talent Acquisition?',
     ],
-    avatar: `${R2_MEDIA_URL}/images/speaker11.png`,
-    bannerImage: `${R2_MEDIA_URL}/images/speaker11.png`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r11.svg`,
+    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-11.svg`,
   },
   {
     id: 12,
@@ -160,8 +163,8 @@ const voicesData: VoiceItem[] = [
       'How does Talent Acquisition contribute to building and strengthening organizational culture?',
       'What makes Talent Acquisition a future ready career path?',
     ],
-    avatar: `${R2_MEDIA_URL}/images/speaker12.png`,
-    bannerImage: `${R2_MEDIA_URL}/images/speaker12.png`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r12.svg`,
+    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-12.svg`,
   },
   {
     id: 13,
@@ -172,8 +175,8 @@ const voicesData: VoiceItem[] = [
       'In your opinion, why is there a growing need for skilled Talent Acquisition professionals in Sri Lanka?',
       'What is your perspective on developing Talent Acquisition professionals who are globally competitive?',
     ],
-    avatar: `${R2_MEDIA_URL}/images/speaker13.png`,
-    bannerImage: `${R2_MEDIA_URL}/images/speaker13.png`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r13.svg`,
+    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-13.svg`,
   },
   {
     id: 14,
@@ -184,8 +187,8 @@ const voicesData: VoiceItem[] = [
       'How Important is hands-on experience in building a successful career in Talent Acquisition?',
       'In your opinion, why is there a growing need for skilled Talent Acquisition professionals in Sri Lanka?',
     ],
-    avatar: `${R2_MEDIA_URL}/images/speaker14.png`,
-    bannerImage: `${R2_MEDIA_URL}/images/speaker14.png`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r14.svg`,
+    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-14.svg`,
   },
 ];
 
@@ -302,23 +305,12 @@ export default function VoicesSlider() {
       ">
         <div
           className="relative h-[290px] overflow-hidden p-[26px] lg:p-[30px] flex flex-col justify-between text-white shrink-0 rounded-[28px] border border-transparent"
-          style={{
-            background: "radial-gradient(71.47% 191.86% at 92.83% 52.77%, rgba(21, 154, 153, 0) 0%, #159A99 100%), #FFFFFF",
-          }}
         >
-          {/* Bottom dark overlay ONLY at the bottom */}
-          <div
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-[45%] z-[1]"
-            style={{
-              background: "linear-gradient(180deg, rgba(102, 102, 102, 0) 0%, #000000 100%)",
-            }}
-          />
-
-          {/* Speaker image filling the right side like SeriesSection */}
+          {/* Speaker Pillar SVG Banner */}
           <img
             src={item.bannerImage}
             alt={item.name}
-            className="absolute right-0 bottom-0 h-full w-auto max-w-none object-contain object-right-bottom pointer-events-none z-0"
+            className="absolute inset-0 h-full w-full object-cover pointer-events-none z-0"
           />
 
           <div className="flex justify-between items-start z-10">
@@ -405,11 +397,13 @@ export default function VoicesSlider() {
             <h3 className="font-geist text-[23px] xl:text-[25px] font-normal leading-[1.22] text-black">
               {item.name}
             </h3>
-            <img
-              src={item.avatar}
-              alt={item.name}
-              className="w-[76px] h-[76px] xl:w-[80px] xl:h-[80px] rounded-full object-cover shrink-0 shadow-md"
-            />
+            <div className="w-[76px] h-[76px] xl:w-[80px] xl:h-[80px] rounded-full bg-[#159A99] overflow-hidden shrink-0 shadow-md flex items-center justify-center">
+              <img
+                src={item.avatar}
+                alt={item.name}
+                className="w-full h-full object-cover"
+              />
+            </div>
           </div>
 
           <p className="min-h-[68px] xl:min-h-[72px] font-geist text-[16px] xl:text-[17px] font-light leading-[1.4] text-[#666666]">
@@ -477,26 +471,15 @@ export default function VoicesSlider() {
               }}
               className="w-full flex flex-col justify-between overflow-hidden bg-[#F5F7FA] rounded-[28px] border-[1.5px] border-[#E0E0E0] shadow-md cursor-grab active:cursor-grabbing"
             >
-              {/* Top Banner with Teal Gradient & Clear Side-by-Side Speaker Image Layout */}
+              {/* Top Banner with Pillar SVG */}
               <div
                 className="relative h-[220px] sm:h-[240px] md:h-[255px] overflow-hidden p-5 sm:p-6 md:p-7 flex flex-col justify-between text-white shrink-0 rounded-[24px]"
-                style={{
-                  background: "radial-gradient(71.47% 191.86% at 92.83% 52.77%, rgba(21, 154, 153, 0) 0%, #159A99 100%), #FFFFFF",
-                }}
               >
-                {/* Bottom dark overlay ONLY at the bottom */}
-                <div
-                  className="pointer-events-none absolute inset-x-0 bottom-0 h-[45%] z-[1]"
-                  style={{
-                    background: "linear-gradient(180deg, rgba(102, 102, 102, 0) 0%, #000000 100%)",
-                  }}
-                />
-
-                {/* Speaker Photo like SeriesSection thumbnail */}
+                {/* Speaker Pillar SVG banner image */}
                 <img
                   src={currentMobileSpeaker.bannerImage}
                   alt={currentMobileSpeaker.name}
-                  className="absolute right-0 bottom-0 h-full w-auto max-w-none object-contain object-right-bottom pointer-events-none z-0"
+                  className="absolute inset-0 h-full w-full object-cover pointer-events-none z-0"
                 />
 
                 {/* Badge */}
@@ -583,13 +566,12 @@ export default function VoicesSlider() {
                     key={`dot-${dotIdx}`}
                     onClick={() => goToSlide(dotIdx)}
                     aria-label={`Go to slide ${dotIdx + 1}`}
-                    className={`rounded-full transition-all duration-300 cursor-pointer ${
-                      isActive
-                        ? "w-6 h-2 bg-[#159A99]"
-                        : isEdgeSmall
+                    className={`rounded-full transition-all duration-300 cursor-pointer ${isActive
+                      ? "w-6 h-2 bg-[#159A99]"
+                      : isEdgeSmall
                         ? "w-1.5 h-1.5 bg-[#D6D6D6]"
                         : "w-2 h-2 bg-[#D6D6D6] hover:bg-[#B0B0B0]"
-                    }`}
+                      }`}
                   />
                 );
               });

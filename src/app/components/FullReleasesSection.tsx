@@ -3,6 +3,7 @@
 import React, { useRef, useState } from "react";
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
+const SPEAKER_SECTION_IMG_BASE = "https://talentsuite.career141.com/images/speakerSection";
 const reelBackground = `${R2_MEDIA_URL}/images/reelThumbnail/reelthumbnail.png`;
 
 type Episode = {
@@ -478,7 +479,7 @@ export default function FullReleasesSection() {
                       {/* 1. Back Photo: Big, Grayscale, Upper-Left (Desktop only) */}
                       <div className="pointer-events-none absolute inset-0 overflow-hidden hidden min-[1100px]:block">
                         <img
-                          src={selectedEpisode.id === 7 ? "/images/reelThumbnail/speaker7reel.png" : `${R2_MEDIA_URL}/images/reelThumbnail/speaker${selectedEpisode.id}reel.png`}
+                          src={`${SPEAKER_SECTION_IMG_BASE}/r${selectedEpisode.id}.svg`}
                           alt=""
                           className="absolute -top-[2%] sm:-top-[2.5%] -left-[10%] sm:-left-[5%] h-[118%] w-[110%] object-cover object-[center_top] grayscale contrast-125 brightness-105 opacity-50 select-none transition-transform duration-700 group-hover:scale-105"
                           style={{
@@ -491,9 +492,9 @@ export default function FullReleasesSection() {
                       {/* 2. Front Photo: Full Color */}
                       <div className="pointer-events-none absolute inset-0 overflow-hidden">
                         <img
-                          src={selectedEpisode.id === 7 ? "/images/reelThumbnail/speaker7reel.png" : `${R2_MEDIA_URL}/images/reelThumbnail/speaker${selectedEpisode.id}reel.png`}
+                          src={`${SPEAKER_SECTION_IMG_BASE}/r${selectedEpisode.id}.svg`}
                           alt={selectedEpisode.guest}
-                          className="absolute -bottom-[6%] right-[2%] sm:right-[6%] h-[75%] w-[65%] sm:w-[58%] object-cover object-[center_bottom] select-none drop-shadow-[0_20px_40px_rgba(0,0,0,0.85)] transition-transform duration-500 group-hover:scale-105 max-[760px]:-bottom-[0.5%] max-[760px]:right-[-30%] max-[760px]:h-[77%] max-[760px]:w-auto max-[760px]:max-w-none max-[760px]:object-contain"
+                          className="absolute bottom-0 left-1/2 -translate-x-1/2 right-auto h-[85%] sm:h-[88%] w-auto max-w-none object-contain object-bottom select-none drop-shadow-[0_20px_40px_rgba(0,0,0,0.85)] transition-transform duration-500 group-hover:scale-105 min-[1100px]:left-auto min-[1100px]:translate-x-0 min-[1100px]:right-[4%] min-[1100px]:h-[80%] min-[1100px]:w-[60%] min-[1100px]:object-contain min-[1100px]:object-right-bottom"
                         />
                       </div>
 

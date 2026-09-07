@@ -16,7 +16,10 @@ export interface SeriesEpisode {
   videoId?: string;
   videoUrl?: string;
   bannerImage: string;
+  thumbnail: string;
 }
+
+const SERIES_THUMBNAIL_BASE = "https://talentsuite.career141.com/images/seriesSection";
 
 export const seriesEpisodesData: SeriesEpisode[] = [
   {
@@ -27,6 +30,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     duration: "14:20",
     videoUrl: `${R2_MEDIA_URL}/videos/Mr.%20Pratrick%20Pereira.mp4`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker1.png`,
+    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-01.svg`,
   },
   {
     id: 2,
@@ -36,6 +40,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     duration: "12:48",
     videoUrl: `${R2_MEDIA_URL}/videos/Mr.Ken.mp4`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker2.png`,
+    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-02.svg`,
   },
   {
     id: 3,
@@ -45,6 +50,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     duration: "16:15",
     videoUrl: `${R2_MEDIA_URL}/videos/Mr.%20Chamila%20C%20Perera.mp4`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker3.png`,
+    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-03.svg`,
   },
   {
     id: 4,
@@ -54,6 +60,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     duration: "13:50",
     videoUrl: `${R2_MEDIA_URL}/videos/Ms.Thrimuthi%20Dhanushka.mp4`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker4.png`,
+    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-04.svg`,
   },
   {
     id: 5,
@@ -63,6 +70,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     duration: "15:30",
     videoUrl: `${R2_MEDIA_URL}/videos/Ms.%20Surani%20Amarasinghe.mp4`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker5.png`,
+    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-05.svg`,
   },
   {
     id: 6,
@@ -72,6 +80,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     duration: "11:45",
     videoUrl: `${R2_MEDIA_URL}/videos/Mr.Arshaq%20Farally%2002.mp4`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker6.png`,
+    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-06.svg`,
   },
   {
     id: 7,
@@ -81,6 +90,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     duration: "14:10",
     videoUrl: `${R2_MEDIA_URL}/videos/Mr.%20Danushka.mp4`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker7.png`,
+    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-07.svg`,
   },
   {
     id: 8,
@@ -90,6 +100,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     duration: "17:05",
     videoUrl: `${R2_MEDIA_URL}/videos/Ms.%20Hasanthi.mp4`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker8.png`,
+    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-08.svg`,
   },
   {
     id: 9,
@@ -99,6 +110,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     duration: "15:12",
     videoUrl: `${R2_MEDIA_URL}/videos/Mr.%20Ashan%20Ransilige%2002.mp4`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker9.png`,
+    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-09.svg`,
   },
   {
     id: 10,
@@ -108,6 +120,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     duration: "12:35",
     videoUrl: `${R2_MEDIA_URL}/videos/Mr.Indiaka%20Ranathunga%2002.mp4`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker10.png`,
+    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-10.svg`,
   },
   {
     id: 11,
@@ -117,6 +130,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     duration: "14:50",
     videoUrl: `${R2_MEDIA_URL}/videos/Ms.%20Chamindra.mp4`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker11.png`,
+    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-11.svg`,
   },
   {
     id: 12,
@@ -126,6 +140,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     duration: "13:40",
     videoUrl: `${R2_MEDIA_URL}/videos/Ms.%20Chandima.mp4`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker12.png`,
+    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-12.svg`,
   },
   {
     id: 13,
@@ -135,6 +150,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     duration: "16:22",
     videoUrl: `${R2_MEDIA_URL}/videos/Mr.%20Gehan.mp4`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker13.png`,
+    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-13.svg`,
   },
   {
     id: 14,
@@ -144,6 +160,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     duration: "15:05",
     videoUrl: `${R2_MEDIA_URL}/videos/Mr.%20Kanishka.mp4`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker14.png`,
+    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-14.svg`,
   },
 ];
 
@@ -411,7 +428,7 @@ export default function SeriesSection() {
 
       <div className="grid gap-6 xl:gap-7 min-[1025px]:grid-cols-[minmax(0,1fr)_290px] xl:grid-cols-[minmax(0,1fr)_320px] 2xl:grid-cols-[minmax(0,1fr)_350px]">
         {/* Main Featured Video / Poster */}
-        <article className="group relative w-full min-h-[500px] sm:min-h-[520px] min-[1025px]:min-h-0 min-[1025px]:aspect-video overflow-hidden rounded-[28px] md:rounded-[32px] max-[760px]:shadow-none max-[760px]:border-0 max-[760px]:ring-0 shadow-xl border-none outline-none bg-black">
+        <article className="group relative w-full min-h-[500px] sm:min-h-[520px] min-[1025px]:min-h-0 min-[1025px]:aspect-video overflow-hidden rounded-[28px] md:rounded-[32px] max-[760px]:shadow-none max-[760px]:border-0 max-[760px]:ring-0 shadow-xl border-none outline-none bg-transparent">
           {isPlaying ? (
             <div
               onClick={handleContainerClick}
@@ -624,27 +641,16 @@ export default function SeriesSection() {
             </div>
           ) : (
             <div
-              className="relative h-full w-full min-h-[500px] sm:min-h-[520px] min-[1025px]:min-h-0 flex flex-col justify-between p-6 sm:p-8 md:p-10"
-              style={{
-                background: "radial-gradient(71.47% 191.86% at 92.83% 52.77%, rgba(21, 154, 153, 0) 0%, #159A99 100%), #FFFFFF",
-              }}
+              className="relative h-full w-full min-h-[500px] sm:min-h-[520px] min-[1025px]:min-h-0 flex flex-col justify-between p-6 sm:p-8 md:p-10 overflow-hidden"
             >
-              {/* Speaker Photo - Centered & sized for mobile, right-aligned for desktop */}
+              {/* Speaker Pillar SVG Thumbnail Image */}
               <img
-                src={selectedEpisode.bannerImage}
+                src={selectedEpisode.thumbnail}
                 alt={selectedEpisode.name}
                 loading="eager"
                 decoding="async"
                 fetchPriority="high"
-                className="absolute left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 right-auto sm:-right-36 md:-right-48 lg:-right-60 xl:-right-72 bottom-0 sm:-bottom-28 md:-bottom-36 lg:-bottom-44 xl:-bottom-48 h-[65%] sm:h-[116%] md:h-[120%] xl:h-[125%] w-auto max-w-none object-contain object-bottom sm:object-right-bottom pointer-events-none z-0"
-              />
-
-              {/* Dark Gradient Overlay at the bottom for crystal clear text readability */}
-              <div
-                className="pointer-events-none absolute inset-x-0 bottom-0 h-[65%] sm:h-[60%] z-[1]"
-                style={{
-                  background: "linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.45) 45%, rgba(0, 0, 0, 0.88) 100%)",
-                }}
+                className="absolute inset-0 h-full w-full object-cover max-[760px]:object-[92%_center] max-[1024px]:object-[80%_center] min-[1025px]:object-center pointer-events-none z-0"
               />
 
               {/* Top-Left: VOTA Logo Badge */}
@@ -716,11 +722,11 @@ export default function SeriesSection() {
                     background: "radial-gradient(71.47% 191.86% at 92.83% 52.77%, rgba(21, 154, 153, 0) 0%, #159A99 100%), #FFFFFF",
                   }}
                 >
-                  {/* Speaker photo */}
+                  {/* Speaker thumbnail */}
                   <img
-                    src={episode.bannerImage}
+                    src={episode.thumbnail || episode.bannerImage}
                     alt={episode.name}
-                    className="absolute right-0 bottom-0 h-full w-auto max-w-none object-contain object-right-bottom transition-transform duration-500 group-hover:scale-105"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
 
                   {/* Gradient shadow */}
@@ -787,11 +793,11 @@ export default function SeriesSection() {
                     background: "radial-gradient(71.47% 191.86% at 92.83% 52.77%, rgba(21, 154, 153, 0) 0%, #159A99 100%), #FFFFFF",
                   }}
                 >
-                  {/* Speaker photo */}
+                  {/* Speaker thumbnail */}
                   <img
-                    src={episode.bannerImage}
+                    src={episode.thumbnail || episode.bannerImage}
                     alt={episode.name}
-                    className="absolute right-0 bottom-0 h-full w-auto max-w-none object-contain object-right-bottom transition-transform duration-500 group-hover:scale-105"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
 
                   {/* Gradient shadow */}
