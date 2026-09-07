@@ -25,8 +25,8 @@ const voicesData: VoiceItem[] = [
     role: 'Vice President Learning & Development',
     company: 'Aitken Spence Hotels',
     bulletPoints: [
-      'How do you see Talent Acquisition contributing to overall business success?',
       'What makes Talent Acquisition a future ready career path?',
+      'How do you see Talent Acquisition contributing to overall business success?',
     ],
     avatar: `${R2_MEDIA_URL}/images/speaker1.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker1.png`,
@@ -37,8 +37,8 @@ const voicesData: VoiceItem[] = [
     role: 'Senior General Manager, Human Resource & Sustainability',
     company: 'A. Baur & Co. (Pvt) Ltd',
     bulletPoints: [
-      'How do you see Talent Acquisition contributing to overall business success?',
       'How do you define Talent Acquisition in today’s context?',
+      'How do you see Talent Acquisition contributing to overall business success?',
     ],
     avatar: `${R2_MEDIA_URL}/images/speaker2.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker2.png`,
@@ -49,8 +49,8 @@ const voicesData: VoiceItem[] = [
     role: 'Former Managing Director, Head of Human Resources',
     company: 'HSBC Malaysia',
     bulletPoints: [
-      'In your opinion, why is there a growing need for skilled Talent Acquisition professionals in Sri Lanka?',
       'What makes Talent Acquisition a future ready career path?',
+      'In your opinion, why is there a growing need for skilled Talent Acquisition professionals in Sri Lanka?',
     ],
     avatar: `${R2_MEDIA_URL}/images/speaker3.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker3.png`,
@@ -61,8 +61,8 @@ const voicesData: VoiceItem[] = [
     role: 'Group Deputy General Manager, Human Resource & Administration',
     company: 'Ideal Group',
     bulletPoints: [
-      'In your view, why is Talent Acquisition becoming increasingly important for organizations?',
       'How do you define Talent Acquisition in today’s context?',
+      'In your view, why is Talent Acquisition becoming increasingly important for organizations?',
     ],
     avatar: `${R2_MEDIA_URL}/images/speaker4.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker4.png`,
@@ -73,8 +73,8 @@ const voicesData: VoiceItem[] = [
     role: 'Director, Country People Partnering, Sri Lanka',
     company: 'LSEG (London Stock Exchange Group)',
     bulletPoints: [
-      'What key skills do you believe are essential to succeed in talent acquisition?',
       'How do you define Talent Acquisition in today’s context?',
+      'What key skills do you believe are essential to succeed in talent acquisition?',
     ],
     avatar: `${R2_MEDIA_URL}/images/speaker5.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker5.png`,
@@ -85,8 +85,8 @@ const voicesData: VoiceItem[] = [
     role: 'Chief People Officer, Sri Lanka',
     company: 'Daraz',
     bulletPoints: [
-      'How does a career in Talent Acquisition support individuals in achieving their broader career aspirations?',
       'How does Talent Acquisition contribute to building and strengthening organizational culture?',
+      'How does a career in Talent Acquisition support individuals in achieving their broader career aspirations?',
     ],
     avatar: `${R2_MEDIA_URL}/images/speaker6.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker6.png`,
@@ -97,8 +97,8 @@ const voicesData: VoiceItem[] = [
     role: 'Head of Human Resources / AGM',
     company: 'Janashakthi Insurance PLC',
     bulletPoints: [
-      "How does working in talent acquisition help broaden an individual's mindset?",
       'How Important is the Talent Acquisition Function within an Organization',
+      "How does working in talent acquisition help broaden an individual's mindset?",
     ],
     avatar: `${R2_MEDIA_URL}/images/speaker7.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker7.png`,
@@ -109,8 +109,8 @@ const voicesData: VoiceItem[] = [
     role: 'Director / Senior HR Consultant',
     company: '(Former Director HR - Asiri Health)',
     bulletPoints: [
-      'What message would you like to share with the next generation aspiring to build a career in Talent Acquisition?',
       'How do you see talent acquisition contributing to overall business success?',
+      'What message would you like to share with the next generation aspiring to build a career in Talent Acquisition?',
     ],
     avatar: `${R2_MEDIA_URL}/images/speaker8.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker8.png`,
@@ -121,8 +121,8 @@ const voicesData: VoiceItem[] = [
     role: 'Chief Executive Officer',
     company: 'Link Natural Products (Pvt.) Ltd',
     bulletPoints: [
-      'How does a career in Talent Acquisition support individuals in achieving their broader career aspirations?',
       'How does Talent Acquisition contribute to building and strengthening organizational culture?',
+      'How does a career in Talent Acquisition support individuals in achieving their broader career aspirations?',
     ],
     avatar: `${R2_MEDIA_URL}/images/speaker9.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker9.png`,
@@ -133,8 +133,8 @@ const voicesData: VoiceItem[] = [
     role: 'Chief Operating Officer',
     company: 'Allied Commercial Fertilizers',
     bulletPoints: [
-      'From your perspective, how does Talent Acquisition',
       'How do you see Talent Acquisition contributing to overall business success?',
+      'From your perspective, how does Talent Acquisition differ from traditional HR roles?',
     ],
     avatar: `${R2_MEDIA_URL}/images/speaker10.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker10.png`,
@@ -145,8 +145,8 @@ const voicesData: VoiceItem[] = [
     role: 'Human Resources Director',
     company: 'GRI Sri Lanka',
     bulletPoints: [
-      'What advice would you offer to someone considering a career in Talent Acquisition?',
       'How do you see Talent Acquisition contributing to overall business success?',
+      'What advice would you offer to someone considering a career in Talent Acquisition?',
     ],
     avatar: `${R2_MEDIA_URL}/images/speaker11.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker11.png`,
@@ -157,8 +157,8 @@ const voicesData: VoiceItem[] = [
     role: 'Group Head of Human Resources',
     company: 'Pyramid Wilmar Group',
     bulletPoints: [
-      'What makes Talent Acquisition a future ready career path?',
       'How does Talent Acquisition contribute to building and strengthening organizational culture?',
+      'What makes Talent Acquisition a future ready career path?',
     ],
     avatar: `${R2_MEDIA_URL}/images/speaker12.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker12.png`,
@@ -169,8 +169,8 @@ const voicesData: VoiceItem[] = [
     role: 'Manager of Human Resources Development',
     company: 'MAS Holdings Silueta',
     bulletPoints: [
-      'What is your perspective on developing Talent Acquisition professionals who are globally competitive?',
       'In your opinion, why is there a growing need for skilled Talent Acquisition professionals in Sri Lanka?',
+      'What is your perspective on developing Talent Acquisition professionals who are globally competitive?',
     ],
     avatar: `${R2_MEDIA_URL}/images/speaker13.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker13.png`,
@@ -181,8 +181,8 @@ const voicesData: VoiceItem[] = [
     role: 'General Manager, Human Resources',
     company: 'Port City BPO',
     bulletPoints: [
-      'In your opinion, why is there a growing need for skilled Talent Acquisition professionals in Sri Lanka?',
       'How Important is hands-on experience in building a successful career in Talent Acquisition?',
+      'In your opinion, why is there a growing need for skilled Talent Acquisition professionals in Sri Lanka?',
     ],
     avatar: `${R2_MEDIA_URL}/images/speaker14.png`,
     bannerImage: `${R2_MEDIA_URL}/images/speaker14.png`,

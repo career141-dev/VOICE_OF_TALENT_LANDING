@@ -720,7 +720,7 @@ export default function SeriesSection() {
                   <img
                     src={episode.bannerImage}
                     alt={episode.name}
-                    className="absolute right-0 top-0 h-full w-[70%] object-cover object-[center_top] transition-transform duration-500 group-hover:scale-105"
+                    className="absolute right-0 bottom-0 h-full w-auto max-w-none object-contain object-right-bottom transition-transform duration-500 group-hover:scale-105"
                   />
 
                   {/* Gradient shadow */}
@@ -791,7 +791,7 @@ export default function SeriesSection() {
                   <img
                     src={episode.bannerImage}
                     alt={episode.name}
-                    className="absolute right-0 top-0 h-full w-[70%] object-cover object-[center_top] transition-transform duration-500 group-hover:scale-105"
+                    className="absolute right-0 bottom-0 h-full w-auto max-w-none object-contain object-right-bottom transition-transform duration-500 group-hover:scale-105"
                   />
 
                   {/* Gradient shadow */}

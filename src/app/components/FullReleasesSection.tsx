@@ -283,12 +283,12 @@ export default function FullReleasesSection() {
       {/* Main Container */}
       <div className="mx-auto flex w-full max-w-[1595px] flex-col-reverse gap-6 min-[1100px]:gap-8 min-[1100px]:flex-row min-[1100px]:items-start">
         {/* Episode Playlist with Custom Scroll Indicator */}
-        <div className="relative flex h-[480px] sm:h-[560px] min-[1100px]:h-[660px] w-full min-[1100px]:w-[688px] max-w-full overflow-hidden rounded-[30px] bg-[#F5F7FA]">
+        <div className="relative flex h-[480px] sm:h-[560px] min-[1100px]:h-[660px] w-full min-[1100px]:w-[688px] max-w-full overflow-hidden rounded-[24px] sm:rounded-[30px] bg-[#F5F7FA]">
           {/* Custom Scrollbar Track */}
-          <div className="relative my-4 ml-4 flex h-[calc(100%-32px)] w-[5px] shrink-0 rounded-full bg-[#E2E5E8] overflow-hidden">
+          <div className="relative my-3 sm:my-4 ml-2.5 sm:ml-4 flex h-[calc(100%-24px)] sm:h-[calc(100%-32px)] w-[4px] sm:w-[5px] shrink-0 rounded-full bg-[#E2E5E8] overflow-hidden">
             {/* Custom Black Scroll Thumb */}
             <div
-              className="absolute w-[5px] rounded-full bg-black transition-transform duration-75 ease-out"
+              className="absolute w-full rounded-full bg-black transition-transform duration-75 ease-out"
               style={{
                 height: "80px",
                 top: `${scrollProgress * 100}%`,
@@ -301,9 +301,9 @@ export default function FullReleasesSection() {
           <div
             ref={scrollContainerRef}
             onScroll={handleScroll}
-            className="h-full w-full overflow-y-auto px-4 sm:px-6 py-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="h-full w-full overflow-y-auto px-2.5 sm:px-6 py-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-3 sm:gap-4">
               {episodes.map((episode) => {
                 const isSelected = selectedEpisode.id === episode.id;
 
@@ -316,15 +316,19 @@ export default function FullReleasesSection() {
                     className={[
                       `
                         group
+                        relative
                         flex
-                        h-[143px]
+                        h-[135px]
+                        sm:h-[143px]
                         w-full
                         shrink-0
                         items-center
                         overflow-hidden
-                        rounded-[30px]
+                        rounded-[26px]
+                        sm:rounded-[30px]
                         bg-white
-                        px-6
+                        px-4
+                        sm:px-6
                         text-left
                         cursor-pointer
                         transition-all
@@ -339,32 +343,31 @@ export default function FullReleasesSection() {
                         : "border-[1.62px] border-[#EAECEE] hover:border-[#159A99]/40 hover:shadow-[0_12px_24px_-4px_rgba(0,0,0,0.06)]",
                     ].join(" ")}
                   >
-                    {/* Episode Number */}
-                    <div className="relative h-full w-[150px] shrink-0 overflow-hidden">
-                      <span
-                        className={[
-                          "absolute left-0 top-[24px] z-10 rounded-[4px] px-2 py-0.5 text-[8px] font-bold uppercase tracking-wide text-white transition-colors duration-300",
-                          isSelected ? "bg-[#159A99]" : "bg-[#B6B8BB] group-hover:bg-[#159A99]",
-                        ].join(" ")}
-                      >
-                        Episode
-                      </span>
+                    {/* Episode Badge (Top-Left) */}
+                    <span
+                      className={[
+                        "absolute left-4 sm:left-6 top-[18px] sm:top-[22px] z-10 rounded-[4px] px-2 py-0.5 text-[7.5px] sm:text-[8px] font-bold uppercase tracking-wide text-white transition-colors duration-300 pointer-events-none",
+                        isSelected ? "bg-[#159A99]" : "bg-[#B6B8BB] group-hover:bg-[#159A99]",
+                      ].join(" ")}
+                    >
+                      Episode
+                    </span>
 
+                    {/* Giant Partially-Hidden Number (Bottom-Left - Cropped at bottom border like original) */}
+                    <p
+                      className={[
+                        "absolute -bottom-[20px] left-2.5 sm:left-4 z-0 font-geist text-[86px] font-bold leading-none tracking-[-0.08em] transition-colors duration-300 select-none pointer-events-none",
+                        isSelected ? "text-[#202020]" : "text-[#E2E3E5] group-hover:text-[#CBD1D6]",
+                      ].join(" ")}
+                    >
+                      {episode.number}
+                    </p>
+
+                    {/* Guest & Role Info (Right-Aligned with plenty of room) */}
+                    <div className="relative z-10 ml-auto flex min-w-0 max-w-[66%] sm:max-w-[68%] flex-col justify-center text-right">
                       <p
                         className={[
-                          "absolute -bottom-[20px] -left-[4px] font-geist text-[86px] font-bold leading-none tracking-[-0.08em] transition-colors duration-300 select-none",
-                          isSelected ? "text-[#202020]" : "text-[#E2E3E5] group-hover:text-[#CBD1D6]",
-                        ].join(" ")}
-                      >
-                        {episode.number}
-                      </p>
-                    </div>
-
-                    {/* Guest & Role Info */}
-                    <div className="ml-auto flex min-w-0 flex-1 flex-col justify-center pl-4 text-right">
-                      <p
-                        className={[
-                          "line-clamp-1 font-geist text-[15px] font-bold uppercase tracking-wide transition-colors duration-300",
+                          "font-geist text-[13px] sm:text-[15px] font-bold uppercase tracking-tight sm:tracking-wide leading-tight sm:leading-snug transition-colors duration-300 line-clamp-2 sm:line-clamp-1",
                           isSelected ? "text-[#159A99]" : "text-[#202020] group-hover:text-[#159A99]",
                         ].join(" ")}
                       >
@@ -373,7 +376,7 @@ export default function FullReleasesSection() {
 
                       <p
                         className={[
-                          "mt-1.5 line-clamp-2 font-geist text-[13px] leading-snug transition-colors duration-300",
+                          "mt-1 sm:mt-1.5 font-geist text-[11px] sm:text-[13px] leading-[1.35] sm:leading-snug transition-colors duration-300 line-clamp-3 sm:line-clamp-2",
                           isSelected
                             ? "font-medium text-[#202020]"
                             : "font-normal text-[#71767B] group-hover:text-[#333333]",

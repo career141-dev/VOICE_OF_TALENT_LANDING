@@ -10,7 +10,7 @@ const seriesLinks = [
   { label: "About", href: "#mission" },
   { label: "Speakers", href: "#speakers" },
   { label: "Episodes", href: "#episodes" },
-  { label: "Partners", href: "#full-releases" },
+  { label: "Reels", href: "#full-releases" },
 ];
 
 // Swapped string image URLs for actual inline SVG paths to guarantee flawless hover colors
