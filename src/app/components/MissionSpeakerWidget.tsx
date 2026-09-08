@@ -58,7 +58,7 @@ export default function MissionSpeakerWidget({ currentIndex, isMobile = false }:
 
   if (isMobile) {
     return (
-      <div className="relative -rotate-[6deg] w-[130px] h-[92px] sm:w-[155px] sm:h-[108px] md:w-[170px] md:h-[118px] rounded-[10px] sm:rounded-[12px] overflow-hidden select-none pointer-events-none bg-neutral-100 shadow-md">
+      <div className="relative rotate-[6deg] w-[130px] h-[92px] sm:w-[155px] sm:h-[108px] md:w-[175px] md:h-[122px] lg:w-[190px] lg:h-[132px] rounded-[10px] sm:rounded-[12px] md:rounded-[14px] overflow-hidden select-none pointer-events-none bg-neutral-100 shadow-md">
         <AnimatePresence initial={false}>
           <motion.img
             key={safeIndex}
@@ -78,8 +78,8 @@ export default function MissionSpeakerWidget({ currentIndex, isMobile = false }:
   }
 
   return (
-    <span className="relative inline-block w-[78px] sm:w-[104px] md:w-[126px] min-[1367px]:w-[148px] h-0 align-baseline select-none mr-2 sm:mr-3 md:mr-3.5">
-      <span className="absolute left-[-6px] sm:left-[-10px] md:left-[-14px] min-[1367px]:left-[-18px] bottom-[-28px] sm:bottom-[-40px] md:bottom-[-48px] min-[1367px]:bottom-[-56px] w-[78px] h-[55px] sm:w-[104px] sm:h-[72px] md:w-[126px] md:h-[88px] min-[1367px]:w-[148px] min-[1367px]:h-[102px] -rotate-[6deg] rounded-[8px] sm:rounded-[12px] md:rounded-[14px] overflow-hidden pointer-events-none bg-neutral-100 shadow-md">
+    <span className="relative inline-block w-[78px] sm:w-[104px] md:w-[126px] lg:w-[140px] xl:w-[148px] h-0 align-baseline select-none mr-2 sm:mr-3 md:mr-3.5">
+      <span className="absolute left-[-6px] sm:left-[-10px] md:left-[-14px] lg:left-[-16px] xl:left-[-18px] bottom-[-28px] sm:bottom-[-40px] md:bottom-[-48px] lg:bottom-[-52px] xl:bottom-[-56px] w-[78px] h-[55px] sm:w-[104px] sm:h-[72px] md:w-[126px] md:h-[88px] lg:w-[140px] lg:h-[98px] xl:w-[148px] xl:h-[102px] -rotate-[6deg] rounded-[8px] sm:rounded-[12px] md:rounded-[14px] overflow-hidden pointer-events-none bg-neutral-100 shadow-md">
         <AnimatePresence initial={false}>
           <motion.img
             key={safeIndex}

@@ -50,7 +50,7 @@ export default function Home() {
   return (
     <>
       <main
-        className="hero-frame isolate relative min-h-[900px] overflow-hidden bg-[#050505] bg-[radial-gradient(ellipse_at_center,rgba(21,154,153,0.22)_0%,#050505_75%)] max-[760px]:min-h-[730px]"
+        className="hero-frame isolate relative min-h-[710px] sm:min-h-[730px] md:min-h-[750px] lg:min-h-[780px] xl:min-h-[850px] overflow-hidden bg-[#050505] bg-[radial-gradient(ellipse_at_center,rgba(21,154,153,0.22)_0%,#050505_75%)]"
         data-node-id="1:845">
         {/* Background */}
         <div className="absolute inset-0 z-0" aria-hidden="true">
@@ -73,7 +73,7 @@ export default function Home() {
 
         {/* Microphone */}
         <div
-          className="pointer-events-none absolute inset-x-0 top-[31%] z-[4] flex justify-center overflow-visible max-[760px]:top-[37%] max-[760px]:z-[1]"
+          className="pointer-events-none absolute inset-x-0 top-[30%] z-[4] flex justify-center overflow-visible max-[760px]:top-[33%] max-[760px]:z-[1]"
           aria-hidden="true"
         >
           <div className="relative flex w-[clamp(420px,38vw,560px)] max-[760px]:w-[290px] justify-center animate-[microphone-rise_1.5s_cubic-bezier(.22,1,.36,1)_both]">
@@ -91,7 +91,7 @@ export default function Home() {
         <Navbar />
         <HeroTitle />
         <div
-          className="absolute left-1/2 top-[43%] z-[5] w-[min(92%,935px)] -translate-x-1/2 text-center max-[760px]:top-[45%]"
+          className="absolute left-1/2 top-[41%] z-[5] w-[min(92%,935px)] -translate-x-1/2 text-center max-[760px]:top-[38%]"
         >
           <p className="mx-auto mt-4 max-w-[781px] text-[clamp(14px,1.35vw,22px)] leading-[1.6] text-white max-[760px]:px-3 max-[760px]:text-[14px]">
             The voices shaping Sri Lanka&apos;s talent story. Meet the people connecting talent with opportunity, building stronger organizations, and shaping the{" "}<br />future of work in Sri Lanka.
@@ -99,8 +99,8 @@ export default function Home() {
 
           <HeroCTAs />
 
-          {/* People */}
-          <div className="mt-7 sm:mt-9 flex justify-center" aria-label="Meet the people behind Voice of Talent">
+          {/* People - Identical Gap */}
+          <div className="mt-[clamp(34px,3.5vw,50px)] flex justify-center max-[760px]:mt-[34px]" aria-label="Meet the people behind Voice of Talent">
             <a
               href="#speakers"
               onClick={scrollToSpeakers}
@@ -122,35 +122,44 @@ export default function Home() {
               </div>
             </a>
           </div>
-        </div>
 
-        {/* Powered by Career141 */}
-        <div
-          className="absolute bottom-[7%] left-1/2 z-[10] flex -translate-x-1/2 items-center justify-center gap-2.5 sm:gap-3.5 max-[760px]:bottom-4"
-        >
-          <span className="font-['Quicksand'] text-[18px] sm:text-[22px] md:text-[26px] font-normal leading-none text-white select-none drop-shadow translate-y-[4px] sm:translate-y-[6px] md:translate-y-[8px]">
-            Powered by
-          </span>
-          <img
-            src="https://talentsuite-southernchapter.career141.com/IMAGES/Artboard%205%402x%204.svg"
-            alt="Career141 | 20 Years of Excellence"
-            className="h-[52px] sm:h-[64px] md:h-[76px] lg:h-[86px] w-auto object-contain drop-shadow"
-            loading="lazy"
-            decoding="async"
-          />
+          {/* Powered by Career141 - Identical Gap */}
+          <div className="mt-[clamp(34px,3.5vw,50px)] flex w-full justify-center max-[760px]:mt-[34px]">
+            <div
+              className="flex w-max flex-row flex-nowrap items-center justify-center gap-2 sm:gap-3 md:gap-4"
+            >
+              {/* Powered by Text Wrapper Div */}
+              <div className="flex h-[42px] sm:h-[56px] md:h-[72px] lg:h-[86px] shrink-0 items-center justify-center">
+                <span className="whitespace-nowrap font-['Quicksand'] text-[15px] sm:text-[20px] md:text-[24px] lg:text-[28px] font-normal leading-none text-white select-none drop-shadow translate-y-[3px] sm:translate-y-[5px] md:translate-y-[8px] lg:translate-y-[10px]">
+                  Powered by
+                </span>
+              </div>
+
+              {/* Logo Wrapper Div - Same Size */}
+              <div className="flex h-[42px] sm:h-[56px] md:h-[72px] lg:h-[86px] shrink-0 items-center justify-center">
+                <img
+                  src="https://talentsuite-southernchapter.career141.com/IMAGES/Artboard%205%402x%204.svg"
+                  alt="Career141 | 20 Years of Excellence"
+                  className="h-full w-auto object-contain drop-shadow -translate-y-[4px] sm:-translate-y-[4px] md:-translate-y-[5px] lg:-translate-y-[5px]"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </main>
 
       <section
         id="mission"
-        className="relative overflow-hidden bg-white px-6 min-[1367px]:px-[8.7%] pt-14 pb-14 sm:pb-16 min-[1367px]:pt-[100px] min-[1367px]:pb-16 text-[#202020]"
+        className="relative overflow-hidden bg-white px-6 sm:px-10 md:px-12 lg:px-[8.7%] pt-14 pb-14 sm:pb-16 md:pt-[70px] md:pb-[100px] min-[1025px]:pt-[100px] min-[1025px]:pb-[150px] text-[#202020]"
         aria-labelledby="mission-title"
       >
-        <div className="flex items-start justify-between gap-6 min-[1367px]:gap-20 flex-col min-[1367px]:flex-row">
-          <p className="m-0 shrink-0 text-[15px] sm:text-[18px] md:text-[20px] min-[1367px]:text-[23px] font-semibold uppercase tracking-[-.02em] text-[#159a99]">
+        <div className="flex items-start justify-between gap-6 min-[1025px]:gap-20 flex-col min-[1025px]:flex-row">
+          <p className="m-0 shrink-0 text-[15px] sm:text-[18px] md:text-[20px] lg:text-[22px] min-[1025px]:text-[23px] font-semibold uppercase tracking-[-.02em] text-[#159a99]">
             — The VOTA Mission
           </p>
-          <div className="relative w-full min-[1367px]:w-[min(100%,1081px)] text-left min-[1367px]:text-right">
+          <div className="relative w-full min-[1025px]:w-[min(100%,1081px)] text-left min-[1025px]:text-right">
             <MissionHeadline />
           </div>
         </div>

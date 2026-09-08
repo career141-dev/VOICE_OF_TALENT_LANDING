@@ -56,7 +56,7 @@ export default function MissionHeadline() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.25 }}
-        className="m-0 font-geist text-[20px] sm:text-[24px] md:text-[30px] lg:text-[34px] min-[1367px]:text-[40px] font-medium leading-[1.35] min-[1367px]:leading-[1.24] tracking-[-0.02em] min-[1367px]:tracking-[-0.04em] text-left min-[1367px]:text-right text-[#232323]"
+        className="m-0 font-geist text-[20px] sm:text-[24px] md:text-[28px] lg:text-[32px] min-[1025px]:text-[34px] xl:text-[40px] font-medium leading-[1.35] min-[1025px]:leading-[1.24] tracking-[-0.02em] min-[1025px]:tracking-[-0.04em] text-left min-[1025px]:text-right text-[#232323]"
       >
         {/* Line 1 - Dark Text */}
         <span className="text-[#232323]">
@@ -71,7 +71,7 @@ export default function MissionHeadline() {
           ))}
         </span>
 
-        <br className="hidden min-[1367px]:inline" />
+        <br className="hidden min-[1025px]:inline" />
 
         {/* Line 2 - "and" (dark) + Muted Text */}
         <span>
@@ -94,14 +94,14 @@ export default function MissionHeadline() {
           </span>
         </span>
 
-        <br className="hidden min-[1367px]:inline" />
+        <br className="hidden min-[1025px]:inline" />
 
         {/* Line 3 - Speaker Widget + Muted Text */}
         <span className="text-[#8d8d8d]">
           {/* Desktop inline tilted widget */}
           <motion.span
             variants={wordVariants}
-            className="hidden min-[1367px]:inline-block will-change-transform align-baseline"
+            className="hidden min-[1025px]:inline-block will-change-transform align-baseline"
           >
             <MissionSpeakerWidget currentIndex={speakerIndex} />
           </motion.span>
@@ -117,8 +117,8 @@ export default function MissionHeadline() {
         </span>
       </motion.h2>
 
-      {/* Mobile speaker image - exact layout matching screenshot */}
-      <div className="block min-[1367px]:hidden -mt-1 sm:-mt-2 ml-1 sm:ml-2 relative z-[2] pointer-events-none">
+      {/* Mobile & Tablet speaker image (<= 1024px) - right aligned */}
+      <div className="flex justify-end min-[1025px]:hidden -mt-8 sm:-mt-10 md:-mt-12 mr-1 sm:mr-3 md:mr-4 relative z-[2] pointer-events-none">
         <MissionSpeakerWidget currentIndex={speakerIndex} isMobile />
       </div>
     </div>
