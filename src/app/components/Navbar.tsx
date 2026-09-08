@@ -8,7 +8,7 @@ const votaLogo = "https://talentsuite.career141.com/images/HeaderLogo.svg";
 const arrowUpRight = `${R2_MEDIA_URL}/icons/arrow-up-right.svg`;
 
 const NAV_ITEMS = [
-  { label: "Home", href: "#top", section: "top" },
+  { label: "Home", href: "/", section: "hero" },
   { label: "Speakers", href: "#speakers", section: "speakers" },
   { label: "Episodes", href: "#episodes", section: "episodes" },
   { label: "Reels", href: "#full-releases", section: "full-releases" },
@@ -33,9 +33,12 @@ export default function Navbar() {
     setPillStyle({ left: linkRect.left - containerRect.left, width: linkRect.width });
   }, []);
 
-  /* ── Initial pill position after mount ── */
+  /* ── Initial pill position after mount & hash cleanup ── */
   useEffect(() => {
     computePill(0);
+    if (typeof window !== "undefined" && window.location.hash === "#top") {
+      history.replaceState(null, "", window.location.pathname + window.location.search);
+    }
   }, [computePill]);
 
   /* ── Intersection Observer — only fires when NOT clicking ── */
@@ -83,8 +86,12 @@ export default function Navbar() {
 
       // 3️⃣ After pill animation finishes → scroll to section
       setTimeout(() => {
-        const target = document.getElementById(item.section);
-        if (target) target.scrollIntoView({ behavior: "smooth" });
+        if (item.section === "top") {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        } else {
+          const target = document.getElementById(item.section);
+          if (target) target.scrollIntoView({ behavior: "smooth" });
+        }
 
         // Re-enable observer after scroll settles (~800ms)
         setTimeout(() => { isClickNav.current = false; }, 800);
@@ -100,8 +107,14 @@ export default function Navbar() {
     >
       {/* Logo */}
       <a
-        className="relative block w-[160px] h-auto max-[760px]:origin-top-left max-[760px]:scale-[.72]"
-        href="#top"
+        className="relative block w-[160px] h-auto max-[760px]:origin-top-left max-[760px]:scale-[.72] cursor-pointer"
+        href="/"
+        onClick={(e) => {
+          e.preventDefault();
+          setActive(NAV_ITEMS[0].label);
+          computePill(0);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
         aria-label="Voice of Talent home"
       >
         <img

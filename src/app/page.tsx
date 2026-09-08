@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SeriesSection from "./components/SeriesSection";
 import SpeakerSection from "./components/SpeakerSection";
 import CoreConversationThemes from "./components/CoreConversationThemes";
@@ -33,6 +33,12 @@ function Arrow({ source }: { source: string }) {
 }
 
 export default function Home() {
+  useEffect(() => {
+    if (typeof window !== "undefined" && (window.location.hash === "#top" || window.location.hash === "#hero")) {
+      window.history.replaceState(null, "", window.location.pathname + window.location.search);
+    }
+  }, []);
+
   const scrollToSpeakers = (e: React.MouseEvent) => {
     e.preventDefault();
     const el = document.getElementById("speakers");

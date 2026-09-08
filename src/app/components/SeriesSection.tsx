@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import AnimatedCounter from "./AnimatedCounter";
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
-const votaLogo = `${R2_MEDIA_URL}/images/VOTA Background White.png`;
+const votaLogo = `${R2_MEDIA_URL}/images/VOTA Background White.svg`;
 const reelBackground = `${R2_MEDIA_URL}/images/reelThumbnail/reelthumbnail.png`;
 
 export interface SeriesEpisode {
@@ -395,40 +395,41 @@ export default function SeriesSection() {
     <section
       id="episodes"
       ref={sectionRef}
-      className="bg-[#f8f9fa] px-6 sm:px-10 lg:px-12 xl:px-[5.5%] 2xl:px-[7%] pt-14 pb-[88px] text-[#202020] max-[760px]:px-6 max-[760px]:pt-10 max-[760px]:pb-16"
+      className="w-full bg-[#f8f9fa] px-6 sm:px-10 md:px-12 lg:px-[8.7%] pt-14 pb-[88px] text-[#202020] max-[760px]:px-6 max-[760px]:pt-10 max-[760px]:pb-16"
       aria-labelledby="series-title"
     >
-      {/* Header */}
-      <div className="mb-12 flex items-center justify-between gap-8 xl:gap-24 max-[760px]:flex-col max-[760px]:items-center max-[760px]:gap-6">
-        <p
-          id="series-title"
-          className="m-0 max-w-[880px] font-geist text-[26px] font-medium leading-[1.3] text-[#333] xl:text-[28px] max-[1024px]:text-[24px] max-[760px]:text-center max-[760px]:text-[22px]"
-        >
-          This is more than a video series — It is a platform for leaders to{" "}
-          <br className="hidden xl:block" />
-          share, young professionals to{" "}
-          <span className="text-[#159a99]">
-            learn, and the entire industry to{" "}
+      <div className="mx-auto w-full max-w-[1636px]">
+        {/* Header */}
+        <div className="mb-12 flex items-center justify-between gap-8 xl:gap-24 max-[760px]:flex-col max-[760px]:items-center max-[760px]:gap-6">
+          <p
+            id="series-title"
+            className="m-0 max-w-[880px] font-geist text-[26px] font-medium leading-[1.3] text-[#333] xl:text-[28px] max-[1024px]:text-[24px] max-[760px]:text-center max-[760px]:text-[22px]"
+          >
+            This is more than a video series — It is a platform for leaders to{" "}
             <br className="hidden xl:block" />
-            move forward together.
-          </span>
-        </p>
-
-        {/* Counter Block Centered on Mobile View */}
-        <div className="shrink-0 text-right max-[760px]:w-full max-[760px]:text-center">
-          <p className="m-0 font-geist text-[72px] font-semibold leading-none tracking-tight text-[#222] max-[1024px]:text-[56px] max-[760px]:text-[46px]">
-            <AnimatedCounter to={150} suffix="K+" />
+            share, young professionals to{" "}
+            <span className="text-[#159a99]">
+              learn, and the entire industry to{" "}
+              <br className="hidden xl:block" />
+              move forward together.
+            </span>
           </p>
 
-          <p className="mt-3 font-geist text-[16px] font-medium uppercase tracking-widest text-[#888] max-[1024px]:text-[13px] max-[760px]:text-[10px]">
-            Viewers worldwide
-          </p>
+          {/* Counter Block Centered on Mobile View */}
+          <div className="shrink-0 text-right max-[760px]:w-full max-[760px]:text-center">
+            <p className="m-0 font-geist text-[72px] font-semibold leading-none tracking-tight text-[#222] max-[1024px]:text-[56px] max-[760px]:text-[46px]">
+              <AnimatedCounter to={150} suffix="K+" />
+            </p>
+
+            <p className="mt-3 font-geist text-[16px] font-medium uppercase tracking-widest text-[#888] max-[1024px]:text-[13px] max-[760px]:text-[10px]">
+              Viewers worldwide
+            </p>
+          </div>
         </div>
-      </div>
 
-      <div className="grid gap-6 xl:gap-7 min-[1025px]:grid-cols-[minmax(0,1fr)_290px] xl:grid-cols-[minmax(0,1fr)_320px] 2xl:grid-cols-[minmax(0,1fr)_350px]">
+        <div className="w-full grid gap-5 xl:gap-[26px] min-[1025px]:grid-cols-[minmax(0,1128fr)_minmax(0,482fr)]">
         {/* Main Featured Video / Poster */}
-        <article className="group relative w-full min-h-[500px] sm:min-h-[520px] min-[1025px]:min-h-0 min-[1025px]:aspect-video overflow-hidden rounded-[28px] md:rounded-[32px] max-[760px]:shadow-none max-[760px]:border-0 max-[760px]:ring-0 shadow-xl border-none outline-none bg-transparent">
+        <article className="group relative w-full min-h-[500px] sm:min-h-[520px] min-[1025px]:min-h-0 min-[1025px]:aspect-[1128/660] overflow-hidden rounded-[24px] sm:rounded-[30px] max-[760px]:shadow-none max-[760px]:border-0 max-[760px]:ring-0 shadow-xl border-none outline-none bg-transparent">
           {isPlaying ? (
             <div
               onClick={handleContainerClick}
@@ -702,74 +703,76 @@ export default function SeriesSection() {
         </article>
 
         {/* Desktop Playlist: 14 Episodes with Custom Black Scrollbar */}
-        <div className="hidden max-h-[500px] sm:max-h-[520px] md:max-h-[540px] xl:max-h-[560px] flex-col gap-3.5 overflow-y-auto pr-3 min-[1025px]:flex [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-black [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar]:w-1.5">
-          {seriesEpisodesData.map((episode, index) => {
-            const isSelected = selectedEpisode.id === episode.id;
+        <div className="hidden min-[1025px]:block relative h-full min-h-0">
+          <div className="absolute inset-0 flex flex-col gap-3 xl:gap-[19px] overflow-y-auto pr-2 xl:pr-3 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-black [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar]:w-1.5">
+            {seriesEpisodesData.map((episode, index) => {
+              const isSelected = selectedEpisode.id === episode.id;
 
-            return (
-              <article
-                key={`desktop-${episode.id}-${index}`}
-                onClick={() => handleEpisodeSelect(episode)}
-                className={`group flex cursor-pointer items-center gap-4 rounded-[22px] p-3 transition-all duration-300 ${isSelected
-                  ? "border-[1.5px] border-[#159A99] bg-white shadow-md shadow-[#159A99]/10"
-                  : "border border-transparent bg-[#F2F4F7]/70 hover:border-[#D0D7DE] hover:bg-white hover:shadow-sm"
-                  }`}
-              >
-                {/* Thumbnail styled like the selected widget */}
-                <div
-                  className="relative h-[84px] w-[124px] xl:h-[88px] xl:w-[132px] shrink-0 overflow-hidden rounded-[14px] shadow-sm"
-                  style={{
-                    background: "radial-gradient(71.47% 191.86% at 92.83% 52.77%, rgba(21, 154, 153, 0) 0%, #159A99 100%), #FFFFFF",
-                  }}
+              return (
+                <article
+                  key={`desktop-${episode.id}-${index}`}
+                  onClick={() => handleEpisodeSelect(episode)}
+                  className={`group flex cursor-pointer items-center gap-3 xl:gap-4 rounded-[18px] xl:rounded-[22px] p-2.5 xl:p-3 shrink-0 h-[calc((100%-36px)/4)] xl:h-[calc((100%-57px)/4)] transition-all duration-300 ${isSelected
+                    ? "border-[1.5px] border-[#159A99] bg-white shadow-md shadow-[#159A99]/10"
+                    : "border border-transparent bg-[#F2F4F7]/70 hover:border-[#D0D7DE] hover:bg-white hover:shadow-sm"
+                    }`}
                 >
-                  {/* Speaker thumbnail */}
-                  <img
-                    src={episode.thumbnail || episode.bannerImage}
-                    alt={episode.name}
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-
-                  {/* Gradient shadow */}
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
-
-                  {/* VOTA Logo on thumbnail */}
-                  <img
-                    src={votaLogo}
-                    alt="VOTA"
-                    className="absolute top-1.5 left-1.5 h-[16px] w-auto max-w-[50px] rounded-[5px] object-contain z-10 shadow-sm"
-                  />
-
-                  {/* Duration */}
-                  <span className="absolute bottom-1.5 right-1.5 z-10 rounded-md bg-black/80 px-1.5 py-0.5 font-geist text-[10px] font-medium text-white">
-                    {episodeDurations[episode.id] || episode.duration}
-                  </span>
-                </div>
-
-                {/* Info */}
-                <div className="min-w-0 flex-1">
-                  <span
-                    className={`inline-block rounded-full border px-2.5 py-1 font-geist text-[8.5px] font-bold uppercase tracking-wider transition-colors ${isSelected
-                      ? "border-[#159A99] bg-[#159A99] text-white"
-                      : "border-gray-200 bg-white text-black group-hover:border-gray-300"
-                      }`}
+                  {/* Thumbnail styled like the selected widget (Figma: width 239, height 150.32, radius 21.63px) */}
+                  <div
+                    className="relative h-full aspect-[239/150.32] shrink-0 overflow-hidden rounded-[14px] xl:rounded-[21.63px] shadow-sm"
+                    style={{
+                      background: "radial-gradient(71.47% 191.86% at 92.83% 52.77%, rgba(21, 154, 153, 0) 0%, #159A99 100%), #FFFFFF",
+                    }}
                   >
-                    Explore VOTA
-                  </span>
+                    {/* Speaker thumbnail */}
+                    <img
+                      src={episode.thumbnail || episode.bannerImage}
+                      alt={episode.name}
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
 
-                  <p
-                    className={`mt-1.5 font-geist text-[14px] font-bold leading-[1.3] transition-colors line-clamp-1 ${isSelected ? "text-[#159A99]" : "text-[#222] group-hover:text-[#159A99]"
-                      }`}
-                  >
-                    {episode.name}
-                  </p>
+                    {/* Gradient shadow */}
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
 
-                  <p className="mt-0.5 line-clamp-2 font-geist text-[12px] font-normal leading-[1.35] text-[#666]">
-                    {episode.role} · {episode.company}
-                  </p>
-                </div>
-              </article>
-            );
-          })}
+                    {/* VOTA Logo on thumbnail */}
+                    <img
+                      src={votaLogo}
+                      alt="VOTA"
+                      className="absolute top-1.5 left-1.5 xl:top-2 xl:left-2 h-[15px] xl:h-[18px] w-auto max-w-[55px] rounded-[5px] xl:rounded-[6px] object-contain z-10 shadow-sm"
+                    />
+
+                    {/* Duration */}
+                    <span className="absolute bottom-1.5 right-1.5 xl:bottom-2 xl:right-2 z-10 rounded-md bg-black/80 px-1.5 xl:px-2 py-0.5 font-geist text-[9.5px] xl:text-[10.5px] font-medium text-white">
+                      {episodeDurations[episode.id] || episode.duration}
+                    </span>
+                  </div>
+
+                  {/* Info */}
+                  <div className="min-w-0 flex-1 flex flex-col justify-center">
+                    <span
+                      className={`inline-block w-fit rounded-full border px-2 xl:px-2.5 py-0.5 xl:py-1 font-geist text-[8px] xl:text-[8.5px] font-bold uppercase tracking-wider transition-colors ${isSelected
+                        ? "border-[#159A99] bg-[#159A99] text-white"
+                        : "border-gray-200 bg-white text-black group-hover:border-gray-300"
+                        }`}
+                    >
+                      Explore VOTA
+                    </span>
+
+                    <p
+                      className={`mt-1 font-geist text-[13px] xl:text-[15px] font-bold leading-[1.25] xl:leading-[1.3] transition-colors line-clamp-1 ${isSelected ? "text-[#159A99]" : "text-[#222] group-hover:text-[#159A99]"
+                        }`}
+                    >
+                      {episode.name}
+                    </p>
+
+                    <p className="mt-0.5 line-clamp-1 xl:line-clamp-2 font-geist text-[11px] xl:text-[12.5px] font-normal leading-tight xl:leading-[1.35] text-[#666]">
+                      {episode.role} · {episode.company}
+                    </p>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
         </div>
 
         {/* Tablet/Mobile Playlist: Horizontal Swipeable 14 Episodes */}
@@ -842,6 +845,7 @@ export default function SeriesSection() {
           })}
         </div>
       </div>
-    </section>
-  );
+    </div>
+  </section>
+);
 }
