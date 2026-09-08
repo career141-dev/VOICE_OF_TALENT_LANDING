@@ -18,11 +18,11 @@
 
 @keyframes microphone-rise {
   from {
-    transform: translateX(var(--microphone-shift)) translateY(100%);
+    transform: translateY(100%);
   }
 
   to {
-    transform: translateX(var(--microphone-shift)) translateY(0);
+    transform: translateY(0);
   }
 }
 

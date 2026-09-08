@@ -17,7 +17,7 @@ import { getOptimizedImageUrl } from "./utils/imageLoader";
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
 
 const backgroundImage = getOptimizedImageUrl(`${R2_MEDIA_URL}/images/hero-background.webp`, 1920);
-const microphoneImage = getOptimizedImageUrl(`${R2_MEDIA_URL}/images/microphone.webp`, 900);
+const microphoneImage = getOptimizedImageUrl(`${R2_MEDIA_URL}/images/heromic.webp`, 900);
 const votaLogo = `${R2_MEDIA_URL}/icons/vota-logo.png`;
 const arrowUpRight = `${R2_MEDIA_URL}/icons/arrow-up-right.svg`;
 const arrowRight = `${R2_MEDIA_URL}/icons/arrow-right.svg`;
@@ -67,16 +67,18 @@ export default function Home() {
 
         {/* Microphone */}
         <div
-          className="pointer-events-none absolute left-[calc(25%+27px)] top-[26%] z-[4] h-[108.2%] w-[min(46.82vw,899px)] overflow-hidden [--microphone-shift:0%] animate-[microphone-rise_1.5s_cubic-bezier(.22,1,.36,1)_both] max-[760px]:left-1/2 max-[760px]:top-[35%] max-[760px]:z-[1] max-[760px]:h-[930px] max-[760px]:w-[620px] max-[760px]:overflow-visible max-[760px]:[--microphone-shift:-50%]"
+          className="pointer-events-none absolute inset-x-0 top-[31%] z-[4] flex justify-center overflow-visible max-[760px]:top-[37%] max-[760px]:z-[1]"
           aria-hidden="true"
         >
-          <img
-            className="absolute left-[-19.25%] top-[-32%] h-[130%] w-[119.22%] max-w-none object-cover blur-[2px] max-[760px]:left-[-8%] max-[760px]:top-[-28%] max-[760px]:h-[930px] max-[760px]:w-[620px] max-[760px]:object-contain"
-            src={microphoneImage}
-            loading="eager"
-            decoding="async"
-            alt=""
-          />
+          <div className="relative flex w-[clamp(420px,38vw,560px)] max-[760px]:w-[290px] justify-center animate-[microphone-rise_1.5s_cubic-bezier(.22,1,.36,1)_both]">
+            <img
+              className="h-auto w-full object-contain pointer-events-none select-none blur-[2px] drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
+              src={microphoneImage}
+              loading="eager"
+              decoding="async"
+              alt=""
+            />
+          </div>
         </div>
 
         {/* Navbar */}
