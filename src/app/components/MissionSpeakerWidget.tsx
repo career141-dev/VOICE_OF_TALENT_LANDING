@@ -63,7 +63,7 @@ export default function MissionSpeakerWidget({ currentIndex, isMobile = false }:
           <motion.img
             key={safeIndex}
             src={SPEAKER_IMAGES[safeIndex]}
-            alt={`Voice of Talent Speaker ${safeIndex + 1}`}
+            alt={`Voices of Talent Acquisition Speaker ${safeIndex + 1}`}
             className="absolute inset-0 w-full h-full object-cover pointer-events-none"
             variants={imageVariants}
             initial="initial"
@@ -84,7 +84,7 @@ export default function MissionSpeakerWidget({ currentIndex, isMobile = false }:
           <motion.img
             key={safeIndex}
             src={SPEAKER_IMAGES[safeIndex]}
-            alt={`Voice of Talent Speaker ${safeIndex + 1}`}
+            alt={`Voices of Talent Acquisition Speaker ${safeIndex + 1}`}
             className="absolute inset-0 w-full h-full object-cover pointer-events-none"
             variants={imageVariants}
             initial="initial"

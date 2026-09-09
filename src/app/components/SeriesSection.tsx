@@ -658,7 +658,7 @@ export default function SeriesSection() {
               <div className="relative z-10 pt-1 sm:pt-3 md:pt-4">
                 <img
                   src={votaLogo}
-                  alt="VOTA - Voice of Talent Acquisition"
+                  alt="VOTA - Voices of Talent Acquisition"
                   className="h-[42px] sm:h-[60px] md:h-[88px] xl:h-[96px] w-auto max-w-[170px] sm:max-w-[220px] md:max-w-[280px] rounded-[12px] sm:rounded-[16px] md:rounded-[22px] object-contain shadow-md"
                 />
               </div>

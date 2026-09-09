@@ -28,7 +28,7 @@ export default function VotaBannerSection() {
           bg-cover
           bg-center
           px-6
-          pt-7
+          pt-5
           pb-9
           sm:min-h-[520px]
           sm:rounded-[40px]
@@ -60,11 +60,11 @@ export default function VotaBannerSection() {
             alt="Career141 and VOTA"
             loading="lazy"
             decoding="async"
-            className="h-auto w-[150px] object-contain sm:w-[220px] lg:w-[400px]"
+            className="h-auto w-[140px] object-contain sm:w-[220px] lg:w-[400px]"
           />
 
           {/* Banner Content & Buttons */}
-          <div className="mt-9 w-full sm:mt-12 md:mt-20">
+          <div className="mt-8 w-full sm:mt-12 md:mt-20">
             <h2 className="max-w-[760px] font-['Geist'] text-[22px] sm:text-[32px] md:text-[38px] lg:text-[46px] font-semibold leading-[1.22] tracking-[-0.03em] text-white">
               Sri Lanka&apos;s Talent Story Is Being Written Today.
               <br className="hidden sm:block" />{" "}

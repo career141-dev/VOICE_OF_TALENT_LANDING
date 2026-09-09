@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 type ThemeItem = {
@@ -59,19 +59,21 @@ const themes: ThemeItem[] = [
       "Empowering the next generation of local professionals with globally competitive skills, adaptable mindsets, and cross-industry opportunities.",
   },
 ];
+
+function getCircularDiff(index: number, active: number, total: number) {
+  let diff = index - active;
+  if (diff > total / 2) diff -= total;
+  if (diff < -total / 2) diff += total;
+  return diff;
+}
+
 export default function CoreConversationThemes() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [direction, setDirection] = useState(0);
+  const [direction, setDirection] = useState<number>(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   const lastSwipeTime = useRef<number>(0);
-  const containerTouchStartX = useRef<number | null>(null);
-  const containerTouchStartY = useRef<number | null>(null);
-  const containerTouchTime = useRef<number>(0);
-
   const totalThemes = themes.length;
-
-  const prevIndex = (activeIndex - 1 + totalThemes) % totalThemes;
-  const nextIndex = (activeIndex + 1) % totalThemes;
 
   const handlePrev = useCallback(() => {
     setDirection(-1);
@@ -97,20 +99,36 @@ export default function CoreConversationThemes() {
     handleNext();
   }, [handleNext]);
 
-  const handleSelectTheme = (index: number, dir?: number) => {
+  const handleSelectTheme = (index: number) => {
     if (index === activeIndex) return;
-    setDirection(dir ?? (index > activeIndex ? 1 : -1));
+    setDirection(index > activeIndex ? 1 : -1);
     setActiveIndex(index);
   };
 
-  /* ── Container Touch Swiping by Hand (For swipes starting on side cards / container) ── */
+  /* ── Auto-play Movement (Advances every 6.5s, pauses on hover / touch) ── */
+  useEffect(() => {
+    if (isPaused) return;
+    const interval = setInterval(() => {
+      handleNext();
+    }, 6500);
+
+    return () => clearInterval(interval);
+  }, [isPaused, handleNext, activeIndex]);
+
+  /* ── Container Touch Swiping for Mobile Carousel ── */
+  const containerTouchStartX = useRef<number | null>(null);
+  const containerTouchStartY = useRef<number | null>(null);
+  const containerTouchTime = useRef<number>(0);
+
   const handleContainerTouchStart = (e: React.TouchEvent) => {
+    setIsPaused(true);
     containerTouchStartX.current = e.touches[0].clientX;
     containerTouchStartY.current = e.touches[0].clientY;
     containerTouchTime.current = Date.now();
   };
 
   const handleContainerTouchEnd = (e: React.TouchEvent) => {
+    setIsPaused(false);
     if (containerTouchStartX.current === null || containerTouchStartY.current === null) return;
     const endX = e.changedTouches[0]?.clientX ?? containerTouchStartX.current;
     const endY = e.changedTouches[0]?.clientY ?? containerTouchStartY.current;
@@ -119,8 +137,7 @@ export default function CoreConversationThemes() {
     const elapsed = Date.now() - containerTouchTime.current;
     const speedX = Math.abs(diffX) / Math.max(elapsed, 1);
 
-    // If horizontal swipe is detected (> 30px or quick flick)
-    if ((Math.abs(diffX) > 30 || (Math.abs(diffX) > 15 && speedX > 0.25)) && Math.abs(diffX) > Math.abs(diffY)) {
+    if ((Math.abs(diffX) > 25 || (Math.abs(diffX) > 15 && speedX > 0.2)) && Math.abs(diffX) > Math.abs(diffY)) {
       if (diffX < 0) {
         triggerNext();
       } else {
@@ -140,136 +157,161 @@ export default function CoreConversationThemes() {
           CURATED TOPICS
         </span>
 
-        <h2 className="mt-2 font-cal font-normal text-[28px] sm:text-[38px] md:text-[50px] leading-[110%] tracking-normal text-[#262626] capitalize">
+        <h2 className="mt-3 font-cal font-normal text-[28px] sm:text-[38px] md:text-[50px] leading-[110%] tracking-normal text-[#262626] capitalize">
           Core Conversation Themes
         </h2>
       </div>
 
-      {/* ── DESKTOP 3-WIDGET VIEW (Aligned to Header Left & Right Edges) ── */}
-      <div className="hidden lg:block w-full">
-        <div className="flex w-full items-center justify-between gap-6 xl:gap-8 min-h-[470px] xl:min-h-[510px]">
-          {/* ── Left Widget (Aligned with header left 'Core' title edge) ── */}
-          <div className="w-[28%] xl:w-[28.5%] shrink-0">
-            <SideThemeCard
-              item={themes[prevIndex]}
-              onClick={() => handleSelectTheme(prevIndex, -1)}
-            />
-          </div>
+      {/* ── DESKTOP 3-WIDGET CONTINUOUS CAROUSEL (Left -> Center -> Right Real Movement) ── */}
+      <div
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+        className="hidden lg:block relative w-full h-[470px] xl:h-[510px]"
+      >
+        {themes.map((theme, idx) => {
+          const diff = getCircularDiff(idx, activeIndex, totalThemes);
+          const isVisible = Math.abs(diff) <= 2;
+          if (!isVisible) return null;
 
-          {/* ── Middle Widget (Active Item: Taller & Prominent #159A99) ── */}
-          <div className="w-[42%] xl:w-[41%] shrink-0">
-            <AnimatePresence mode="popLayout" custom={direction} initial={false}>
-              <motion.div
-                key={themes[activeIndex].id}
-                custom={direction}
-                initial={{ opacity: 0, x: direction > 0 ? 60 : -60, scale: 0.98 }}
-                animate={{ opacity: 1, x: 0, scale: 1 }}
-                exit={{ opacity: 0, x: direction > 0 ? -60 : 60, scale: 0.98 }}
-                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          const isActive = diff === 0;
+
+          return (
+            <motion.article
+              key={`desktop-theme-card-${theme.id}`}
+              initial={false}
+              animate={{
+                left: diff === 0 ? "50%" : diff === -1 ? "0%" : diff === 1 ? "72%" : diff < -1 ? "-32%" : "104%",
+                x: diff === 0 ? "-50%" : "0%",
+                width: diff === 0 ? "42%" : "28%",
+                height: diff === 0 ? "440px" : "330px",
+                zIndex: diff === 0 ? 30 : 20,
+                opacity: Math.abs(diff) <= 1 ? 1 : 0,
+                backgroundColor: diff === 0 ? "#159A99" : "#F5F7FA",
+                borderColor: diff === 0 ? "transparent" : "#159A99",
+                boxShadow:
+                  diff === 0
+                    ? "0 22px 56px rgba(21, 154, 153, 0.32)"
+                    : "0 4px 14px rgba(0, 0, 0, 0.04)",
+                pointerEvents: Math.abs(diff) <= 1 ? "auto" : "none",
+              }}
+              transition={{
+                duration: 0.75,
+                ease: [0.25, 1, 0.5, 1],
+              }}
+              style={{
+                backfaceVisibility: "hidden",
+                WebkitFontSmoothing: "antialiased",
+                transform: "translate3d(0,0,0)",
+              }}
+              onClick={() => {
+                if (diff === -1) handlePrev();
+                if (diff === 1) handleNext();
+              }}
+              className={`absolute top-1/2 -translate-y-1/2 flex flex-col items-center text-center rounded-[28px] xl:rounded-[34px] border-[1.5px] select-none ${
+                isActive
+                  ? "justify-between px-8 pt-11 pb-13 xl:px-12 xl:pt-13 xl:pb-16 cursor-default"
+                  : "justify-center px-7 xl:px-10 py-6 cursor-pointer hover:bg-white hover:shadow-md transition-colors"
+              }`}
+            >
+              {/* Title */}
+              <h3
+                className={`font-cal font-normal leading-[1.2] transition-colors duration-500 ${
+                  isActive
+                    ? "text-white text-[28px] sm:text-[32px] xl:text-[36px] max-w-[490px]"
+                    : "text-[#161616] text-[21px] sm:text-[23px] xl:text-[25px] max-w-[280px]"
+                }`}
               >
-                <ActiveCenterThemeCard item={themes[activeIndex]} />
-              </motion.div>
-            </AnimatePresence>
-          </div>
+                {theme.title}
+              </h3>
 
-          {/* ── Right Widget (Aligned with header right navigation arrow edge) ── */}
-          <div className="w-[28%] xl:w-[28.5%] shrink-0">
-            <SideThemeCard
-              item={themes[nextIndex]}
-              onClick={() => handleSelectTheme(nextIndex, 1)}
-            />
-          </div>
-        </div>
+              {/* Description (Only in active widget) */}
+              {isActive && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.45 }}
+                  className="max-w-[470px]"
+                >
+                  <p className="font-geist text-[17px] sm:text-[19px] xl:text-[21px] font-light leading-[1.6] text-white/95">
+                    {theme.description}
+                  </p>
+                </motion.div>
+              )}
+            </motion.article>
+          );
+        })}
       </div>
 
-      {/* ── TABLET & MOBILE VIEW (3-Card Stack with Real-Time Hand Swiping & Touch Gestures) ── */}
+      {/* ── TABLET & MOBILE VIEW (Continuous Carousel: Prev glides left, Next glides to center) ── */}
       <div
         onTouchStart={handleContainerTouchStart}
         onTouchEnd={handleContainerTouchEnd}
-        className="relative flex w-full items-center justify-center py-4 min-h-[380px] sm:min-h-[430px] lg:hidden select-none"
+        className="relative flex w-full items-center justify-center py-6 min-h-[380px] sm:min-h-[410px] lg:hidden select-none overflow-hidden"
         style={{ touchAction: "pan-y" }}
       >
-        {/* Left Peeking Card (Previous - White & Shadow) */}
-        <button
-          type="button"
-          onClick={triggerPrev}
-          aria-label="Previous theme"
-          className="absolute left-[-8px] sm:left-1 z-10 w-[74%] sm:w-[65%] max-w-[280px] sm:max-w-[320px] h-[310px] sm:h-[350px] rounded-[22px] sm:rounded-[26px] bg-white shadow-[0_14px_36px_rgba(0,0,0,0.14),0_3px_12px_rgba(0,0,0,0.08)] scale-[0.92] cursor-pointer transition-all duration-300 active:scale-90 outline-none"
-        />
+        {themes.map((theme, idx) => {
+          const diff = getCircularDiff(idx, activeIndex, totalThemes);
+          const isVisible = Math.abs(diff) <= 2;
+          if (!isVisible) return null;
 
-        {/* Center Active Card (Hand Swipeable with Elastic Physics, Heading & Description) */}
-        <div className="relative z-20 w-[76%] sm:w-[72%] max-w-[310px] sm:max-w-[350px] min-h-[360px] sm:min-h-[400px]">
-          <AnimatePresence mode="popLayout" custom={direction} initial={false}>
-            <motion.div
-              key={themes[activeIndex].id}
-              custom={direction}
-              variants={{
-                enter: (dir: number) => ({
-                  x: dir > 0 ? "105%" : "-105%",
-                  opacity: 0,
-                  scale: 0.92,
-                }),
-                center: {
-                  zIndex: 1,
-                  x: 0,
-                  opacity: 1,
-                  scale: 1,
-                },
-                exit: (dir: number) => ({
-                  zIndex: 0,
-                  x: dir > 0 ? "-105%" : "105%",
-                  opacity: 0,
-                  scale: 0.92,
-                }),
+          const isActive = diff === 0;
+
+          return (
+            <motion.article
+              key={`mobile-theme-card-${theme.id}`}
+              initial={false}
+              animate={{
+                left: "50%",
+                x:
+                  diff === 0
+                    ? "-50%"
+                    : diff === -1
+                    ? "calc(-50% - 32px)"
+                    : diff === 1
+                    ? "calc(-50% + 32px)"
+                    : diff < -1
+                    ? "calc(-50% - 150%)"
+                    : "calc(-50% + 150%)",
+                width: "74%",
+                height: diff === 0 ? "345px" : "260px",
+                zIndex: diff === 0 ? 20 : 10,
+                opacity: diff === 0 ? 1 : Math.abs(diff) === 1 ? 0.95 : 0,
+                backgroundColor: diff === 0 ? "#159A99" : "#F5F7FA",
+                borderColor: diff === 0 ? "transparent" : "#159A99",
+                boxShadow: "none",
+                pointerEvents: Math.abs(diff) <= 1 ? "auto" : "none",
               }}
-              initial="enter"
-              animate="center"
-              exit="exit"
               transition={{
-                x: { duration: 0.38, ease: [0.22, 1, 0.36, 1] },
-                opacity: { duration: 0.28, ease: "easeInOut" },
-                scale: { duration: 0.38, ease: [0.22, 1, 0.36, 1] },
+                duration: 0.65,
+                ease: [0.25, 1, 0.5, 1],
               }}
-              drag="x"
-              dragDirectionLock
-              dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={0.3}
-              onDragEnd={(_e, info) => {
-                const swipeThreshold = 25;
-                const velocityThreshold = 150;
-                if (info.offset.x < -swipeThreshold || info.velocity.x < -velocityThreshold) {
-                  triggerNext();
-                } else if (info.offset.x > swipeThreshold || info.velocity.x > velocityThreshold) {
-                  triggerPrev();
-                }
+              style={{
+                backfaceVisibility: "hidden",
+                WebkitFontSmoothing: "antialiased",
+                transform: "translate3d(0,0,0)",
               }}
-              className="w-full select-none cursor-grab active:cursor-grabbing touch-pan-y"
-              style={{ touchAction: "pan-y" }}
+              onClick={() => {
+                if (diff === -1) triggerPrev();
+                if (diff === 1) triggerNext();
+              }}
+              className="absolute top-1/2 -translate-y-1/2 max-w-[290px] sm:max-w-[320px] flex flex-col justify-center items-center text-center gap-3.5 sm:gap-4.5 rounded-[28px] sm:rounded-[32px] border px-6 py-6 sm:px-7 sm:py-7 cursor-pointer"
             >
-              <article
-                className="flex h-[360px] sm:h-[400px] w-full flex-col justify-between items-center text-center overflow-hidden rounded-[26px] sm:rounded-[30px] bg-[#159A99] px-6 pt-7 pb-12 sm:px-8 sm:pt-9 sm:pb-16 shadow-[0_20px_50px_rgba(21,154,153,0.35)] pointer-events-none"
+              {/* Content: Continuous smooth opacity transition with NO unmounting or blinking */}
+              <div
+                className={`flex flex-col items-center justify-center gap-3.5 sm:gap-4.5 transition-opacity duration-500 ease-in-out ${
+                  isActive ? "opacity-100" : "opacity-0 pointer-events-none"
+                }`}
               >
-                {/* Heading */}
-                <h3 className="font-cal text-[23px] sm:text-[26px] font-normal leading-[1.2] text-white">
-                  {themes[activeIndex].title}
+                <h3 className="font-cal text-[21px] sm:text-[24px] font-normal leading-[1.22] text-white max-w-[260px] sm:max-w-[280px]">
+                  {theme.title}
                 </h3>
-
-                {/* Description - Lifted higher with increased font size */}
-                <p className="font-geist text-[15.5px] sm:text-[17.5px] font-light leading-[1.58] text-white/95">
-                  {themes[activeIndex].description}
+                <p className="font-geist text-[13.8px] sm:text-[15.5px] font-light leading-[1.55] text-white/95 max-w-[260px] sm:max-w-[280px]">
+                  {theme.description}
                 </p>
-              </article>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        {/* Right Peeking Card (Next - White & Shadow) */}
-        <button
-          type="button"
-          onClick={triggerNext}
-          aria-label="Next theme"
-          className="absolute right-[-8px] sm:right-1 z-10 w-[74%] sm:w-[65%] max-w-[280px] sm:max-w-[320px] h-[310px] sm:h-[350px] rounded-[22px] sm:rounded-[26px] bg-white shadow-[0_14px_36px_rgba(0,0,0,0.14),0_3px_12px_rgba(0,0,0,0.08)] scale-[0.92] cursor-pointer transition-all duration-300 active:scale-90 outline-none"
-        />
+              </div>
+            </motion.article>
+          );
+        })}
       </div>
 
       {/* ── DOWN DOT PAGINATION (Dynamic 5-Dot Window on Mobile, Full on Desktop) ── */}
@@ -355,46 +397,6 @@ export default function CoreConversationThemes() {
         </button>
       </div>
     </section>
-  );
-}
-
-/* ── Middle Active Card Component (Teal #159A99, Cal Sans Heading & Description positioned higher) ── */
-function ActiveCenterThemeCard({ item }: { item: ThemeItem }) {
-  return (
-    <article
-      className="relative flex h-[440px] xl:h-[480px] w-full flex-col justify-between items-center text-center overflow-hidden rounded-[28px] xl:rounded-[34px] bg-[#159A99] px-8 pt-8 pb-16 sm:px-11 sm:pt-10 sm:pb-20 xl:px-14 xl:pt-11 xl:pb-24 shadow-[0_22px_56px_rgba(21,154,153,0.32)] transition-all duration-500"
-    >
-      {/* Heading / Title - Cal Sans font */}
-      <h3 className="font-cal text-[28px] sm:text-[32px] xl:text-[36px] font-normal leading-[1.18] text-white max-w-[490px]">
-        {item.title}
-      </h3>
-
-      {/* Description - Positioned higher up from bottom with increased font size */}
-      <p className="font-geist text-[17.5px] sm:text-[19.5px] xl:text-[21.5px] font-light leading-[1.6] text-white/95 max-w-[470px]">
-        {item.description}
-      </p>
-    </article>
-  );
-}
-
-/* ── Side Card Component (Shorter & Vertically Centered: Cal Sans Heading) ── */
-function SideThemeCard({
-  item,
-  onClick,
-}: {
-  item: ThemeItem;
-  onClick: () => void;
-}) {
-  return (
-    <article
-      onClick={onClick}
-      className="group relative flex h-[330px] xl:h-[360px] w-full flex-col justify-center items-center text-center overflow-hidden rounded-[24px] xl:rounded-[28px] bg-[#F5F7FA] p-7 xl:p-10 border-[1.5px] border-[#E0E0E0] shadow-sm transition-all duration-400 hover:bg-white hover:border-[#159A99]/50 hover:shadow-md cursor-pointer select-none"
-    >
-      {/* ONLY Heading (Title) - Cal Sans */}
-      <h3 className="font-cal text-[21px] sm:text-[23px] xl:text-[25px] font-normal leading-[1.3] text-[#161616] group-hover:text-[#159A99] transition-colors max-w-[280px]">
-        {item.title}
-      </h3>
-    </article>
   );
 }
 

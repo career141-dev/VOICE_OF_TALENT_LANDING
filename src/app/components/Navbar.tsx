@@ -128,12 +128,12 @@ export default function Navbar() {
             setIsMobileMenuOpen(false);
             window.scrollTo({ top: 0, behavior: "smooth" });
           }}
-          aria-label="Voice of Talent home"
+          aria-label="Voices of Talent Acquisition home"
         >
           <img
             className="block w-full h-auto object-contain object-left"
             src={votaLogo}
-            alt="VOTA - Voice of Talent Acquisition"
+            alt="VOTA - Voices of Talent Acquisition"
           />
         </a>
 

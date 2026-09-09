@@ -80,7 +80,7 @@ export default function Footer() {
           <div className="flex shrink-0 justify-center md:justify-start">
             <img
               src={footerLogo}
-              alt="VOTA — Voice of Talent Acquisition"
+              alt="VOTA — Voices of Talent Acquisition"
               className="h-auto w-[240px] sm:w-[300px] md:w-[300px] lg:w-[400px] xl:w-[460px] max-w-full object-contain"
             />
           </div>

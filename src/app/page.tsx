@@ -100,7 +100,7 @@ export default function Home() {
           <HeroCTAs />
 
           {/* People - Identical Gap */}
-          <div className="mt-[clamp(34px,3.5vw,50px)] flex justify-center max-[760px]:mt-[34px]" aria-label="Meet the people behind Voice of Talent">
+          <div className="mt-[clamp(34px,3.5vw,50px)] flex justify-center max-[760px]:mt-[34px]" aria-label="Meet the people behind Voices of Talent Acquisition">
             <a
               href="#speakers"
               onClick={scrollToSpeakers}

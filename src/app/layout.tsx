@@ -8,6 +8,12 @@ const iconUrl = R2_MEDIA_URL ? `${R2_MEDIA_URL}/images/icontop.png` : "/images/i
 export const metadata: Metadata = {
   title: "Voices of Talent Acquisition",
   description: "Voices of Talent Landing Page",
+  openGraph: {
+    title: "Voices of Talent Acquisition",
+    description: "Voices of Talent Acquisition — The voices shaping Sri Lanka's talent story.",
+    siteName: "Voices of Talent Acquisition",
+    type: "website",
+  },
   icons: {
     icon: iconUrl,
     shortcut: iconUrl,
