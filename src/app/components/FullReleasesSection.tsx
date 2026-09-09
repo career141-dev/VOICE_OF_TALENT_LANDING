@@ -90,7 +90,7 @@ const episodes: Episode[] = [
     guest: "MR. ARSHAQ FARALLY",
     role: "Chief People Officer, Sri Lanka",
     company: "Daraz",
-    videoUrl: "https://media.career141.com/new%20reels/Mr.%20Arshaq/01%20Reel%20Arshaq.mp4",
+    videoUrl: "https://media.career141.com/new%20reels/Mr.%20Arshaq/Mr.%20Arshaq.mp4",
     reels: [
       "https://media.career141.com/new%20reels/Mr.%20Arshaq/01%20Reel%20Arshaq.mp4",
       "https://media.career141.com/new%20reels/Mr.%20Arshaq/02%20Reel%20Arshaq.mp4",
@@ -116,7 +116,7 @@ const episodes: Episode[] = [
     guest: "MS. HASANTHI DE SARAM",
     role: "Director / Senior HR Consultant",
     company: "(Former Director HR - Asiri Health)",
-    videoUrl: "https://media.career141.com/new%20reels/Ms.%20Hasanthi/01%20Reel%20Ms.%20Hasanthi.mp4",
+    videoUrl: "https://media.career141.com/new%20reels/Ms.%20Hasanthi/Ms.%20Hasanthi.mp4",
     reels: [
       "https://media.career141.com/new%20reels/Ms.%20Hasanthi/01%20Reel%20Ms.%20Hasanthi.mp4",
       "https://media.career141.com/new%20reels/Ms.%20Hasanthi/02%20Reel%20Ms.%20Hasanthi.mp4",
@@ -526,7 +526,11 @@ export default function FullReleasesSection() {
                         <img
                           src={`${SPEAKER_SECTION_IMG_BASE}/r${selectedEpisode.id}png.png?v=3`}
                           alt={selectedEpisode.guest}
-                          className="absolute left-1/2 -translate-x-1/2 right-auto w-auto max-w-none h-[85%] sm:h-[88%] bottom-0 object-contain object-bottom select-none drop-shadow-[0_20px_40px_rgba(0,0,0,0.85)] transition-transform duration-500 group-hover:scale-105"
+                          className={`absolute left-1/2 -translate-x-1/2 right-auto w-auto max-w-none object-contain object-bottom select-none drop-shadow-[0_20px_40px_rgba(0,0,0,0.85)] transition-transform duration-500 group-hover:scale-105 ${
+                            selectedEpisode.id === 10
+                              ? "h-[88%] sm:h-[90%] -bottom-[6%] sm:-bottom-[6%]"
+                              : "h-[85%] sm:h-[88%] bottom-0"
+                          }`}
                         />
                       </div>
 

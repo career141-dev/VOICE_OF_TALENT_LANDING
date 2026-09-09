@@ -247,7 +247,7 @@ export default function CoreConversationThemes() {
       <div
         onTouchStart={handleContainerTouchStart}
         onTouchEnd={handleContainerTouchEnd}
-        className="relative flex w-full items-center justify-center py-6 min-h-[390px] sm:min-h-[420px] md:min-h-[440px] lg:hidden select-none overflow-hidden"
+        className="relative flex w-full items-center justify-center py-4 min-h-[365px] sm:min-h-[400px] md:min-h-[440px] lg:hidden select-none overflow-hidden"
         style={{ touchAction: "pan-y" }}
       >
         {themes.map((theme, idx) => {
@@ -273,8 +273,8 @@ export default function CoreConversationThemes() {
                     : diff < -1
                     ? "calc(-50% - 150%)"
                     : "calc(-50% + 150%)",
-                width: "77%",
-                height: diff === 0 ? "355px" : "275px",
+                width: "78%",
+                height: diff === 0 ? "328px" : "258px",
                 zIndex: diff === 0 ? 20 : 10,
                 opacity: diff === 0 ? 1 : Math.abs(diff) === 1 ? 0.95 : 0,
                 backgroundColor: diff === 0 ? "#159A99" : "#F5F7FA",
@@ -295,18 +295,18 @@ export default function CoreConversationThemes() {
                 if (diff === -1) triggerPrev();
                 if (diff === 1) triggerNext();
               }}
-              className="absolute top-1/2 -translate-y-1/2 w-full max-w-[285px] sm:max-w-[480px] md:max-w-[620px] flex flex-col justify-center items-center text-center gap-3.5 sm:gap-4.5 md:gap-5 rounded-[28px] sm:rounded-[34px] border-[1.5px] px-5 py-6 sm:px-9 sm:py-8 md:px-12 md:py-9 cursor-pointer"
+              className="absolute top-1/2 -translate-y-1/2 w-full max-w-[290px] sm:max-w-[480px] md:max-w-[620px] flex flex-col justify-center items-center text-center gap-3 sm:gap-4.5 md:gap-5 rounded-[26px] sm:rounded-[34px] border-[1.5px] px-4.5 py-5 sm:px-9 sm:py-8 md:px-12 md:py-9 cursor-pointer"
             >
               {/* Content: Continuous smooth opacity transition with NO unmounting or blinking */}
               <div
-                className={`flex flex-col items-center justify-center gap-3.5 sm:gap-4.5 md:gap-5 transition-opacity duration-500 ease-in-out ${
+                className={`flex flex-col items-center justify-center gap-3 sm:gap-4.5 md:gap-5 transition-opacity duration-500 ease-in-out ${
                   isActive ? "opacity-100" : "opacity-0 pointer-events-none"
                 }`}
               >
-                <h3 className="font-cal text-[20px] sm:text-[25px] md:text-[29px] font-normal leading-[1.22] text-white max-w-[245px] sm:max-w-[420px] md:max-w-[540px]">
+                <h3 className="font-cal text-[21.5px] sm:text-[25px] md:text-[29px] font-normal leading-[1.2] text-white max-w-[255px] sm:max-w-[420px] md:max-w-[540px]">
                   {theme.title}
                 </h3>
-                <p className="font-geist text-[13.2px] sm:text-[15.5px] md:text-[17.5px] font-light leading-[1.55] text-white/95 max-w-[245px] sm:max-w-[420px] md:max-w-[520px]">
+                <p className="font-geist text-[14px] sm:text-[15.5px] md:text-[17.5px] font-light leading-[1.5] text-white/95 max-w-[255px] sm:max-w-[420px] md:max-w-[520px]">
                   {theme.description}
                 </p>
               </div>
