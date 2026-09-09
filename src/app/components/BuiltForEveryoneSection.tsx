@@ -43,12 +43,12 @@ export default function BuiltForEveryoneSection() {
   return (
     <section className="w-full overflow-hidden bg-white px-6 py-16 text-[#262626] xl:px-[7.4%] xl:py-24">
       {/* Heading */}
-      <div className="mx-auto mb-10 text-center lg:mb-16">
-        <span className="mb-3 inline-flex items-center rounded-full border border-[rgba(21,154,153,0.20)] bg-[rgba(21,154,153,0.10)] px-4 py-1.5 font-geist text-[12px] font-semibold uppercase leading-normal text-[#159A99] md:text-[13.6px]">
-          For Whom
+      <div className="mx-auto mb-10 text-center lg:mb-16 px-4">
+        <span className="inline-flex items-center rounded-[123.833px] border-[1.238px] border-[rgba(21,154,153,0.20)] bg-[rgba(21,154,153,0.10)] px-[14.86px] py-[7.43px] font-geist text-[12px] sm:text-[13.62px] font-semibold leading-[100%] tracking-normal uppercase text-[#159A99] mb-3">
+          FOR WHOM
         </span>
 
-        <h2 className="mt-2 font-geist text-[28px] font-bold leading-tight tracking-[-0.04em] text-[#262626] sm:text-4xl lg:text-[46px]">
+        <h2 className="mt-2 text-center font-cal font-normal text-[28px] sm:text-[38px] md:text-[50px] leading-[110%] tracking-normal text-[#262626] capitalize">
           Built For Everyone Shaping The Future Of Talent
         </h2>
       </div>
@@ -117,13 +117,13 @@ export default function BuiltForEveryoneSection() {
                 absolute
                 left-7
                 right-7
-                top-[225px]
+                top-[210px]
                 font-geist
-                text-[25px]
-                font-semibold
-                leading-[1.25]
-                tracking-[-0.03em]
-                text-[#161616]
+                text-[28px]
+                font-normal
+                leading-[105%]
+                tracking-normal
+                text-black
                 transition-all
                 duration-700
                 ease-[cubic-bezier(0.22,1,0.36,1)]
@@ -131,9 +131,10 @@ export default function BuiltForEveryoneSection() {
                 group-hover:text-white
                 xl:left-8
                 xl:right-8
-                xl:top-[220px]
+                xl:top-[205px]
                 xl:group-hover:top-8
-                xl:text-[27px]
+                xl:text-[35.63px]
+                xl:leading-[100%]
               "
             >
               {audience.title}
@@ -143,14 +144,16 @@ export default function BuiltForEveryoneSection() {
             <p
               className="
                 absolute
-                top-[106px]
+                top-[112px]
                 left-7
                 right-7
                 translate-y-3
                 font-geist
+                font-light
                 text-[16px]
-                leading-[1.58]
-                text-white/95
+                leading-[160%]
+                tracking-normal
+                text-white
                 opacity-0
                 transition-all
                 delay-100
@@ -158,10 +161,11 @@ export default function BuiltForEveryoneSection() {
                 ease-[cubic-bezier(0.22,1,0.36,1)]
                 group-hover:translate-y-0
                 group-hover:opacity-100
-                xl:top-[112px]
+                xl:top-[120px]
                 xl:left-8
                 xl:right-8
                 xl:text-[17px]
+                min-[1560px]:text-[18px]
               "
             >
               {audience.description}
@@ -171,7 +175,7 @@ export default function BuiltForEveryoneSection() {
       </div>
 
       {/* ── MOBILE / TABLET / IPAD VIEW (< xl): Interactive Tap-to-Fill Cards ── */}
-      <div className="grid grid-cols-1 gap-4 xl:hidden sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:gap-5 xl:hidden sm:grid-cols-2">
         {audiences.map((audience) => {
           const isActive = activeMobileCard === audience.number;
 
@@ -183,39 +187,32 @@ export default function BuiltForEveryoneSection() {
                 `
                   relative
                   flex
+                  h-[215px]
+                  sm:h-[230px]
+                  w-full
                   cursor-pointer
                   flex-col
-                  justify-between
+                  justify-start
                   overflow-hidden
                   rounded-[24px]
-                  p-5
-                  sm:p-6
+                  sm:rounded-[28px]
+                  p-6
+                  sm:p-7
                   transition-all
                   duration-500
                   ease-out
                   active:scale-[0.98]
                 `,
                 isActive
-                  ? "-translate-y-0.5 border border-[#159A99] bg-[#159A99] shadow-[0_16px_32px_-8px_rgba(21,154,153,0.35)]"
-                  : "border border-[#E3E8EC] bg-[#F8FAFC] shadow-sm",
+                  ? "-translate-y-1 border-[1.62px] border-[#159A99] bg-[#159A99] shadow-[0_20px_40px_-10px_rgba(21,154,153,0.4)]"
+                  : "border-[1.62px] border-[#E3E8EC] bg-[#F8FAFC] shadow-sm hover:border-[#159A99]/50",
               ].join(" ")}
             >
-              {/* Watermark Number */}
-              <span
-                className={[
-                  "pointer-events-none absolute right-4 top-1 select-none font-geist text-[80px] font-black leading-none tracking-[-0.08em] transition-colors duration-500",
-                  isActive ? "text-white/20" : "text-[#E5ECF0]",
-                ].join(" ")}
-                aria-hidden="true"
-              >
-                {audience.number}
-              </span>
-
-              {/* Top Tag & Number */}
+              {/* Top Tag */}
               <div className="relative z-10 mb-3 flex items-center justify-between">
                 <span
                   className={[
-                    "rounded-full px-3 py-1 font-geist text-[11px] font-bold uppercase tracking-wider transition-colors duration-500",
+                    "rounded-full px-3.5 py-1.5 font-geist text-[11px] sm:text-[12px] font-bold uppercase tracking-wider transition-colors duration-500",
                     isActive
                       ? "bg-white/20 text-white backdrop-blur-sm"
                       : "bg-[rgba(21,154,153,0.10)] text-[#159A99]",
@@ -225,12 +222,12 @@ export default function BuiltForEveryoneSection() {
                 </span>
               </div>
 
-              {/* Content with tight gap between heading and description */}
-              <div className="relative z-10">
+              {/* Content directly under tag without extra space */}
+              <div className="relative z-10 flex flex-col">
                 <h3
                   className={[
-                    "font-geist text-[20px] sm:text-[21px] font-bold leading-tight transition-colors duration-500",
-                    isActive ? "text-white" : "text-[#161616]",
+                    "font-geist text-[22px] sm:text-[26px] font-normal leading-[1.15] tracking-normal transition-colors duration-500",
+                    isActive ? "text-white" : "text-black",
                   ].join(" ")}
                 >
                   {audience.title}
@@ -238,8 +235,8 @@ export default function BuiltForEveryoneSection() {
 
                 <p
                   className={[
-                    "mt-2 font-geist text-[14.5px] sm:text-[15px] leading-relaxed transition-colors duration-500",
-                    isActive ? "text-white" : "text-[#57606A]",
+                    "mt-2 font-geist text-[14px] sm:text-[15px] leading-[1.55] transition-colors duration-500",
+                    isActive ? "text-white/95" : "text-[#57606A]",
                   ].join(" ")}
                 >
                   {audience.description}

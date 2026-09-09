@@ -171,9 +171,9 @@ export default function SeriesSection() {
   const isManuallyPausedRef = useRef(false);
   const wasPlayingBeforeScrollOutRef = useRef(true);
 
-  // Default to Episode 2 (Mr. Ken Vijayakumar)
+  // Default to Episode 1 (Mr. Patrick Pereira)
   const [selectedEpisode, setSelectedEpisode] = useState<SeriesEpisode>(
-    seriesEpisodesData[1] || seriesEpisodesData[0]
+    seriesEpisodesData[0]
   );
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
@@ -655,11 +655,11 @@ export default function SeriesSection() {
               />
 
               {/* Top-Left: VOTA Logo Badge */}
-              <div className="relative z-10 pt-2 sm:pt-3 md:pt-4">
+              <div className="relative z-10 pt-1 sm:pt-3 md:pt-4">
                 <img
                   src={votaLogo}
                   alt="VOTA - Voice of Talent Acquisition"
-                  className="h-[68px] sm:h-[78px] md:h-[88px] xl:h-[96px] w-auto max-w-[280px] rounded-[18px] sm:rounded-[22px] object-contain shadow-md"
+                  className="h-[42px] sm:h-[60px] md:h-[88px] xl:h-[96px] w-auto max-w-[170px] sm:max-w-[220px] md:max-w-[280px] rounded-[12px] sm:rounded-[16px] md:rounded-[22px] object-contain shadow-md"
                 />
               </div>
 

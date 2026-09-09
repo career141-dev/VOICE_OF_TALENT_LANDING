@@ -6,8 +6,8 @@ const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/
 const iconUrl = R2_MEDIA_URL ? `${R2_MEDIA_URL}/images/icontop.png` : "/images/icontop.png";
 
 export const metadata: Metadata = {
-  title: "Voice of Talent",
-  description: "Voice of Talent Landing Page",
+  title: "Voices of Talent Acquisition",
+  description: "Voices of Talent Landing Page",
   icons: {
     icon: iconUrl,
     shortcut: iconUrl,

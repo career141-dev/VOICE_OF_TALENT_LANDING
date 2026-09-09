@@ -166,7 +166,7 @@ export default function Footer() {
       </div>
 
       {/* Bottom teal bar */}
-      <div className="w-full bg-[#159A99] px-4 sm:px-8 md:px-12 lg:px-[8.7%]">
+      <div className="w-full bg-[#159A99] px-3 sm:px-8 md:px-12 lg:px-[8.7%]">
         <div
           className="
             flex
@@ -175,7 +175,7 @@ export default function Footer() {
             flex-col
             items-center
             justify-center
-            gap-4
+            gap-3
             py-5
             text-center
             text-white
@@ -186,16 +186,16 @@ export default function Footer() {
             md:text-left
           "
         >
-          <p className="font-['Geist'] text-[16px]">
+          <p className="font-['Geist'] text-[11px] min-[360px]:text-[12px] min-[400px]:text-[13.5px] sm:text-[15px] md:text-[16px] whitespace-nowrap">
             © 2026 VOTA. Powered by Career141. All rights reserved.
           </p>
 
-          <div className="flex items-center justify-center gap-7">
-            <span className="font-['Geist'] text-[16px]">
+          <div className="flex items-center justify-center gap-5 sm:gap-7">
+            <span className="font-['Geist'] text-[13px] sm:text-[15px] md:text-[16px] whitespace-nowrap">
               Privacy Strategy
             </span>
 
-            <span className="font-['Geist'] text-[16px]">
+            <span className="font-['Geist'] text-[13px] sm:text-[15px] md:text-[16px] whitespace-nowrap">
               Terms of Service
             </span>
           </div>

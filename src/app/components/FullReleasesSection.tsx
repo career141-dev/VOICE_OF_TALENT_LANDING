@@ -4,6 +4,7 @@ import React, { useRef, useState } from "react";
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
 const SPEAKER_SECTION_IMG_BASE = "https://talentsuite.career141.com/images/speakerSection";
+const FULL_RELEASE_IMG_BASE = "https://talentsuite.career141.com/images/fullRelease";
 const reelBackground = `${R2_MEDIA_URL}/images/reelThumbnail/reelthumbnail.png`;
 
 type Episode = {
@@ -213,6 +214,11 @@ export default function FullReleasesSection() {
   const reelSliderRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
+  const touchStartX = useRef<number>(0);
+  const touchStartY = useRef<number>(0);
+  const touchStartTime = useRef<number>(0);
+  const isSwiping = useRef<boolean>(false);
+
   const togglePlayPause = () => {
     if (!videoRef.current) return;
     if (videoRef.current.paused) {
@@ -233,11 +239,45 @@ export default function FullReleasesSection() {
     }
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+    touchStartTime.current = Date.now();
+    isSwiping.current = false;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    const diffX = Math.abs(e.touches[0].clientX - touchStartX.current);
+    const diffY = Math.abs(e.touches[0].clientY - touchStartY.current);
+    if (diffX > 10 && diffX > diffY) {
+      isSwiping.current = true;
+    }
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const deltaX = e.changedTouches[0].clientX - touchStartX.current;
+    const deltaY = e.changedTouches[0].clientY - touchStartY.current;
+    const deltaTime = Date.now() - touchStartTime.current;
+
+    const isHorizontalSwipe =
+      Math.abs(deltaX) > Math.abs(deltaY) &&
+      (Math.abs(deltaX) > 35 || (Math.abs(deltaX) > 20 && deltaTime < 300));
+
+    if (isHorizontalSwipe) {
+      if (deltaX < 0 && activeReelIndex === 0) {
+        scrollToReel(1);
+      } else if (deltaX > 0 && activeReelIndex === 1) {
+        scrollToReel(0);
+      }
+    }
+  };
+
   const handleReelScroll = () => {
     if (!reelSliderRef.current) return;
     const { scrollLeft, clientWidth } = reelSliderRef.current;
-    const newIndex = scrollLeft > clientWidth / 2 ? 1 : 0;
-    if (newIndex !== activeReelIndex) {
+    if (clientWidth === 0) return;
+    const newIndex = Math.round(scrollLeft / clientWidth);
+    if (newIndex !== activeReelIndex && (newIndex === 0 || newIndex === 1)) {
       setActiveReelIndex(newIndex);
     }
   };
@@ -284,7 +324,7 @@ export default function FullReleasesSection() {
       {/* Main Container */}
       <div className="mx-auto flex w-full max-w-[1595px] flex-col-reverse gap-6 min-[1100px]:gap-8 min-[1100px]:flex-row min-[1100px]:items-start">
         {/* Episode Playlist with Custom Scroll Indicator */}
-        <div className="relative flex h-[480px] sm:h-[560px] min-[1100px]:h-[660px] w-full min-[1100px]:w-[688px] max-w-full overflow-hidden rounded-[24px] sm:rounded-[30px] bg-[#F5F7FA]">
+        <div className="relative flex h-[441px] sm:h-[660px] w-full min-[1100px]:w-[688px] max-w-full overflow-hidden rounded-[24px] sm:rounded-[30px] bg-[#F5F7FA]">
           {/* Custom Scrollbar Track */}
           <div className="relative my-3 sm:my-4 ml-2.5 sm:ml-4 flex h-[calc(100%-24px)] sm:h-[calc(100%-32px)] w-[4px] sm:w-[5px] shrink-0 rounded-full bg-[#E2E5E8] overflow-hidden">
             {/* Custom Black Scroll Thumb */}
@@ -302,7 +342,7 @@ export default function FullReleasesSection() {
           <div
             ref={scrollContainerRef}
             onScroll={handleScroll}
-            className="h-full w-full overflow-y-auto px-2.5 sm:px-6 py-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="h-full w-full overflow-y-auto px-2.5 sm:px-6 py-1.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             <div className="flex flex-col gap-3 sm:gap-4">
               {episodes.map((episode) => {
@@ -320,7 +360,7 @@ export default function FullReleasesSection() {
                         relative
                         flex
                         h-[135px]
-                        sm:h-[143px]
+                        sm:h-[150px]
                         w-full
                         shrink-0
                         items-center
@@ -394,11 +434,14 @@ export default function FullReleasesSection() {
         </div>
 
         {/* Video Player Section with Reel Thumbnail Poster & Swipeable 2-Reel Slider */}
-        <div className="mx-auto flex w-full min-[1100px]:w-[887px] max-w-full flex-col items-center">
+        <div className="mx-auto flex w-full min-[1100px]:w-[887px] min-[1100px]:h-[660px] max-w-full flex-col items-center min-[1100px]:justify-between">
           <div
             ref={reelSliderRef}
             onScroll={handleReelScroll}
-            className="relative flex h-[380px] sm:h-[460px] md:h-[540px] min-[1100px]:h-[660px] w-full max-w-full overflow-x-auto overflow-y-hidden rounded-[24px] sm:rounded-[30px] border-[1.62px] border-[#E0E0E0] bg-black shadow-lg opacity-100 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            className="relative flex h-[380px] sm:h-[460px] md:h-[540px] min-[1100px]:h-auto min-[1100px]:flex-1 min-[1100px]:min-h-0 w-full max-w-full overflow-x-auto overflow-y-hidden rounded-[24px] sm:rounded-[30px] border-[1.62px] border-[#E0E0E0] bg-black shadow-lg opacity-100 snap-x snap-mandatory snap-always overscroll-x-contain touch-pan-y [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {/* Render 2 Reel Slides (Reel 1 & Reel 2) */}
             {[0, 1].map((reelIdx) => {
@@ -409,7 +452,7 @@ export default function FullReleasesSection() {
               return (
                 <article
                   key={reelIdx}
-                  className="relative h-full w-full shrink-0 snap-center overflow-hidden bg-black select-none cursor-pointer"
+                  className="relative h-full w-full shrink-0 snap-start overflow-hidden bg-black select-none cursor-pointer"
                 >
                   {isCurrentSlidePlaying ? (
                     <div
@@ -467,6 +510,7 @@ export default function FullReleasesSection() {
                   ) : (
                     <div
                       onClick={() => {
+                        if (isSwiping.current) return;
                         scrollToReel(reelIdx);
                         setIsPlaying(true);
                         setIsPaused(false);
@@ -476,25 +520,21 @@ export default function FullReleasesSection() {
                         backgroundImage: `url('${reelBackground}')`,
                       }}
                     >
-                      {/* 1. Back Photo: Big, Grayscale, Upper-Left (Desktop only) */}
-                      <div className="pointer-events-none absolute inset-0 overflow-hidden hidden min-[1100px]:block">
-                        <img
-                          src={`${SPEAKER_SECTION_IMG_BASE}/r${selectedEpisode.id}.svg`}
-                          alt=""
-                          className="absolute -top-[2%] sm:-top-[2.5%] -left-[10%] sm:-left-[5%] h-[118%] w-[110%] object-cover object-[center_top] grayscale contrast-125 brightness-105 opacity-50 select-none transition-transform duration-700 group-hover:scale-105"
-                          style={{
-                            maskImage: "linear-gradient(180deg, rgba(0,0,0,1) 48%, rgba(0,0,0,0) 88%)",
-                            WebkitMaskImage: "linear-gradient(180deg, rgba(0,0,0,1) 48%, rgba(0,0,0,0) 88%)",
-                          }}
-                        />
-                      </div>
-
-                      {/* 2. Front Photo: Full Color */}
-                      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                      {/* 1. Mobile Front Photo over reel background */}
+                      <div className="pointer-events-none absolute inset-0 overflow-hidden min-[1100px]:hidden">
                         <img
                           src={`${SPEAKER_SECTION_IMG_BASE}/r${selectedEpisode.id}.svg`}
                           alt={selectedEpisode.guest}
-                          className="absolute bottom-0 left-1/2 -translate-x-1/2 right-auto h-[85%] sm:h-[88%] w-auto max-w-none object-contain object-bottom select-none drop-shadow-[0_20px_40px_rgba(0,0,0,0.85)] transition-transform duration-500 group-hover:scale-105 min-[1100px]:left-auto min-[1100px]:translate-x-0 min-[1100px]:right-[4%] min-[1100px]:h-[80%] min-[1100px]:w-[60%] min-[1100px]:object-contain min-[1100px]:object-right-bottom"
+                          className="absolute bottom-0 left-1/2 -translate-x-1/2 right-auto h-[85%] sm:h-[88%] w-auto max-w-none object-contain object-bottom select-none drop-shadow-[0_20px_40px_rgba(0,0,0,0.85)] transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </div>
+
+                      {/* 2. Desktop Full Cover Thumbnail Image */}
+                      <div className="pointer-events-none absolute inset-0 overflow-hidden hidden min-[1100px]:block">
+                        <img
+                          src={`${FULL_RELEASE_IMG_BASE}/reelspeaker${selectedEpisode.id}.png`}
+                          alt={selectedEpisode.guest}
+                          className="h-full w-full object-cover object-[center_top] select-none transition-transform duration-500 group-hover:scale-105"
                         />
                       </div>
 
@@ -505,6 +545,7 @@ export default function FullReleasesSection() {
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
+                            if (isSwiping.current) return;
                             scrollToReel(reelIdx);
                             setIsPlaying(true);
                             setIsPaused(false);
@@ -535,7 +576,7 @@ export default function FullReleasesSection() {
           </div>
 
           {/* Navigation Controls: < (1) (2) > */}
-          <div className="mt-5 flex items-center justify-center gap-3">
+          <div className="mt-5 flex shrink-0 items-center justify-center gap-3">
             {/* Previous Arrow (<) */}
             <button
               type="button"

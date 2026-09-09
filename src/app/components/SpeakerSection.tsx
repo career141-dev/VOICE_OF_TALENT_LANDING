@@ -77,7 +77,7 @@ const voicesData: VoiceItem[] = [
     company: 'LSEG (London Stock Exchange Group)',
     bulletPoints: [
       'How do you define Talent Acquisition in today’s context?',
-      'What key skills do you believe are essential to succeed in talent acquisition?',
+      'What key skills do you believe are essential to succeed in Talent Acquisition?',
     ],
     avatar: `${SPEAKER_SECTION_IMG_BASE}/r5.svg`,
     bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-05.svg`,
@@ -184,7 +184,7 @@ const voicesData: VoiceItem[] = [
     role: 'General Manager, Human Resources',
     company: 'Port City BPO',
     bulletPoints: [
-      'How Important is hands-on experience in building a successful career in Talent Acquisition?',
+      'How important is hands-on experience in building a successful career in Talent Acquisition?',
       'In your opinion, why is there a growing need for skilled Talent Acquisition professionals in Sri Lanka?',
     ],
     avatar: `${SPEAKER_SECTION_IMG_BASE}/r14.svg`,
@@ -310,7 +310,7 @@ export default function VoicesSlider() {
           <img
             src={item.bannerImage}
             alt={item.name}
-            className="absolute inset-0 h-full w-full object-cover pointer-events-none z-0"
+            className="absolute inset-0 h-full w-full object-cover object-top pointer-events-none z-0"
           />
 
           <div className="flex justify-between items-start z-10">
@@ -319,9 +319,9 @@ export default function VoicesSlider() {
             </span>
           </div>
 
-          <div className="relative z-10 max-w-[48%] pb-1">
-            <h3 className="font-geist text-[22px] lg:text-[26px] font-bold leading-tight text-white drop-shadow-md">{item.name}</h3>
-            <p className="mt-1.5 font-geist text-[13px] lg:text-[14px] font-normal leading-snug text-white/90">
+          <div className="relative z-10 max-w-[60%] lg:max-w-[62%] pb-1">
+            <h3 className="font-geist text-[21px] lg:text-[25px] font-bold leading-[1.2] text-white drop-shadow-md">{item.name}</h3>
+            <p className="mt-1.5 font-geist text-[12.5px] lg:text-[13.5px] font-normal leading-snug text-white/90 drop-shadow">
               {item.role},<br />{item.company}
             </p>
           </div>
@@ -401,7 +401,9 @@ export default function VoicesSlider() {
               <img
                 src={item.avatar}
                 alt={item.name}
-                className="w-full h-full object-cover"
+                className={`w-full h-full object-cover ${
+                  item.id === 6 ? "scale-125 origin-center" : ""
+                }`}
               />
             </div>
           </div>
@@ -420,10 +422,10 @@ export default function VoicesSlider() {
     <section id="speakers" className="w-full py-12 md:py-16 overflow-hidden bg-white">
       {/* Header Section */}
       <div className="text-center mb-8 md:mb-16 px-4">
-        <span className="inline-flex items-center rounded-[123.833px] border-[1.238px] border-[rgba(21,154,153,0.20)] bg-[rgba(21,154,153,0.10)] px-[14.86px] py-[7.43px] font-geist text-[12px] md:text-[13.622px] font-semibold leading-normal uppercase text-[#159A99] mb-3">
+        <span className="inline-flex items-center rounded-[123.833px] border-[1.238px] border-[rgba(21,154,153,0.20)] bg-[rgba(21,154,153,0.10)] px-[14.86px] py-[7.43px] font-geist text-[12px] sm:text-[13.62px] font-semibold leading-[100%] tracking-normal uppercase text-[#159A99] mb-3">
           AN INDUSTRY-LED VIDEO SERIES BY CAREER141
         </span>
-        <h2 className="text-center font-geist text-[22px] sm:text-[30px] md:text-[30px] font-extrabold leading-[110%] text-[#262626] capitalize">
+        <h2 className="text-center font-cal font-normal text-[26px] sm:text-[36px] md:text-[50px] leading-[110%] tracking-normal text-[#262626] capitalize">
           Meet The Voices Behind The Industry
         </h2>
       </div>
@@ -479,7 +481,7 @@ export default function VoicesSlider() {
                 <img
                   src={currentMobileSpeaker.bannerImage}
                   alt={currentMobileSpeaker.name}
-                  className="absolute inset-0 h-full w-full object-cover pointer-events-none z-0"
+                  className="absolute inset-0 h-full w-full object-cover object-top max-[760px]:object-[85%_top] pointer-events-none z-0"
                 />
 
                 {/* Badge */}
@@ -490,11 +492,11 @@ export default function VoicesSlider() {
                 </div>
 
                 {/* Speaker Name & Role on Left Half */}
-                <div className="relative z-10 max-w-[48%] pb-1">
-                  <h3 className="mb-1 font-geist text-[17px] sm:text-[20px] md:text-[23px] font-bold leading-tight text-white drop-shadow-md">
+                <div className="relative z-10 max-w-[60%] sm:max-w-[58%] pb-1">
+                  <h3 className="mb-1 font-geist text-[17px] sm:text-[20px] md:text-[22px] font-bold leading-[1.2] text-white drop-shadow-md">
                     {currentMobileSpeaker.name}
                   </h3>
-                  <p className="font-geist text-[12px] sm:text-[13px] md:text-[13.5px] font-normal leading-snug text-white/90 mt-1">
+                  <p className="font-geist text-[11.5px] sm:text-[12.5px] md:text-[13px] font-normal leading-snug text-white/90 mt-1 drop-shadow">
                     {currentMobileSpeaker.role},<br />{currentMobileSpeaker.company}
                   </p>
                 </div>

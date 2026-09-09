@@ -136,11 +136,11 @@ export default function CoreConversationThemes() {
     <section className="w-full bg-[#FAFCFC] px-4 sm:px-6 py-16 text-[#1A1A1A] md:px-12 lg:px-[7%] xl:px-[8.7%] lg:py-20 overflow-hidden">
       {/* Header Section */}
       <div className="mb-8 flex flex-col items-start max-xl:items-center max-xl:text-center lg:mb-12">
-        <span className="inline-flex w-fit items-center rounded-full bg-[#E0F2F1] px-3.5 py-1 text-[11px] font-bold uppercase tracking-wider text-[#00897B]">
+        <span className="inline-flex items-center rounded-[123.833px] border-[1.238px] border-[rgba(21,154,153,0.20)] bg-[rgba(21,154,153,0.10)] px-[14.86px] py-[7.43px] font-geist text-[12px] sm:text-[13.62px] font-semibold leading-[100%] tracking-normal uppercase text-[#159A99] mb-3">
           CURATED TOPICS
         </span>
 
-        <h2 className="mt-3 font-geist text-3xl font-bold tracking-tight text-[#161616] sm:text-4xl md:text-[40px]">
+        <h2 className="mt-2 font-cal font-normal text-[28px] sm:text-[38px] md:text-[50px] leading-[110%] tracking-normal text-[#262626] capitalize">
           Core Conversation Themes
         </h2>
       </div>
@@ -156,7 +156,7 @@ export default function CoreConversationThemes() {
             />
           </div>
 
-          {/* ── Middle Widget (Active Item: Taller & Prominent) ── */}
+          {/* ── Middle Widget (Active Item: Taller & Prominent #159A99) ── */}
           <div className="w-[42%] xl:w-[41%] shrink-0">
             <AnimatePresence mode="popLayout" custom={direction} initial={false}>
               <motion.div
@@ -247,15 +247,15 @@ export default function CoreConversationThemes() {
               style={{ touchAction: "pan-y" }}
             >
               <article
-                className="flex h-[360px] sm:h-[400px] w-full flex-col justify-between items-center text-center overflow-hidden rounded-[26px] sm:rounded-[30px] bg-white px-6 pt-10 pb-12 sm:px-8 sm:pt-12 sm:pb-16 shadow-[0_20px_50px_rgba(0,0,0,0.12),0_4px_16px_rgba(0,0,0,0.06)] pointer-events-none"
+                className="flex h-[360px] sm:h-[400px] w-full flex-col justify-between items-center text-center overflow-hidden rounded-[26px] sm:rounded-[30px] bg-[#159A99] px-6 pt-7 pb-12 sm:px-8 sm:pt-9 sm:pb-16 shadow-[0_20px_50px_rgba(21,154,153,0.35)] pointer-events-none"
               >
                 {/* Heading */}
-                <h3 className="font-geist text-[21px] sm:text-[24px] font-bold leading-[1.28] text-[#161616]">
+                <h3 className="font-cal text-[23px] sm:text-[26px] font-normal leading-[1.2] text-white">
                   {themes[activeIndex].title}
                 </h3>
 
-                {/* Description */}
-                <p className="font-geist text-[13.5px] sm:text-[15px] leading-[1.6] text-[#57606A]">
+                {/* Description - Lifted higher with increased font size */}
+                <p className="font-geist text-[15.5px] sm:text-[17.5px] font-light leading-[1.58] text-white/95">
                   {themes[activeIndex].description}
                 </p>
               </article>
@@ -358,26 +358,26 @@ export default function CoreConversationThemes() {
   );
 }
 
-/* ── Middle Active Card Component (Taller: Heading at Top, Description Lifted Up, No Border) ── */
+/* ── Middle Active Card Component (Teal #159A99, Cal Sans Heading & Description positioned higher) ── */
 function ActiveCenterThemeCard({ item }: { item: ThemeItem }) {
   return (
     <article
-      className="relative flex h-[440px] xl:h-[480px] w-full flex-col justify-between items-center text-center overflow-hidden rounded-[28px] xl:rounded-[34px] bg-white px-8 pt-12 pb-16 sm:px-11 sm:pt-14 sm:pb-20 xl:px-14 xl:pt-16 xl:pb-24 shadow-[0_18px_52px_rgba(0,0,0,0.06)] transition-all duration-500"
+      className="relative flex h-[440px] xl:h-[480px] w-full flex-col justify-between items-center text-center overflow-hidden rounded-[28px] xl:rounded-[34px] bg-[#159A99] px-8 pt-8 pb-16 sm:px-11 sm:pt-10 sm:pb-20 xl:px-14 xl:pt-11 xl:pb-24 shadow-[0_22px_56px_rgba(21,154,153,0.32)] transition-all duration-500"
     >
-      {/* Heading / Title - Positioned nicely at the top */}
-      <h3 className="font-geist text-[26px] sm:text-[29px] xl:text-[32px] font-bold leading-[1.25] text-[#161616] max-w-[460px]">
+      {/* Heading / Title - Cal Sans font */}
+      <h3 className="font-cal text-[28px] sm:text-[32px] xl:text-[36px] font-normal leading-[1.18] text-white max-w-[490px]">
         {item.title}
       </h3>
 
-      {/* Description - Lifted up from bottom */}
-      <p className="font-geist text-[15px] sm:text-[16px] xl:text-[17px] leading-[1.65] text-[#57606A] max-w-[440px]">
+      {/* Description - Positioned higher up from bottom with increased font size */}
+      <p className="font-geist text-[17.5px] sm:text-[19.5px] xl:text-[21.5px] font-light leading-[1.6] text-white/95 max-w-[470px]">
         {item.description}
       </p>
     </article>
   );
 }
 
-/* ── Side Card Component (Shorter & Vertically Centered: ONLY Heading, No Border on Hover) ── */
+/* ── Side Card Component (Shorter & Vertically Centered: Cal Sans Heading) ── */
 function SideThemeCard({
   item,
   onClick,
@@ -388,10 +388,10 @@ function SideThemeCard({
   return (
     <article
       onClick={onClick}
-      className="group relative flex h-[330px] xl:h-[360px] w-full flex-col justify-center items-center text-center overflow-hidden rounded-[24px] xl:rounded-[28px] bg-[#F5F7FA] p-7 xl:p-10 border-[1.5px] border-[#E0E0E0] shadow-sm transition-all duration-400 hover:bg-white hover:shadow-md cursor-pointer select-none"
+      className="group relative flex h-[330px] xl:h-[360px] w-full flex-col justify-center items-center text-center overflow-hidden rounded-[24px] xl:rounded-[28px] bg-[#F5F7FA] p-7 xl:p-10 border-[1.5px] border-[#E0E0E0] shadow-sm transition-all duration-400 hover:bg-white hover:border-[#159A99]/50 hover:shadow-md cursor-pointer select-none"
     >
-      {/* ONLY Heading (Title) - Increased font size */}
-      <h3 className="font-geist text-[20px] sm:text-[22px] xl:text-[24px] font-semibold leading-[1.35] text-[#161616] group-hover:text-[#159A99] transition-colors max-w-[280px]">
+      {/* ONLY Heading (Title) - Cal Sans */}
+      <h3 className="font-cal text-[21px] sm:text-[23px] xl:text-[25px] font-normal leading-[1.3] text-[#161616] group-hover:text-[#159A99] transition-colors max-w-[280px]">
         {item.title}
       </h3>
     </article>

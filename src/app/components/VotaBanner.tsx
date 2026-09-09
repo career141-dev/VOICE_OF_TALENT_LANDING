@@ -9,26 +9,27 @@ const artboardImage = `${R2_MEDIA_URL}/images/Artboard.svg`;
 
 export default function VotaBannerSection() {
   return (
-    <section className="w-full bg-[#F5F7FA] px-4 py-10 sm:px-8 md:px-12 lg:px-[8.7%] lg:py-24">
+    <section className="w-full bg-[#F5F7FA] px-4 py-8 sm:px-8 sm:py-10 md:px-12 lg:px-[8.7%] lg:py-24">
       <div
         className="
           vota-banner-bg
           relative
           mx-auto
           flex
-          min-h-[580px]
+          min-h-[390px]
           w-full
           max-w-[1636px]
           flex-col
           justify-between
           overflow-hidden
-          rounded-[30px]
+          rounded-[28px]
           border
           border-[1.03px]
           bg-cover
           bg-center
           px-6
-          py-8
+          pt-7
+          pb-9
           sm:min-h-[520px]
           sm:rounded-[40px]
           sm:px-12
@@ -52,26 +53,26 @@ export default function VotaBannerSection() {
         {/* Subtle overlay for contrast */}
         <div className="pointer-events-none absolute inset-0 bg-black/20 md:bg-black/10" />
 
-        <div className="relative z-10 flex h-full min-h-[500px] w-full flex-col justify-between items-start sm:min-h-0">
+        <div className="relative z-10 flex h-full w-full flex-col justify-between items-start">
           {/* Career141 / VOTA Logo (Pinned at top) */}
           <img
             src={artboardImage}
             alt="Career141 and VOTA"
             loading="lazy"
             decoding="async"
-            className="h-auto w-[160px] object-contain sm:w-[220px] lg:w-[400px]"
+            className="h-auto w-[150px] object-contain sm:w-[220px] lg:w-[400px]"
           />
 
-          {/* Banner Content & Buttons — Vertically Centered on Mobile */}
-          <div className="my-auto w-full max-sm:py-6 sm:my-0 sm:mt-12 md:mt-20">
-            <h2 className="max-w-[760px] font-['Geist'] text-[24px] font-semibold leading-[1.22] tracking-[-0.03em] text-white sm:text-[32px] md:text-[38px] lg:text-[46px]">
+          {/* Banner Content & Buttons */}
+          <div className="mt-9 w-full sm:mt-12 md:mt-20">
+            <h2 className="max-w-[760px] font-['Geist'] text-[22px] sm:text-[32px] md:text-[38px] lg:text-[46px] font-semibold leading-[1.22] tracking-[-0.03em] text-white">
               Sri Lanka&apos;s Talent Story Is Being Written Today.
               <br className="hidden sm:block" />{" "}
               Let The Voices Behind It Be Heard.
             </h2>
 
             {/* Buttons Row — Single row layout */}
-            <div className="mt-12 flex flex-row flex-nowrap items-center gap-2.5 sm:mt-10 sm:gap-4 md:mt-16">
+            <div className="mt-9 flex flex-row flex-nowrap items-center gap-2.5 sm:mt-10 sm:gap-4 md:mt-16">
               {/* Watch VOTA Button */}
               <a
                 href="#episodes"
