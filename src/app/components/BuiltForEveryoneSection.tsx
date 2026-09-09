@@ -217,8 +217,8 @@ export default function BuiltForEveryoneSection() {
                     : "border-[1.62px] border-[#E3E8EC] bg-[#F8FAFC] shadow-sm hover:border-[#159A99]/50",
                 ].join(" ")}
               >
-                {/* Top Tag & Number */}
-                <div className="relative z-10 mb-4 sm:mb-5 flex items-center justify-between">
+                {/* Top Tag */}
+                <div className="relative z-10 mb-4 sm:mb-5 flex items-center">
                   <span
                     className={[
                       "rounded-full px-3.5 py-1.5 font-geist text-[11px] sm:text-[12px] font-bold uppercase tracking-wider transition-colors duration-500",
@@ -228,14 +228,6 @@ export default function BuiltForEveryoneSection() {
                     ].join(" ")}
                   >
                     {audience.tag}
-                  </span>
-                  <span
-                    className={[
-                      "font-geist text-[15px] sm:text-[16px] font-bold tracking-tight transition-colors duration-500",
-                      isActive ? "text-white/60" : "text-[#B0BCC8]",
-                    ].join(" ")}
-                  >
-                    {audience.number}
                   </span>
                 </div>
 
