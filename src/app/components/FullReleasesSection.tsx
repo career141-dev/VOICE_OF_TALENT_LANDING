@@ -308,23 +308,24 @@ export default function FullReleasesSection() {
   return (
     <section
       id="full-releases"
-      className="w-full overflow-hidden bg-[#F5F7FA] px-6 py-20 text-[#262626] md:px-12 lg:px-[8.7%] lg:py-28"
+      className="w-full overflow-hidden bg-[#F5F7FA] px-6 sm:px-10 md:px-12 lg:px-[8.7%] py-16 md:py-20 lg:py-24 text-[#262626]"
     >
-      {/* Heading */}
-      <div className="mb-12 text-center lg:mb-16">
-        <span className="mb-3 inline-flex items-center rounded-full border border-[#159A99]/20 bg-[#159A99]/10 px-4 py-1.5 font-geist text-xs font-semibold uppercase tracking-wider text-[#159A99]">
-          Full Releases
-        </span>
+      <div className="mx-auto w-full max-w-[1600px]">
+        {/* Heading */}
+        <div className="mb-12 text-center lg:mb-16">
+          <span className="mb-3 inline-flex items-center rounded-full border border-[#159A99]/20 bg-[#159A99]/10 px-4 py-1.5 font-geist text-xs font-semibold uppercase tracking-wider text-[#159A99]">
+            Full Releases
+          </span>
 
-        <h2 className="mt-4 font-geist text-3xl font-bold tracking-tight text-[#262626] md:text-4xl lg:text-[46px]">
-          Watch. Learn. Be Inspired.
-        </h2>
-      </div>
+          <h2 className="mt-4 font-geist text-3xl font-bold tracking-tight text-[#262626] md:text-4xl lg:text-[46px]">
+            Watch. Learn. Be Inspired.
+          </h2>
+        </div>
 
-      {/* Main Container */}
-      <div className="mx-auto flex w-full max-w-[1595px] flex-col-reverse gap-6 min-[1100px]:gap-8 min-[1100px]:flex-row min-[1100px]:items-start">
-        {/* Episode Playlist with Custom Scroll Indicator */}
-        <div className="relative flex h-[441px] sm:h-[660px] w-full min-[1100px]:w-[688px] max-w-full overflow-hidden rounded-[24px] sm:rounded-[30px] bg-[#F5F7FA]">
+        {/* Main Container */}
+        <div className="w-full flex flex-col-reverse gap-6 min-[1100px]:gap-8 min-[1100px]:grid min-[1100px]:grid-cols-[minmax(0,688fr)_minmax(0,887fr)] min-[1100px]:items-start">
+          {/* Episode Playlist with Custom Scroll Indicator */}
+          <div className="relative flex h-[441px] sm:h-[660px] w-full max-w-full overflow-hidden rounded-[24px] sm:rounded-[30px] bg-[#F5F7FA]">
           {/* Custom Scrollbar Track */}
           <div className="relative my-3 sm:my-4 ml-2.5 sm:ml-4 flex h-[calc(100%-24px)] sm:h-[calc(100%-32px)] w-[4px] sm:w-[5px] shrink-0 rounded-full bg-[#E2E5E8] overflow-hidden">
             {/* Custom Black Scroll Thumb */}
@@ -405,10 +406,10 @@ export default function FullReleasesSection() {
                     </p>
 
                     {/* Guest & Role Info (Right-Aligned with plenty of room) */}
-                    <div className="relative z-10 ml-auto flex min-w-0 max-w-[66%] sm:max-w-[68%] flex-col justify-center text-right">
+                    <div className="relative z-10 ml-auto flex min-w-0 max-w-[66%] sm:max-w-[68%] min-[1100px]:max-w-[72%] flex-col justify-center text-right">
                       <p
                         className={[
-                          "font-geist text-[13px] sm:text-[15px] font-bold uppercase tracking-tight sm:tracking-wide leading-tight sm:leading-snug transition-colors duration-300 line-clamp-2 sm:line-clamp-1",
+                          "font-geist text-[13px] sm:text-[15px] md:text-[16.5px] lg:text-[17.5px] font-bold uppercase tracking-tight sm:tracking-wide leading-tight sm:leading-snug transition-colors duration-300 line-clamp-2 sm:line-clamp-1",
                           isSelected ? "text-[#159A99]" : "text-[#202020] group-hover:text-[#159A99]",
                         ].join(" ")}
                       >
@@ -417,7 +418,7 @@ export default function FullReleasesSection() {
 
                       <p
                         className={[
-                          "mt-1 sm:mt-1.5 font-geist text-[11px] sm:text-[13px] leading-[1.35] sm:leading-snug transition-colors duration-300 line-clamp-3 sm:line-clamp-2",
+                          "mt-1 sm:mt-1.5 font-geist text-[11px] sm:text-[13px] md:text-[13.5px] lg:text-[14.5px] leading-[1.35] sm:leading-[1.4] transition-colors duration-300 line-clamp-3 sm:line-clamp-2",
                           isSelected
                             ? "font-medium text-[#202020]"
                             : "font-normal text-[#71767B] group-hover:text-[#333333]",
@@ -434,7 +435,7 @@ export default function FullReleasesSection() {
         </div>
 
         {/* Video Player Section with Reel Thumbnail Poster & Swipeable 2-Reel Slider */}
-        <div className="mx-auto flex w-full min-[1100px]:w-[887px] min-[1100px]:h-[660px] max-w-full flex-col items-center min-[1100px]:justify-between">
+        <div className="flex w-full min-[1100px]:h-[660px] max-w-full flex-col items-center min-[1100px]:justify-between">
           <div
             ref={reelSliderRef}
             onScroll={handleReelScroll}
@@ -645,6 +646,7 @@ export default function FullReleasesSection() {
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
   );
 }

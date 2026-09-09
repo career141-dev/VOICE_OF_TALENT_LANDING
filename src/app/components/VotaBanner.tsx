@@ -9,7 +9,7 @@ const artboardImage = `${R2_MEDIA_URL}/images/Artboard.svg`;
 
 export default function VotaBannerSection() {
   return (
-    <section className="w-full bg-[#F5F7FA] px-4 py-8 sm:px-8 sm:py-10 md:px-12 lg:px-[8.7%] lg:py-24">
+    <section className="w-full overflow-hidden bg-[#F5F7FA] px-6 sm:px-10 md:px-12 lg:px-[8.7%] py-16 md:py-20 lg:py-24">
       <div
         className="
           vota-banner-bg
@@ -18,7 +18,7 @@ export default function VotaBannerSection() {
           flex
           min-h-[390px]
           w-full
-          max-w-[1636px]
+          max-w-[1600px]
           flex-col
           justify-between
           overflow-hidden

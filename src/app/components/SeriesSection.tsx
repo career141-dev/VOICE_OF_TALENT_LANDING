@@ -395,10 +395,10 @@ export default function SeriesSection() {
     <section
       id="episodes"
       ref={sectionRef}
-      className="w-full bg-[#f8f9fa] px-6 sm:px-10 md:px-12 lg:px-[8.7%] pt-14 pb-[88px] text-[#202020] max-[760px]:px-6 max-[760px]:pt-10 max-[760px]:pb-16"
+      className="w-full overflow-hidden bg-[#f8f9fa] px-6 sm:px-10 md:px-12 lg:px-[8.7%] py-16 md:py-20 lg:py-24 text-[#202020]"
       aria-labelledby="series-title"
     >
-      <div className="mx-auto w-full max-w-[1636px]">
+      <div className="mx-auto w-full max-w-[1600px]">
         {/* Header */}
         <div className="mb-12 flex items-center justify-between gap-8 xl:gap-24 max-[760px]:flex-col max-[760px]:items-center max-[760px]:gap-6">
           <p

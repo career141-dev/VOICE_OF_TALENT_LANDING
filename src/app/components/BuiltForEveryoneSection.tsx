@@ -41,35 +41,35 @@ export default function BuiltForEveryoneSection() {
   };
 
   return (
-    <section className="w-full overflow-hidden bg-white px-6 py-16 text-[#262626] xl:px-[7.4%] xl:py-24">
-      {/* Heading */}
-      <div className="mx-auto mb-10 text-center lg:mb-16 px-4">
-        <span className="inline-flex items-center rounded-[123.833px] border-[1.238px] border-[rgba(21,154,153,0.20)] bg-[rgba(21,154,153,0.10)] px-[14.86px] py-[7.43px] font-geist text-[12px] sm:text-[13.62px] font-semibold leading-[100%] tracking-normal uppercase text-[#159A99] mb-3">
-          FOR WHOM
-        </span>
+    <section className="w-full overflow-hidden bg-white px-6 sm:px-10 md:px-12 lg:px-[8.7%] py-16 md:py-20 lg:py-24 text-[#262626]">
+      <div className="mx-auto w-full max-w-[1600px]">
+        {/* Heading */}
+        <div className="mb-10 text-center lg:mb-16 px-4">
+          <span className="inline-flex items-center rounded-[123.833px] border-[1.238px] border-[rgba(21,154,153,0.20)] bg-[rgba(21,154,153,0.10)] px-[14.86px] py-[7.43px] font-geist text-[12px] sm:text-[13.62px] font-semibold leading-[100%] tracking-normal uppercase text-[#159A99] mb-3">
+            FOR WHOM
+          </span>
 
-        <h2 className="mt-2 text-center font-cal font-normal text-[28px] sm:text-[38px] md:text-[50px] leading-[110%] tracking-normal text-[#262626] capitalize">
-          Built For Everyone Shaping The Future Of Talent
-        </h2>
-      </div>
+          <h2 className="mt-2 text-center font-cal font-normal text-[28px] sm:text-[38px] md:text-[50px] leading-[110%] tracking-normal text-[#262626] capitalize">
+            Built For Everyone Shaping The Future Of Talent
+          </h2>
+        </div>
 
-      {/* ── DESKTOP GRID (>= xl): 4-Column Interactive Hover View ── */}
-      <div className="hidden mx-auto grid w-full max-w-[1632px] grid-cols-4 justify-items-center gap-6 xl:grid">
-        {audiences.map((audience) => (
-          <article
-            key={`desktop-${audience.number}`}
-            style={{
-              height: "345px",
-              borderRadius: "28px",
-              borderWidth: "1.62px",
-              opacity: 1,
-            }}
-            className="
-              group
-              relative
-              w-full
-              max-w-[387px]
-              shrink-0
+        {/* ── DESKTOP GRID (>= xl): 4-Column Interactive Hover View ── */}
+        <div className="hidden grid w-full grid-cols-4 gap-5 xl:gap-6 xl:grid">
+          {audiences.map((audience) => (
+            <article
+              key={`desktop-${audience.number}`}
+              style={{
+                height: "345px",
+                borderRadius: "28px",
+                borderWidth: "1.62px",
+                opacity: 1,
+              }}
+              className="
+                group
+                relative
+                w-full
+                shrink-0
               cursor-pointer
               overflow-hidden
               border-[#E0E0E0]
@@ -246,6 +246,7 @@ export default function BuiltForEveryoneSection() {
           );
         })}
       </div>
-    </section>
+    </div>
+  </section>
   );
 }

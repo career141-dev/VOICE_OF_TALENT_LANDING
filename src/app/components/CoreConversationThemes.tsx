@@ -150,17 +150,18 @@ export default function CoreConversationThemes() {
   };
 
   return (
-    <section className="w-full bg-[#FAFCFC] px-4 sm:px-6 py-16 text-[#1A1A1A] md:px-12 lg:px-[7%] xl:px-[8.7%] lg:py-20 overflow-hidden">
-      {/* Header Section */}
-      <div className="mb-8 flex flex-col items-start max-xl:items-center max-xl:text-center lg:mb-12">
-        <span className="inline-flex items-center rounded-[123.833px] border-[1.238px] border-[rgba(21,154,153,0.20)] bg-[rgba(21,154,153,0.10)] px-[14.86px] py-[7.43px] font-geist text-[12px] sm:text-[13.62px] font-semibold leading-[100%] tracking-normal uppercase text-[#159A99] mb-3">
-          CURATED TOPICS
-        </span>
+    <section className="w-full overflow-hidden bg-[#FAFCFC] px-6 sm:px-10 md:px-12 lg:px-[8.7%] py-16 md:py-20 lg:py-24 text-[#1A1A1A]">
+      <div className="mx-auto w-full max-w-[1600px]">
+        {/* Header Section */}
+        <div className="mb-8 flex flex-col items-start max-xl:items-center max-xl:text-center lg:mb-12">
+          <span className="inline-flex items-center rounded-[123.833px] border-[1.238px] border-[rgba(21,154,153,0.20)] bg-[rgba(21,154,153,0.10)] px-[14.86px] py-[7.43px] font-geist text-[12px] sm:text-[13.62px] font-semibold leading-[100%] tracking-normal uppercase text-[#159A99] mb-3">
+            CURATED TOPICS
+          </span>
 
-        <h2 className="mt-3 font-cal font-normal text-[28px] sm:text-[38px] md:text-[50px] leading-[110%] tracking-normal text-[#262626] capitalize">
-          Core Conversation Themes
-        </h2>
-      </div>
+          <h2 className="mt-3 font-cal font-normal text-[28px] sm:text-[38px] md:text-[50px] leading-[110%] tracking-normal text-[#262626] capitalize">
+            Core Conversation Themes
+          </h2>
+        </div>
 
       {/* ── DESKTOP 3-WIDGET CONTINUOUS CAROUSEL (Left -> Center -> Right Real Movement) ── */}
       <div
@@ -396,7 +397,7 @@ export default function CoreConversationThemes() {
           </svg>
         </button>
       </div>
-    </section>
+    </div>
+  </section>
   );
 }
-

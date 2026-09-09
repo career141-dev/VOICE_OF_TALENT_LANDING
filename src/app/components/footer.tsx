@@ -57,147 +57,148 @@ export default function Footer() {
   return (
     <footer className="w-full overflow-hidden bg-white">
       {/* Main footer */}
-      <div className="w-full px-4 sm:px-8 md:px-12 lg:px-[8.7%]">
-        <div
-          className="
-            flex
-            w-full
-            flex-col
-            items-center
-            gap-12
-            py-10
-            text-center
-            md:flex-row
-            md:items-start
-            md:justify-between
-            md:gap-10
-            md:py-16
-            md:text-left
-            lg:py-14
-          "
-        >
-          {/* Logo */}
-          <div className="flex shrink-0 justify-center md:justify-start">
-            <img
-              src={footerLogo}
-              alt="VOTA — Voices of Talent Acquisition"
-              className="h-auto w-[240px] sm:w-[300px] md:w-[300px] lg:w-[400px] xl:w-[460px] max-w-full object-contain"
-            />
-          </div>
-
-          {/* Series map */}
-          <nav aria-label="Series map" className="flex flex-col items-center md:items-start shrink-0">
-            <h2 className="font-['Geist'] text-[18px] font-bold uppercase leading-none text-[#262626]">
-              Series Map
-            </h2>
-
-            <ul className="mt-7 space-y-5">
-              {seriesLinks.map((link) => (
-                <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className="font-['Geist'] text-[17px] leading-none text-[#666666] transition-colors duration-200 hover:text-[#159A99]"
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          {/* Social links & Partner Logo */}
-          <div className="flex flex-col items-center md:items-start shrink-0">
-            <h2 className="font-['Geist'] text-[18px] font-bold uppercase leading-none text-[#262626]">
-              Follow Us
-            </h2>
-
-            <div className="mt-7 flex flex-wrap items-center justify-center gap-4 md:justify-start">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={`Follow VOTA on ${social.label}`}
-                  className="
-                    group
-                    flex
-                    h-[42px]
-                    w-[42px]
-                    shrink-0
-                    items-center
-                    justify-center
-                    rounded-[8px]
-                    
-                    /* Base State */
-                    bg-white
-                    border
-                    border-[#E0E0E0]
-                    text-[#555555] /* Icon color when inactive */
-                    
-                    /* Hover State */
-                    transition-all
-                    duration-300
-                    hover:-translate-y-1
-                    hover:bg-[#159A99]
-                    hover:border-[#159A99]
-                    hover:text-white /* Icon turns purely white instantly */
-                    hover:shadow-md
-                  "
-                >
-                  {/* Renders the inline SVG perfectly without filter glitches */}
-                  {social.icon}
-                </a>
-              ))}
+      <div className="w-full px-6 sm:px-10 md:px-12 lg:px-[8.7%]">
+        <div className="mx-auto w-full max-w-[1600px]">
+          <div
+            className="
+              flex
+              w-full
+              flex-col
+              items-center
+              gap-12
+              py-10
+              text-center
+              md:flex-row
+              md:items-start
+              md:justify-between
+              md:gap-10
+              md:py-16
+              md:text-left
+              lg:py-14
+            "
+          >
+            {/* Logo */}
+            <div className="flex shrink-0 justify-center md:justify-start">
+              <img
+                src={footerLogo}
+                alt="VOTA — Voices of Talent Acquisition"
+                className="h-auto w-[240px] sm:w-[300px] md:w-[300px] lg:w-[400px] xl:w-[460px] max-w-full object-contain"
+              />
             </div>
 
-            {/* Career141 / VOTA Logo */}
-            <div className="mt-6 md:mt-7 flex justify-center md:justify-start">
-              <img
-                src={artboardImage}
-                alt="Career141 and VOTA"
-                loading="lazy"
-                decoding="async"
-                className="h-auto w-[160px] sm:w-[190px] md:w-[200px] lg:w-[240px] xl:w-[270px] max-w-full object-contain"
-              />
+            {/* Series map */}
+            <nav aria-label="Series map" className="flex flex-col items-center md:items-start shrink-0">
+              <h2 className="font-['Geist'] text-[18px] font-bold uppercase leading-none text-[#262626]">
+                Series Map
+              </h2>
+
+              <ul className="mt-7 space-y-5">
+                {seriesLinks.map((link) => (
+                  <li key={link.label}>
+                    <a
+                      href={link.href}
+                      className="font-['Geist'] text-[17px] leading-none text-[#666666] transition-colors duration-200 hover:text-[#159A99]"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+
+            {/* Social links & Partner Logo */}
+            <div className="flex flex-col items-center md:items-end shrink-0">
+              {/* Follow Us heading & icons grouped so heading starts where LinkedIn icon starts */}
+              <div className="flex flex-col items-center md:items-start">
+                <h2 className="font-['Geist'] text-[18px] font-bold uppercase leading-none text-[#262626]">
+                  Follow Us
+                </h2>
+
+                <div className="mt-7 flex flex-wrap items-center justify-center gap-4 md:justify-start">
+                  {socialLinks.map((social) => (
+                    <a
+                      key={social.label}
+                      href={social.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={`Follow VOTA on ${social.label}`}
+                      className="
+                        group
+                        flex
+                        h-[42px]
+                        w-[42px]
+                        shrink-0
+                        items-center
+                        justify-center
+                        rounded-[8px]
+                        bg-white
+                        border
+                        border-[#E0E0E0]
+                        text-[#555555]
+                        transition-all
+                        duration-300
+                        hover:-translate-y-1
+                        hover:bg-[#159A99]
+                        hover:border-[#159A99]
+                        hover:text-white
+                        hover:shadow-md
+                      "
+                    >
+                      {social.icon}
+                    </a>
+                  ))}
+                </div>
+              </div>
+
+              {/* Career141 / VOTA Logo */}
+              <div className="mt-6 md:mt-7 flex justify-center md:justify-end">
+                <img
+                  src={artboardImage}
+                  alt="Career141 and VOTA"
+                  loading="lazy"
+                  decoding="async"
+                  className="h-auto w-[160px] sm:w-[190px] md:w-[200px] lg:w-[240px] xl:w-[270px] max-w-full object-contain"
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Bottom teal bar */}
-      <div className="w-full bg-[#159A99] px-3 sm:px-8 md:px-12 lg:px-[8.7%]">
-        <div
-          className="
-            flex
-            min-h-[85px]
-            w-full
-            flex-col
-            items-center
-            justify-center
-            gap-3
-            py-5
-            text-center
-            text-white
-            md:flex-row
-            md:items-center
-            md:justify-between
-            md:py-0
-            md:text-left
-          "
-        >
-          <p className="font-['Geist'] text-[11px] min-[360px]:text-[12px] min-[400px]:text-[13.5px] sm:text-[15px] md:text-[16px] whitespace-nowrap">
-            © 2026 VOTA. Powered by Career141. All rights reserved.
-          </p>
+      <div className="w-full bg-[#159A99] px-6 sm:px-10 md:px-12 lg:px-[8.7%]">
+        <div className="mx-auto w-full max-w-[1600px]">
+          <div
+            className="
+              flex
+              min-h-[85px]
+              w-full
+              flex-col
+              items-center
+              justify-center
+              gap-3
+              py-5
+              text-center
+              text-white
+              md:flex-row
+              md:items-center
+              md:justify-between
+              md:py-0
+              md:text-left
+            "
+          >
+            <p className="font-['Geist'] text-[11px] min-[360px]:text-[12px] min-[400px]:text-[13.5px] sm:text-[15px] md:text-[16px] whitespace-nowrap">
+              © 2026 VOTA. Powered by Career141. All rights reserved.
+            </p>
 
-          <div className="flex items-center justify-center gap-5 sm:gap-7">
-            <span className="font-['Geist'] text-[13px] sm:text-[15px] md:text-[16px] whitespace-nowrap">
-              Privacy Strategy
-            </span>
-
-            <span className="font-['Geist'] text-[13px] sm:text-[15px] md:text-[16px] whitespace-nowrap">
-              Terms of Service
-            </span>
+            <div className="flex items-center justify-center gap-5 sm:gap-7">
+              <span className="font-['Geist'] text-[13px] sm:text-[15px] md:text-[16px] whitespace-nowrap">
+                Privacy Strategy
+              </span>
+              <span className="font-['Geist'] text-[13px] sm:text-[15px] md:text-[16px] whitespace-nowrap">
+                Terms of Service
+              </span>
+            </div>
           </div>
         </div>
       </div>

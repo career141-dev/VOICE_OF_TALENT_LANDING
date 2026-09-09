@@ -152,10 +152,10 @@ export default function Home() {
 
       <section
         id="mission"
-        className="relative overflow-hidden bg-white px-6 sm:px-10 md:px-12 lg:px-[8.7%] pt-14 pb-14 sm:pb-16 md:pt-[70px] md:pb-[100px] min-[1025px]:pt-[100px] min-[1025px]:pb-[150px] text-[#202020]"
+        className="relative w-full overflow-hidden bg-white px-6 sm:px-10 md:px-12 lg:px-[8.7%] py-16 md:py-20 lg:py-24 text-[#202020]"
         aria-labelledby="mission-title"
       >
-        <div className="flex items-start justify-between gap-6 min-[1025px]:gap-20 flex-col min-[1025px]:flex-row">
+        <div className="mx-auto w-full max-w-[1600px] flex items-start justify-between gap-6 min-[1025px]:gap-20 flex-col min-[1025px]:flex-row">
           <p className="m-0 shrink-0 text-[15px] sm:text-[18px] md:text-[20px] lg:text-[22px] min-[1025px]:text-[23px] font-semibold uppercase tracking-[-.02em] text-[#159a99]">
             — The VOTA Mission
           </p>
