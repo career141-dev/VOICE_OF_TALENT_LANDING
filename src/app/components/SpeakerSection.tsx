@@ -402,9 +402,8 @@ export default function VoicesSlider() {
               <img
                 src={item.avatar}
                 alt={item.name}
-                className={`w-full h-full object-cover ${
-                  item.id === 6 ? "scale-125 origin-center" : ""
-                }`}
+                className={`w-full h-full object-cover ${item.id === 6 ? "scale-125 origin-center" : ""
+                  }`}
               />
             </div>
           </div>
@@ -537,62 +536,62 @@ export default function VoicesSlider() {
             </AnimatePresence>
           </div>
 
-        {/* Mobile Navigation Dots & Arrows (Dynamic 5-Dot Window) */}
-        <div className="flex items-center justify-center gap-4 mt-4">
-          <button
-            onClick={prevMobile}
-            aria-label="Previous speaker"
-            className="h-9 w-9 rounded-full bg-[#F2F2F2] border border-[#D6D6D6] flex items-center justify-center text-black active:scale-95 transition-transform cursor-pointer"
-          >
-            <svg className="w-4 h-4 rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
+          {/* Mobile Navigation Dots & Arrows (Dynamic 5-Dot Window) */}
+          <div className="flex items-center justify-center gap-4 mt-4">
+            <button
+              onClick={prevMobile}
+              aria-label="Previous speaker"
+              className="h-9 w-9 rounded-full bg-[#F2F2F2] border border-[#D6D6D6] flex items-center justify-center text-black active:scale-95 transition-transform cursor-pointer"
+            >
+              <svg className="w-4 h-4 rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
 
-          <div className="flex items-center gap-1.5 h-3">
-            {(() => {
-              const total = voicesData.length;
-              const maxVisible = 5;
-              const half = Math.floor(maxVisible / 2);
-              let start = activeMobileIndex - half;
-              if (start < 0) start = 0;
-              if (start + maxVisible > total) start = Math.max(0, total - maxVisible);
-              const visibleIndices = Array.from({ length: Math.min(total, maxVisible) }, (_, i) => start + i);
+            <div className="flex items-center gap-1.5 h-3">
+              {(() => {
+                const total = voicesData.length;
+                const maxVisible = 5;
+                const half = Math.floor(maxVisible / 2);
+                let start = activeMobileIndex - half;
+                if (start < 0) start = 0;
+                if (start + maxVisible > total) start = Math.max(0, total - maxVisible);
+                const visibleIndices = Array.from({ length: Math.min(total, maxVisible) }, (_, i) => start + i);
 
-              return visibleIndices.map((dotIdx) => {
-                const isActive = activeMobileIndex === dotIdx;
-                const isEdgeSmall =
-                  (dotIdx === start && start > 0) ||
-                  (dotIdx === start + maxVisible - 1 && start + maxVisible < total);
+                return visibleIndices.map((dotIdx) => {
+                  const isActive = activeMobileIndex === dotIdx;
+                  const isEdgeSmall =
+                    (dotIdx === start && start > 0) ||
+                    (dotIdx === start + maxVisible - 1 && start + maxVisible < total);
 
-                return (
-                  <button
-                    key={`dot-${dotIdx}`}
-                    onClick={() => goToSlide(dotIdx)}
-                    aria-label={`Go to slide ${dotIdx + 1}`}
-                    className={`rounded-full transition-all duration-300 cursor-pointer ${isActive
-                      ? "w-6 h-2 bg-[#159A99]"
-                      : isEdgeSmall
-                        ? "w-1.5 h-1.5 bg-[#D6D6D6]"
-                        : "w-2 h-2 bg-[#D6D6D6] hover:bg-[#B0B0B0]"
-                      }`}
-                  />
-                );
-              });
-            })()}
+                  return (
+                    <button
+                      key={`dot-${dotIdx}`}
+                      onClick={() => goToSlide(dotIdx)}
+                      aria-label={`Go to slide ${dotIdx + 1}`}
+                      className={`rounded-full transition-all duration-300 cursor-pointer ${isActive
+                        ? "w-6 h-2 bg-[#159A99]"
+                        : isEdgeSmall
+                          ? "w-1.5 h-1.5 bg-[#D6D6D6]"
+                          : "w-2 h-2 bg-[#D6D6D6] hover:bg-[#B0B0B0]"
+                        }`}
+                    />
+                  );
+                });
+              })()}
+            </div>
+
+            <button
+              onClick={nextMobile}
+              aria-label="Next speaker"
+              className="h-9 w-9 rounded-full bg-[#F2F2F2] border border-[#D6D6D6] flex items-center justify-center text-black active:scale-95 transition-transform cursor-pointer"
+            >
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
           </div>
-
-          <button
-            onClick={nextMobile}
-            aria-label="Next speaker"
-            className="h-9 w-9 rounded-full bg-[#F2F2F2] border border-[#D6D6D6] flex items-center justify-center text-black active:scale-95 transition-transform cursor-pointer"
-          >
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
         </div>
-      </div>
       </div>
     </section>
   );

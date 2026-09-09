@@ -25,10 +25,10 @@ const episodes: Episode[] = [
     guest: "MR. PATRICK PEREIRA",
     role: "Vice President Learning & Development",
     company: "Aitken Spence Hotels",
-    videoUrl: `${R2_MEDIA_URL}/videos/Mr.%20Pratrick%20Pereira.mp4`,
+    videoUrl: "https://media.career141.com/new%20reels/Mr.%20Patrick/Mr.%20Patrick.mp4",
     reels: [
-      `${R2_MEDIA_URL}/videos/reels/01%20Mr%20Patrick%20Pereira.mp4`,
-      `${R2_MEDIA_URL}/videos/reels/02%20Mr%20Patrick%20Pereira.mp4`,
+      "https://media.career141.com/new%20reels/Mr.%20Patrick/01%20Reel%20Mr.%20Patrick.mp4",
+      "https://media.career141.com/new%20reels/Mr.%20Patrick/02%20Reel%20Mr.%20Patrick.mp4",
     ],
     reelDurations: ["1 MIN", "45 SEC"],
   },
@@ -38,10 +38,10 @@ const episodes: Episode[] = [
     guest: "MR. KEN VIJAYAKUMAR",
     role: "Senior General Manager, Human Resource & Sustainability",
     company: "A. Baur & Co. (Pvt) Ltd",
-    videoUrl: `${R2_MEDIA_URL}/videos/Mr.Ken.mp4`,
+    videoUrl: "https://media.career141.com/new%20reels/Mr.%20Ken/Mr.%20Ken.mp4",
     reels: [
-      `${R2_MEDIA_URL}/videos/reels/01%20Mr.%20Ken.mp4`,
-      `${R2_MEDIA_URL}/videos/reels/02%20Mr.%20Ken.mp4`,
+      "https://media.career141.com/new%20reels/Mr.%20Ken/01%20Reel%20Mr.%20Ken.mp4",
+      "https://media.career141.com/new%20reels/Mr.%20Ken/02%20Reel%20Mr.%20Ken.mp4",
     ],
     reelDurations: ["50 SEC", "55 SEC"],
   },
@@ -51,10 +51,10 @@ const episodes: Episode[] = [
     guest: "MR. CHAMILA C PERERA",
     role: "Former Managing Director, Head of Human Resources",
     company: "HSBC Malaysia",
-    videoUrl: `${R2_MEDIA_URL}/videos/Mr.%20Chamila%20C%20Perera.mp4`,
+    videoUrl: "https://media.career141.com/new%20reels/Mr.%20Chamila%20C%20Perera/Mr.%20Chamila%20C%20Perera.mp4",
     reels: [
-      `${R2_MEDIA_URL}/videos/reels/01%20Mr.%20Chamila%20C%20Perera.mp4`,
-      `${R2_MEDIA_URL}/videos/reels/02%20Mr.%20Chamila%20C%20Perera.mp4`,
+      "https://media.career141.com/new%20reels/Mr.%20Chamila%20C%20Perera/01%20Reel%20Mr.%20Chamila%20C%20Perera.mp4",
+      "https://media.career141.com/new%20reels/Mr.%20Chamila%20C%20Perera/02%20Reel%20Mr.%20Chamila%20C%20Perera.mp4",
     ],
     reelDurations: ["45 SEC", "1 MIN"],
   },
@@ -64,10 +64,10 @@ const episodes: Episode[] = [
     guest: "MS. THRIMUTHI DHANUSHKA",
     role: "Group Deputy General Manager, Human Resource & Administration",
     company: "Ideal Group",
-    videoUrl: `${R2_MEDIA_URL}/videos/Ms.Thrimuthi%20Dhanushka.mp4`,
+    videoUrl: "https://media.career141.com/new%20reels/Ms.Thrimuthi/Ms.Thrimuthi.mp4",
     reels: [
-      `${R2_MEDIA_URL}/videos/reels/01%20Ms.Thrimuthi.mp4`,
-      `${R2_MEDIA_URL}/videos/reels/02%20Ms.Thrimuthi.mp4`,
+      "https://media.career141.com/new%20reels/Ms.Thrimuthi/01%20Reel%20Ms.Thrimuthi.mp4",
+      "https://media.career141.com/new%20reels/Ms.Thrimuthi/02%20Reel%20Ms.Thrimuthi.mp4",
     ],
     reelDurations: ["1 MIN", "40 SEC"],
   },
@@ -77,10 +77,10 @@ const episodes: Episode[] = [
     guest: "MS. SURANI AMARASINGHE",
     role: "Director, Country People Partnering, Sri Lanka",
     company: "LSEG (London Stock Exchange Group)",
-    videoUrl: `${R2_MEDIA_URL}/videos/Ms.%20Surani%20Amarasinghe.mp4`,
+    videoUrl: "https://media.career141.com/new%20reels/Ms.%20Surani/Ms.%20Surani.mp4",
     reels: [
-      `${R2_MEDIA_URL}/videos/reels/01%20Ms.%20Surani.mp4`,
-      `${R2_MEDIA_URL}/videos/reels/02%20Ms.%20Surani.mp4`,
+      "https://media.career141.com/new%20reels/Ms.%20Surani/01%20Reel%20Ms.%20Surani.mp4",
+      "https://media.career141.com/new%20reels/Ms.%20Surani/02%20Reel%20Ms.%20Surani.mp4",
     ],
     reelDurations: ["55 SEC", "50 SEC"],
   },
@@ -90,10 +90,10 @@ const episodes: Episode[] = [
     guest: "MR. ARSHAQ FARALLY",
     role: "Chief People Officer, Sri Lanka",
     company: "Daraz",
-    videoUrl: `${R2_MEDIA_URL}/videos/Mr.Arshaq%20Farally%2002.mp4`,
+    videoUrl: "https://media.career141.com/new%20reels/Mr.%20Arshaq/01%20Reel%20Arshaq.mp4",
     reels: [
-      `${R2_MEDIA_URL}/videos/reels/01%20Mr.%20Arshaq.mp4`,
-      `${R2_MEDIA_URL}/videos/reels/02%20Mr.%20Arshaq.mp4`,
+      "https://media.career141.com/new%20reels/Mr.%20Arshaq/01%20Reel%20Arshaq.mp4",
+      "https://media.career141.com/new%20reels/Mr.%20Arshaq/02%20Reel%20Arshaq.mp4",
     ],
     reelDurations: ["45 SEC", "1 MIN"],
   },
@@ -103,10 +103,10 @@ const episodes: Episode[] = [
     guest: "MR. DANUSHKA SENETH",
     role: "Head of Human Resources / AGM",
     company: "Janashakthi Insurance PLC",
-    videoUrl: `${R2_MEDIA_URL}/videos/Mr.%20Danushka.mp4`,
+    videoUrl: "https://media.career141.com/new%20reels/Mr.%20Danushaka/Mr.%20Danushaka.mp4",
     reels: [
-      `${R2_MEDIA_URL}/videos/reels/01%20Mr.%20Danushka.mp4`,
-      `${R2_MEDIA_URL}/videos/reels/02%20Mr.%20Danushka.mp4`,
+      "https://media.career141.com/new%20reels/Mr.%20Danushaka/Reel%2001%20Mr.%20Danushaka.mp4",
+      "https://media.career141.com/new%20reels/Mr.%20Danushaka/Reel%2002%20Mr.%20Danushaka.mp4",
     ],
     reelDurations: ["1 MIN", "45 SEC"],
   },
@@ -116,10 +116,10 @@ const episodes: Episode[] = [
     guest: "MS. HASANTHI DE SARAM",
     role: "Director / Senior HR Consultant",
     company: "(Former Director HR - Asiri Health)",
-    videoUrl: `${R2_MEDIA_URL}/videos/Ms.%20Hasanthi.mp4`,
+    videoUrl: "https://media.career141.com/new%20reels/Ms.%20Hasanthi/01%20Reel%20Ms.%20Hasanthi.mp4",
     reels: [
-      `${R2_MEDIA_URL}/videos/reels/Ms.%20Hasanthi.mp4`,
-      `${R2_MEDIA_URL}/videos/reels/2%20Ms.%20Hasanthi.mp4`,
+      "https://media.career141.com/new%20reels/Ms.%20Hasanthi/01%20Reel%20Ms.%20Hasanthi.mp4",
+      "https://media.career141.com/new%20reels/Ms.%20Hasanthi/02%20Reel%20Ms.%20Hasanthi.mp4",
     ],
     reelDurations: ["50 SEC", "55 SEC"],
   },
@@ -129,10 +129,10 @@ const episodes: Episode[] = [
     guest: "MR. ASHAN RANSILIGE",
     role: "Chief Executive Officer",
     company: "Link Natural Products (Pvt.) Ltd",
-    videoUrl: `${R2_MEDIA_URL}/videos/Mr.%20Ashan%20Ransilige%2002.mp4`,
+    videoUrl: "https://media.career141.com/new%20reels/Mr%20Ashan/Mr%20Ashan.mp4",
     reels: [
-      `${R2_MEDIA_URL}/videos/reels/01%20Mr.%20Ashan.mp4`,
-      `${R2_MEDIA_URL}/videos/reels/02%20Mr.%20Ashan.mp4`,
+      "https://media.career141.com/new%20reels/Mr%20Ashan/01%20Reel%20Mr%20Ashan.mp4",
+      "https://media.career141.com/new%20reels/Mr%20Ashan/02%20Reel%20Mr%20Ashan.mp4",
     ],
     reelDurations: ["45 SEC", "1 MIN"],
   },
@@ -142,10 +142,10 @@ const episodes: Episode[] = [
     guest: "MR. INDIKA RANATHUNGA",
     role: "Chief Operating Officer",
     company: "Allied Commercial Fertilizers",
-    videoUrl: `${R2_MEDIA_URL}/videos/Mr.Indiaka%20Ranathunga%2002.mp4`,
+    videoUrl: "https://media.career141.com/new%20reels/Mr.%20Indika/Mr.%20Indika.mp4",
     reels: [
-      `${R2_MEDIA_URL}/videos/reels/01%20Mr.%20Indika.mp4`,
-      `${R2_MEDIA_URL}/videos/reels/02%20Mr.%20Indika.mp4`,
+      "https://media.career141.com/new%20reels/Mr.%20Indika/Reel%201%20Mr.%20Indika.mp4",
+      "https://media.career141.com/new%20reels/Mr.%20Indika/Reel%202%20Mr.%20Indika.mp4",
     ],
     reelDurations: ["1 MIN", "50 SEC"],
   },
@@ -155,10 +155,10 @@ const episodes: Episode[] = [
     guest: "MS. CHAMINDRA PERERA",
     role: "Human Resources Director",
     company: "GRI Sri Lanka",
-    videoUrl: `${R2_MEDIA_URL}/videos/Ms.%20Chamindra.mp4`,
+    videoUrl: "https://media.career141.com/new%20reels/Ms.%20Chamindra/Ms.%20Chamindra.mp4",
     reels: [
-      `${R2_MEDIA_URL}/videos/reels/01%20Ms%20.%20Chamindra.mp4`,
-      `${R2_MEDIA_URL}/videos/reels/02%20Ms%20.%20Chamindra.mp4`,
+      "https://media.career141.com/new%20reels/Ms.%20Chamindra/1%20Reel%20Ms.%20Chamindra.mp4",
+      "https://media.career141.com/new%20reels/Ms.%20Chamindra/2%20Reel%20Ms.%20Chamindra.mp4",
     ],
     reelDurations: ["55 SEC", "45 SEC"],
   },
@@ -168,10 +168,10 @@ const episodes: Episode[] = [
     guest: "MS. CHANDIMA BAMBARENDA",
     role: "Group Head of Human Resources",
     company: "Pyramid Wilmar Group",
-    videoUrl: `${R2_MEDIA_URL}/videos/Ms.%20Chandima.mp4`,
+    videoUrl: "https://media.career141.com/new%20reels/Ms.%20Chandima/Ms.%20Chandima.mp4",
     reels: [
-      `${R2_MEDIA_URL}/videos/reels/01%20Ms.%20Chandima.mp4`,
-      `${R2_MEDIA_URL}/videos/reels/02%20Chandima.mp4`,
+      "https://media.career141.com/new%20reels/Ms.%20Chandima/1%20Reel%20Ms.%20Chandima.mp4",
+      "https://media.career141.com/new%20reels/Ms.%20Chandima/2%20Reel%20Ms.%20Chandima.mp4",
     ],
     reelDurations: ["45 SEC", "1 MIN"],
   },
@@ -181,10 +181,10 @@ const episodes: Episode[] = [
     guest: "MR. GEHAN SAMUEL",
     role: "Manager of Human Resources Development",
     company: "MAS Holdings Silueta",
-    videoUrl: `${R2_MEDIA_URL}/videos/Mr.%20Gehan.mp4`,
+    videoUrl: "https://media.career141.com/new%20reels/Mr.%20Gehan/Mr.%20Gehan.mp4",
     reels: [
-      `${R2_MEDIA_URL}/videos/reels/01%20Mr.%20Gehan.mp4`,
-      `${R2_MEDIA_URL}/videos/reels/02%20Mr.%20Gehan.mp4`,
+      "https://media.career141.com/new%20reels/Mr.%20Gehan/01%20Reel%20Mr.%20Gehan.mp4",
+      "https://media.career141.com/new%20reels/Mr.%20Gehan/02%20Reel%20Mr.%20Gehan.mp4",
     ],
     reelDurations: ["1 MIN", "55 SEC"],
   },
@@ -194,10 +194,10 @@ const episodes: Episode[] = [
     guest: "MR. KANISHKA MUNASINGHE",
     role: "General Manager, Human Resources",
     company: "Port City BPO",
-    videoUrl: `${R2_MEDIA_URL}/videos/Mr.%20Kanishka.mp4`,
+    videoUrl: "https://media.career141.com/new%20reels/Mr.%20Kanishka/Mr.%20Kanishka.mp4",
     reels: [
-      `${R2_MEDIA_URL}/videos/reels/01%20Mr.%20Kanishka.mp4`,
-      `${R2_MEDIA_URL}/videos/reels/02%20Mr.%20Kanishka.mp4`,
+      "https://media.career141.com/new%20reels/Mr.%20Kanishka/01%20Reel%20Mr.%20Kanishka.mp4",
+      "https://media.career141.com/new%20reels/Mr.%20Kanishka/02%20Reel%20Mr.%20Kanishka.mp4",
     ],
     reelDurations: ["50 SEC", "45 SEC"],
   },
@@ -524,13 +524,9 @@ export default function FullReleasesSection() {
                       {/* 1. Mobile Front Photo over reel background */}
                       <div className="pointer-events-none absolute inset-0 overflow-hidden min-[1100px]:hidden">
                         <img
-                          src={`${SPEAKER_SECTION_IMG_BASE}/r${selectedEpisode.id}png.png?v=2`}
+                          src={`${SPEAKER_SECTION_IMG_BASE}/r${selectedEpisode.id}png.png?v=3`}
                           alt={selectedEpisode.guest}
-                          className={`absolute left-1/2 -translate-x-1/2 right-auto w-auto max-w-none object-contain object-bottom select-none drop-shadow-[0_20px_40px_rgba(0,0,0,0.85)] transition-transform duration-500 group-hover:scale-105 ${
-                            [10, 11, 12].includes(selectedEpisode.id)
-                              ? "h-[132%] sm:h-[136%] -bottom-[28%] sm:-bottom-[30%]"
-                              : "h-[85%] sm:h-[88%] bottom-0"
-                          }`}
+                          className="absolute left-1/2 -translate-x-1/2 right-auto w-auto max-w-none h-[85%] sm:h-[88%] bottom-0 object-contain object-bottom select-none drop-shadow-[0_20px_40px_rgba(0,0,0,0.85)] transition-transform duration-500 group-hover:scale-105"
                         />
                       </div>
 
