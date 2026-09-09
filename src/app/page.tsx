@@ -50,7 +50,7 @@ export default function Home() {
   return (
     <>
       <main
-        className="hero-frame isolate relative min-h-[710px] sm:min-h-[730px] md:min-h-[750px] lg:min-h-[780px] xl:min-h-[850px] overflow-hidden bg-[#050505] bg-[radial-gradient(ellipse_at_center,rgba(21,154,153,0.22)_0%,#050505_75%)]"
+        className="hero-frame isolate relative min-h-[590px] sm:min-h-[640px] md:min-h-[750px] lg:min-h-[780px] xl:min-h-[850px] overflow-hidden bg-[#050505] bg-[radial-gradient(ellipse_at_center,rgba(21,154,153,0.22)_0%,#050505_75%)]"
         data-node-id="1:845">
         {/* Background */}
         <div className="absolute inset-0 z-0" aria-hidden="true">
@@ -73,10 +73,10 @@ export default function Home() {
 
         {/* Microphone */}
         <div
-          className="pointer-events-none absolute inset-x-0 top-[30%] z-[4] flex justify-center overflow-visible max-[760px]:top-[33%] max-[760px]:z-[1]"
+          className="pointer-events-none absolute inset-x-0 top-[28%] sm:top-[28%] md:top-[30%] z-[4] flex justify-center overflow-visible max-[760px]:top-[24%] max-[760px]:z-[1]"
           aria-hidden="true"
         >
-          <div className="relative flex w-[clamp(420px,38vw,560px)] max-[760px]:w-[290px] justify-center animate-[microphone-rise_1.5s_cubic-bezier(.22,1,.36,1)_both]">
+          <div className="relative flex w-[clamp(420px,38vw,560px)] max-[760px]:w-[260px] sm:max-[760px]:w-[290px] justify-center animate-[microphone-rise_1.5s_cubic-bezier(.22,1,.36,1)_both]">
             <img
               className="h-auto w-full object-contain pointer-events-none select-none blur-[2px] drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
               src={microphoneImage}
@@ -91,16 +91,16 @@ export default function Home() {
         <Navbar />
         <HeroTitle />
         <div
-          className="absolute left-1/2 top-[41%] z-[5] w-[min(92%,935px)] -translate-x-1/2 text-center max-[760px]:top-[38%]"
+          className="absolute left-1/2 top-[34%] sm:top-[33%] md:top-[41%] z-[5] w-full max-w-[781px] max-[760px]:max-w-[340px] -translate-x-1/2 text-center px-4 sm:px-0"
         >
-          <p className="mx-auto mt-4 max-w-[781px] text-[clamp(14px,1.35vw,22px)] leading-[1.6] text-white max-[760px]:px-3 max-[760px]:text-[14px]">
-            The voices shaping Sri Lanka&apos;s talent story. Meet the people connecting talent with opportunity, building stronger organizations, and shaping the{" "}<br />future of work in Sri Lanka.
+          <p className="mx-auto mt-4 max-w-[781px] text-[clamp(14px,1.35vw,22px)] leading-[1.6] text-white max-[760px]:max-w-[340px] max-[760px]:px-0 max-[760px]:text-[13.5px] max-[760px]:leading-[1.55]">
+            The voices shaping Sri Lanka&apos;s talent story. Meet the people connecting talent with opportunity, building stronger organizations, and shaping the <br className="hidden sm:inline" />future of work in Sri Lanka.
           </p>
 
           <HeroCTAs />
 
           {/* People - Identical Gap */}
-          <div className="mt-[clamp(34px,3.5vw,50px)] flex justify-center max-[760px]:mt-[34px]" aria-label="Meet the people behind Voices of Talent Acquisition">
+          <div className="mt-4 sm:mt-8 md:mt-[clamp(34px,3.5vw,50px)] flex justify-center" aria-label="Meet the people behind Voices of Talent Acquisition">
             <a
               href="#speakers"
               onClick={scrollToSpeakers}
@@ -124,7 +124,7 @@ export default function Home() {
           </div>
 
           {/* Powered by Career141 - Identical Gap */}
-          <div className="mt-[clamp(34px,3.5vw,50px)] flex w-full justify-center max-[760px]:mt-[34px]">
+          <div className="mt-4 sm:mt-8 md:mt-[clamp(34px,3.5vw,50px)] flex w-full justify-center">
             <div
               className="flex w-max flex-row flex-nowrap items-center justify-center gap-2 sm:gap-3 md:gap-4"
             >

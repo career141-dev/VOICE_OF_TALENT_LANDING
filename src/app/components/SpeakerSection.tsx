@@ -20,6 +20,7 @@ interface VoiceItem {
 
 const SPEAKER_SECTION_IMG_BASE = "https://talentsuite.career141.com/images/speakerSection";
 const SERIES_SECTION_IMG_BASE = "https://talentsuite.career141.com/images/seriesSection";
+const IMG_V = "?v=2";
 
 const voicesData: VoiceItem[] = [
   {
@@ -31,7 +32,7 @@ const voicesData: VoiceItem[] = [
       'What makes Talent Acquisition a future ready career path?',
       'How do you see Talent Acquisition contributing to overall business success?',
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/r1.svg`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r1png.png${IMG_V}`,
     bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-01.svg`,
   },
   {
@@ -43,7 +44,7 @@ const voicesData: VoiceItem[] = [
       'How do you define Talent Acquisition in today’s context?',
       'How do you see Talent Acquisition contributing to overall business success?',
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/r2.svg`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r2png.png${IMG_V}`,
     bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-02.svg`,
   },
   {
@@ -55,7 +56,7 @@ const voicesData: VoiceItem[] = [
       'What makes Talent Acquisition a future ready career path?',
       'In your opinion, why is there a growing need for skilled Talent Acquisition professionals in Sri Lanka?',
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/r3.svg`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r3png.png${IMG_V}`,
     bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-03.svg`,
   },
   {
@@ -67,7 +68,7 @@ const voicesData: VoiceItem[] = [
       'How do you define Talent Acquisition in today’s context?',
       'In your view, why is Talent Acquisition becoming increasingly important for organizations?',
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/r4.svg`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r4png.png${IMG_V}`,
     bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-04.svg`,
   },
   {
@@ -79,7 +80,7 @@ const voicesData: VoiceItem[] = [
       'How do you define Talent Acquisition in today’s context?',
       'What key skills do you believe are essential to succeed in Talent Acquisition?',
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/r5.svg`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r5png.png${IMG_V}`,
     bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-05.svg`,
   },
   {
@@ -91,7 +92,7 @@ const voicesData: VoiceItem[] = [
       'How does Talent Acquisition contribute to building and strengthening organizational culture?',
       'How does a career in Talent Acquisition support individuals in achieving their broader career aspirations?',
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/r6.svg`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r6png.png${IMG_V}`,
     bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-06.svg`,
   },
   {
@@ -103,7 +104,7 @@ const voicesData: VoiceItem[] = [
       'How important is the Talent Acquisition function within an organization?',
       "How does working in Talent Acquisition help broaden an individual's mindset?",
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/r7.svg`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r7png.png${IMG_V}`,
     bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-07.svg`,
   },
   {
@@ -115,7 +116,7 @@ const voicesData: VoiceItem[] = [
       'How do you see Talent Acquisition contributing to overall business success?',
       'What message would you like to share with the next generation aspiring to build a career in Talent Acquisition?',
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/r8.svg`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r8png.png${IMG_V}`,
     bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-08.svg`,
   },
   {
@@ -127,7 +128,7 @@ const voicesData: VoiceItem[] = [
       'How does Talent Acquisition contribute to building and strengthening organizational culture?',
       'How does a career in Talent Acquisition support individuals in achieving their broader career aspirations?',
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/r9.svg`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r9png.png${IMG_V}`,
     bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-09.svg`,
   },
   {
@@ -139,7 +140,7 @@ const voicesData: VoiceItem[] = [
       'How do you see Talent Acquisition contributing to overall business success?',
       'From your perspective, how does Talent Acquisition differ from traditional HR roles?',
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/r10.svg`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r10png.png${IMG_V}`,
     bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-10.svg`,
   },
   {
@@ -151,7 +152,7 @@ const voicesData: VoiceItem[] = [
       'How do you see Talent Acquisition contributing to overall business success?',
       'What advice would you offer to someone considering a career in Talent Acquisition?',
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/r11.svg`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r11png.png${IMG_V}`,
     bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-11.svg`,
   },
   {
@@ -163,7 +164,7 @@ const voicesData: VoiceItem[] = [
       'How does Talent Acquisition contribute to building and strengthening organizational culture?',
       'What makes Talent Acquisition a future ready career path?',
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/r12.svg`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r12png.png${IMG_V}`,
     bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-12.svg`,
   },
   {
@@ -175,7 +176,7 @@ const voicesData: VoiceItem[] = [
       'In your opinion, why is there a growing need for skilled Talent Acquisition professionals in Sri Lanka?',
       'What is your perspective on developing Talent Acquisition professionals who are globally competitive?',
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/r13.svg`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r13png.png${IMG_V}`,
     bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-13.svg`,
   },
   {
@@ -187,7 +188,7 @@ const voicesData: VoiceItem[] = [
       'How important is hands-on experience in building a successful career in Talent Acquisition?',
       'In your opinion, why is there a growing need for skilled Talent Acquisition professionals in Sri Lanka?',
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/r14.svg`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r14png.png${IMG_V}`,
     bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-14.svg`,
   },
 ];
@@ -419,121 +420,122 @@ export default function VoicesSlider() {
   const currentMobileSpeaker = voicesData[activeMobileIndex];
 
   return (
-    <section id="speakers" className="w-full py-12 md:py-16 overflow-hidden bg-white">
-      {/* Header Section */}
-      <div className="text-center mb-8 md:mb-16 px-4">
-        <span className="inline-flex items-center rounded-[123.833px] border-[1.238px] border-[rgba(21,154,153,0.20)] bg-[rgba(21,154,153,0.10)] px-[14.86px] py-[7.43px] font-geist text-[12px] sm:text-[13.62px] font-semibold leading-[100%] tracking-normal uppercase text-[#159A99] mb-3">
-          AN INDUSTRY-LED VIDEO SERIES BY CAREER141
-        </span>
-        <h2 className="text-center font-cal font-normal text-[26px] sm:text-[36px] md:text-[50px] leading-[110%] tracking-normal text-[#262626] capitalize">
-          Meet The Voices Behind The Industry
-        </h2>
-      </div>
+    <section id="speakers" className="w-full py-16 md:py-20 lg:py-24 overflow-hidden bg-white px-6 sm:px-10 md:px-12 lg:px-[8.7%]">
+      <div className="mx-auto w-full max-w-[1600px]">
+        {/* Header Section */}
+        <div className="text-center mb-8 md:mb-16">
+          <span className="inline-flex items-center rounded-[123.833px] border-[1.238px] border-[rgba(21,154,153,0.20)] bg-[rgba(21,154,153,0.10)] px-[14.86px] py-[7.43px] font-geist text-[12px] sm:text-[13.62px] font-semibold leading-[100%] tracking-normal uppercase text-[#159A99] mb-3">
+            AN INDUSTRY-LED VIDEO SERIES BY CAREER141
+          </span>
+          <h2 className="text-center font-cal font-normal text-[26px] sm:text-[36px] md:text-[50px] leading-[110%] tracking-normal text-[#262626] capitalize">
+            Meet The Voices Behind The Industry
+          </h2>
+        </div>
 
-      {/* ── DESKTOP VIEW: Pure CSS Infinite Marquee Track (Only on Desktop 1367px+) ── */}
-      <div className="hidden min-[1367px]:block marquee-container pt-24 pb-8">
-        <div className="marquee-track flex items-center">
-          <div className="flex shrink-0 items-center gap-6 pr-6">
-            {listSet.map((item, index) => renderDesktopCard(item, `set1-${item.id}-${index}`))}
-          </div>
-          <div className="flex shrink-0 items-center gap-6 pr-6" aria-hidden="true">
-            {listSet.map((item, index) => renderDesktopCard(item, `set2-${item.id}-${index}`))}
+        {/* ── DESKTOP VIEW: Pure CSS Infinite Marquee Track (Only on Desktop 1367px+) ── */}
+        <div className="hidden min-[1367px]:block marquee-container pt-24 pb-8">
+          <div className="marquee-track flex items-center">
+            <div className="flex shrink-0 items-center gap-6 pr-6">
+              {listSet.map((item, index) => renderDesktopCard(item, `set1-${item.id}-${index}`))}
+            </div>
+            <div className="flex shrink-0 items-center gap-6 pr-6" aria-hidden="true">
+              {listSet.map((item, index) => renderDesktopCard(item, `set2-${item.id}-${index}`))}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* ── MOBILE & IPAD / TABLET VIEW: Expanded Card Carousel (< 1367px) ── */}
-      <div
-        className="block min-[1367px]:hidden relative w-full px-4 pt-2 pb-6 select-none touch-pan-y"
-        onTouchStart={() => setIsPaused(true)}
-        onTouchEnd={() => {
-          setTimeout(() => setIsPaused(false), 2500);
-        }}
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
-      >
-        <div className="relative w-full max-w-[380px] sm:max-w-[440px] md:max-w-[480px] mx-auto min-h-[480px] flex items-center justify-center overflow-hidden">
-          <AnimatePresence initial={false} mode="wait" custom={direction}>
-            <motion.div
-              key={`mobile-card-${currentMobileSpeaker.id}`}
-              custom={direction}
-              initial={{ opacity: 0, x: direction > 0 ? 50 : -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: direction > 0 ? -50 : 50 }}
-              transition={{ duration: 0.35, ease: "easeInOut" }}
-              drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={0.2}
-              onDragEnd={(_, info) => {
-                if (info.offset.x < -40 || info.velocity.x < -200) {
-                  nextMobile();
-                } else if (info.offset.x > 40 || info.velocity.x > 200) {
-                  prevMobile();
-                }
-              }}
-              className="w-full flex flex-col justify-between overflow-hidden bg-[#F5F7FA] rounded-[28px] border-[1.5px] border-[#E0E0E0] shadow-md cursor-grab active:cursor-grabbing"
-            >
-              {/* Top Banner with Pillar SVG */}
-              <div
-                className="relative h-[220px] sm:h-[240px] md:h-[255px] overflow-hidden p-5 sm:p-6 md:p-7 flex flex-col justify-between text-white shrink-0 rounded-[24px]"
+        {/* ── MOBILE & TABLET / IPAD VIEW: Expanded Card Carousel (< 1367px, covers space) ── */}
+        <div
+          className="block min-[1367px]:hidden relative w-full pt-2 pb-6 select-none touch-pan-y"
+          onTouchStart={() => setIsPaused(true)}
+          onTouchEnd={() => {
+            setTimeout(() => setIsPaused(false), 2500);
+          }}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
+          <div className="relative w-full max-w-[480px] sm:max-w-[620px] md:max-w-[780px] min-[900px]:max-w-[880px] lg:max-w-[1060px] mx-auto min-h-[480px] flex items-center justify-center overflow-hidden">
+            <AnimatePresence initial={false} mode="wait" custom={direction}>
+              <motion.div
+                key={`mobile-card-${currentMobileSpeaker.id}`}
+                custom={direction}
+                initial={{ opacity: 0, x: direction > 0 ? 50 : -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: direction > 0 ? -50 : 50 }}
+                transition={{ duration: 0.35, ease: "easeInOut" }}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.2}
+                onDragEnd={(_, info) => {
+                  if (info.offset.x < -40 || info.velocity.x < -200) {
+                    nextMobile();
+                  } else if (info.offset.x > 40 || info.velocity.x > 200) {
+                    prevMobile();
+                  }
+                }}
+                className="w-full flex flex-col justify-between overflow-hidden bg-[#F5F7FA] rounded-[28px] border-[1.5px] border-[#E0E0E0] shadow-md cursor-grab active:cursor-grabbing"
               >
-                {/* Speaker Pillar SVG banner image */}
-                <img
-                  src={currentMobileSpeaker.bannerImage}
-                  alt={currentMobileSpeaker.name}
-                  className="absolute inset-0 h-full w-full object-cover object-top max-[760px]:object-[85%_top] pointer-events-none z-0"
-                />
-
-                {/* Badge */}
-                <div className="flex justify-between items-start z-10">
-                  <span className="inline-flex items-center rounded-full border border-white/20 bg-white px-3.5 py-1 text-[11px] font-bold uppercase text-black font-geist shadow-sm">
-                    EXPLORE VOTA
-                  </span>
-                </div>
-
-                {/* Speaker Name & Role on Left Half */}
-                <div className="relative z-10 max-w-[60%] sm:max-w-[58%] pb-1">
-                  <h3 className="mb-1 font-geist text-[17px] sm:text-[20px] md:text-[22px] font-bold leading-[1.2] text-white drop-shadow-md">
-                    {currentMobileSpeaker.name}
-                  </h3>
-                  <p className="font-geist text-[11.5px] sm:text-[12.5px] md:text-[13px] font-normal leading-snug text-white/90 mt-1 drop-shadow">
-                    {currentMobileSpeaker.role},<br />{currentMobileSpeaker.company}
-                  </p>
-                </div>
-              </div>
-
-              {/* Middle Quote / Bullet Section */}
-              <div className="px-6 sm:px-7 py-5 sm:py-6 flex-1 flex flex-col justify-center">
-                {currentMobileSpeaker.bulletPoints && currentMobileSpeaker.bulletPoints.length > 0 ? (
-                  <ul className="flex flex-col gap-3 font-geist text-[#555]">
-                    {currentMobileSpeaker.bulletPoints.map((point, idx) => (
-                      <li key={idx} className="flex items-start gap-2.5 text-[13.5px] sm:text-[14.5px] font-normal leading-[1.45]">
-                        <span className="text-[#777] text-[16px] leading-[1.1] select-none shrink-0">•</span>
-                        <span>{point}</span>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="font-geist text-[15px] sm:text-[16px] md:text-[17px] font-normal leading-[1.55] text-[#555]">
-                    "{currentMobileSpeaker.quote}"
-                  </p>
-                )}
-              </div>
-
-              {/* Bottom Action Section */}
-              <div className="h-[58px] sm:h-[64px] shrink-0 border-t border-[#E0E0E0] mx-6 sm:mx-7 flex items-center">
-                <a
-                  href="#episodes"
-                  onClick={(e) => handleWatchConversation(e, currentMobileSpeaker.id)}
-                  className="flex items-center gap-2 font-geist text-[13px] sm:text-[14px] font-semibold uppercase text-[#159A99] tracking-wide transition-all hover:gap-3 cursor-pointer"
+                {/* Top Banner with Pillar SVG */}
+                <div
+                  className="relative h-[220px] sm:h-[260px] md:h-[290px] min-[900px]:h-[320px] lg:h-[350px] overflow-hidden p-5 sm:p-6 md:p-8 flex flex-col justify-between text-white shrink-0 rounded-[24px]"
                 >
-                  WATCH CONVERSATION
-                  <img src={arrowRightTeal} alt="" className="h-3.5 w-3.5 object-contain" />
-                </a>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
+                  {/* Speaker Pillar SVG banner image */}
+                  <img
+                    src={currentMobileSpeaker.bannerImage}
+                    alt={currentMobileSpeaker.name}
+                    className="absolute inset-0 h-full w-full object-cover object-top max-[760px]:object-[85%_top] pointer-events-none z-0"
+                  />
+
+                  {/* Badge */}
+                  <div className="flex justify-between items-start z-10">
+                    <span className="inline-flex items-center rounded-full border border-white/20 bg-white px-3.5 py-1 text-[11px] sm:text-[12px] font-bold uppercase text-black font-geist shadow-sm">
+                      EXPLORE VOTA
+                    </span>
+                  </div>
+
+                  {/* Speaker Name & Role on Left Half */}
+                  <div className="relative z-10 max-w-[60%] sm:max-w-[55%] pb-1">
+                    <h3 className="mb-1 font-geist text-[17px] sm:text-[21px] md:text-[25px] min-[900px]:text-[28px] font-bold leading-[1.2] text-white drop-shadow-md">
+                      {currentMobileSpeaker.name}
+                    </h3>
+                    <p className="font-geist text-[11.5px] sm:text-[13px] md:text-[14.5px] min-[900px]:text-[15.5px] font-normal leading-snug text-white/90 mt-1 drop-shadow">
+                      {currentMobileSpeaker.role},<br />{currentMobileSpeaker.company}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Middle Quote / Bullet Section */}
+                <div className="px-6 sm:px-8 md:px-10 py-5 sm:py-7 flex-1 flex flex-col justify-center">
+                  {currentMobileSpeaker.bulletPoints && currentMobileSpeaker.bulletPoints.length > 0 ? (
+                    <ul className="flex flex-col gap-3 font-geist text-[#555]">
+                      {currentMobileSpeaker.bulletPoints.map((point, idx) => (
+                        <li key={idx} className="flex items-start gap-2.5 text-[13.5px] sm:text-[15px] md:text-[16.5px] font-normal leading-[1.45]">
+                          <span className="text-[#777] text-[16px] leading-[1.1] select-none shrink-0">•</span>
+                          <span>{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="font-geist text-[15px] sm:text-[17px] md:text-[19px] font-normal leading-[1.55] text-[#555]">
+                      "{currentMobileSpeaker.quote}"
+                    </p>
+                  )}
+                </div>
+
+                {/* Bottom Action Section */}
+                <div className="h-[58px] sm:h-[66px] md:h-[72px] shrink-0 border-t border-[#E0E0E0] mx-6 sm:mx-8 md:mx-10 flex items-center">
+                  <a
+                    href="#episodes"
+                    onClick={(e) => handleWatchConversation(e, currentMobileSpeaker.id)}
+                    className="flex items-center gap-2 font-geist text-[13px] sm:text-[14.5px] md:text-[15.5px] font-semibold uppercase text-[#159A99] tracking-wide transition-all hover:gap-3 cursor-pointer"
+                  >
+                    WATCH CONVERSATION
+                    <img src={arrowRightTeal} alt="" className="h-3.5 w-3.5 object-contain" />
+                  </a>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
 
         {/* Mobile Navigation Dots & Arrows (Dynamic 5-Dot Window) */}
         <div className="flex items-center justify-center gap-4 mt-4">
@@ -590,6 +592,7 @@ export default function VoicesSlider() {
             </svg>
           </button>
         </div>
+      </div>
       </div>
     </section>
   );

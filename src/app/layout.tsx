@@ -27,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full antialiased" suppressHydrationWarning>
+    <html lang="en" className="h-full scroll-smooth antialiased" suppressHydrationWarning>
       <head>
         <link rel="icon" type="image/png" href={iconUrl} />
         <link rel="shortcut icon" type="image/png" href={iconUrl} />

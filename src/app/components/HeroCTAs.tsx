@@ -13,7 +13,7 @@ function Arrow({ source }: { source: string }) {
 
 export default function HeroCTAs() {
   return (
-    <div className="mt-[clamp(34px,3.5vw,50px)] flex justify-center gap-[19px] max-[760px]:mx-auto max-[760px]:mt-[34px] max-[760px]:w-max max-[760px]:flex-col">
+    <div className="mt-4 sm:mt-[clamp(34px,3.5vw,50px)] flex justify-center gap-2.5 sm:gap-[19px] max-[760px]:mx-auto max-[760px]:mt-4 max-[760px]:w-max max-[760px]:flex-col">
 
       {/* Primary — Watch the Series */}
       <motion.a

@@ -524,9 +524,13 @@ export default function FullReleasesSection() {
                       {/* 1. Mobile Front Photo over reel background */}
                       <div className="pointer-events-none absolute inset-0 overflow-hidden min-[1100px]:hidden">
                         <img
-                          src={`${SPEAKER_SECTION_IMG_BASE}/r${selectedEpisode.id}.svg`}
+                          src={`${SPEAKER_SECTION_IMG_BASE}/r${selectedEpisode.id}png.png?v=2`}
                           alt={selectedEpisode.guest}
-                          className="absolute bottom-0 left-1/2 -translate-x-1/2 right-auto h-[85%] sm:h-[88%] w-auto max-w-none object-contain object-bottom select-none drop-shadow-[0_20px_40px_rgba(0,0,0,0.85)] transition-transform duration-500 group-hover:scale-105"
+                          className={`absolute left-1/2 -translate-x-1/2 right-auto w-auto max-w-none object-contain object-bottom select-none drop-shadow-[0_20px_40px_rgba(0,0,0,0.85)] transition-transform duration-500 group-hover:scale-105 ${
+                            [10, 11, 12].includes(selectedEpisode.id)
+                              ? "h-[132%] sm:h-[136%] -bottom-[28%] sm:-bottom-[30%]"
+                              : "h-[85%] sm:h-[88%] bottom-0"
+                          }`}
                         />
                       </div>
 
