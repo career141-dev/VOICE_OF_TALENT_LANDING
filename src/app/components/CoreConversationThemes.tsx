@@ -295,11 +295,11 @@ export default function CoreConversationThemes() {
                 if (diff === -1) triggerPrev();
                 if (diff === 1) triggerNext();
               }}
-              className="absolute top-1/2 -translate-y-1/2 w-full max-w-[290px] sm:max-w-[480px] md:max-w-[620px] flex flex-col justify-center items-center text-center gap-3 sm:gap-4.5 md:gap-5 rounded-[26px] sm:rounded-[34px] border-[1.5px] px-4.5 py-5 sm:px-9 sm:py-8 md:px-12 md:py-9 cursor-pointer"
+              className="absolute top-1/2 -translate-y-1/2 w-full max-w-[290px] sm:max-w-[480px] md:max-w-[620px] flex flex-col justify-center items-center text-center rounded-[26px] sm:rounded-[34px] border-[1.5px] px-5 py-6 sm:px-9 sm:py-8 md:px-12 md:py-9 cursor-pointer"
             >
               {/* Content: Continuous smooth opacity transition with NO unmounting or blinking */}
               <div
-                className={`flex flex-col items-center justify-center gap-3 sm:gap-4.5 md:gap-5 transition-opacity duration-500 ease-in-out ${
+                className={`flex flex-col items-center justify-center gap-[22px] sm:gap-[26px] md:gap-[30px] transition-opacity duration-500 ease-in-out ${
                   isActive ? "opacity-100" : "opacity-0 pointer-events-none"
                 }`}
               >
