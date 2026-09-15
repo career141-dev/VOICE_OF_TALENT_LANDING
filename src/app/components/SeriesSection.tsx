@@ -199,8 +199,61 @@ export default function SeriesSection() {
   const [duration, setDuration] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [episodeDurations, setEpisodeDurations] = useState<Record<number, string>>({});
+  const [contextMenu, setContextMenu] = useState<{
+    isOpen: boolean;
+    x: number;
+    y: number;
+    episode: SeriesEpisode | null;
+  }>({
+    isOpen: false,
+    x: 0,
+    y: 0,
+    episode: null,
+  });
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleItemContextMenu = (e: React.MouseEvent, episode: SeriesEpisode) => {
+    if (e.shiftKey) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const x = Math.min(e.clientX, window.innerWidth - 300);
+    const y = Math.min(e.clientY, window.innerHeight - 200);
+    setContextMenu({
+      isOpen: true,
+      x: Math.max(10, x),
+      y: Math.max(10, y),
+      episode,
+    });
+  };
+
+  const handleCopyEpisodeLink = (e: React.MouseEvent | null, episode: SeriesEpisode) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    if (typeof window !== "undefined") {
+      const url = `${window.location.origin}/?speaker=${episode.id}#episodes`;
+      navigator.clipboard.writeText(url).then(() => {
+        setToastMessage(`Copied direct video link for ${episode.name}!`);
+        setTimeout(() => setToastMessage(null), 3000);
+      });
+    }
+    setContextMenu((prev) => ({ ...prev, isOpen: false }));
+  };
+
+  useEffect(() => {
+    const handleCloseMenu = () => {
+      setContextMenu((prev) => (prev.isOpen ? { ...prev, isOpen: false } : prev));
+    };
+    window.addEventListener("click", handleCloseMenu);
+    window.addEventListener("scroll", handleCloseMenu, true);
+    return () => {
+      window.removeEventListener("click", handleCloseMenu);
+      window.removeEventListener("scroll", handleCloseMenu, true);
+    };
+  }, []);
 
   const formatTime = (seconds: number) => {
     if (isNaN(seconds) || seconds <= 0) return "00:00";
@@ -533,7 +586,10 @@ export default function SeriesSection() {
 
         <div className="w-full grid gap-5 xl:gap-[26px] min-[1025px]:grid-cols-[minmax(0,1128fr)_minmax(0,482fr)]">
         {/* Main Featured Video / Poster */}
-        <article className="group relative w-full min-h-[500px] sm:min-h-[520px] min-[1025px]:min-h-0 min-[1025px]:aspect-[1128/660] overflow-hidden rounded-[24px] sm:rounded-[30px] max-[760px]:shadow-none max-[760px]:border-0 max-[760px]:ring-0 shadow-xl border-none outline-none bg-transparent">
+        <article
+          onContextMenu={(e) => handleItemContextMenu(e, selectedEpisode)}
+          className="group relative w-full min-h-[500px] sm:min-h-[520px] min-[1025px]:min-h-0 min-[1025px]:aspect-[1128/660] overflow-hidden rounded-[24px] sm:rounded-[30px] max-[760px]:shadow-none max-[760px]:border-0 max-[760px]:ring-0 shadow-xl border-none outline-none bg-transparent"
+        >
           {isPlaying ? (
             <div
               onClick={handleContainerClick}
@@ -820,6 +876,7 @@ export default function SeriesSection() {
                     e.preventDefault();
                     handleEpisodeSelect(episode);
                   }}
+                  onContextMenu={(e) => handleItemContextMenu(e, episode)}
                   className={`no-underline text-inherit group flex cursor-pointer items-center gap-3 xl:gap-4 rounded-[18px] xl:rounded-[22px] p-2.5 xl:p-3 shrink-0 h-[calc((100%-36px)/4)] xl:h-[calc((100%-57px)/4)] transition-all duration-300 ${isSelected
                     ? "border-[1.5px] border-[#159A99] bg-white shadow-md shadow-[#159A99]/10"
                     : "border border-transparent bg-[#F2F4F7]/70 hover:border-[#D0D7DE] hover:bg-white hover:shadow-sm"
@@ -857,14 +914,27 @@ export default function SeriesSection() {
 
                   {/* Info */}
                   <div className="min-w-0 flex-1 flex flex-col justify-center">
-                    <span
-                      className={`inline-block w-fit rounded-full border px-2 xl:px-2.5 py-0.5 xl:py-1 font-geist text-[8px] xl:text-[8.5px] font-bold uppercase tracking-wider transition-colors ${isSelected
-                        ? "border-[#159A99] bg-[#159A99] text-white"
-                        : "border-gray-200 bg-white text-black group-hover:border-gray-300"
-                        }`}
-                    >
-                      Explore VOTA
-                    </span>
+                    <div className="flex items-center justify-between">
+                      <span
+                        className={`inline-block w-fit rounded-full border px-2 xl:px-2.5 py-0.5 xl:py-1 font-geist text-[8px] xl:text-[8.5px] font-bold uppercase tracking-wider transition-colors ${isSelected
+                          ? "border-[#159A99] bg-[#159A99] text-white"
+                          : "border-gray-200 bg-white text-black group-hover:border-gray-300"
+                          }`}
+                      >
+                        Explore VOTA
+                      </span>
+
+                      <button
+                        type="button"
+                        onClick={(e) => handleCopyEpisodeLink(e, episode)}
+                        title={`Copy direct link for ${episode.name}`}
+                        className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-[#159A99]/15 rounded-full text-gray-500 hover:text-[#159A99] cursor-pointer"
+                      >
+                        <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                      </button>
+                    </div>
 
                     <p
                       className={`mt-1 font-geist text-[13px] xl:text-[15px] font-bold leading-[1.25] xl:leading-[1.3] transition-colors line-clamp-1 ${isSelected ? "text-[#159A99]" : "text-[#222] group-hover:text-[#159A99]"
@@ -896,6 +966,7 @@ export default function SeriesSection() {
                   e.preventDefault();
                   handleEpisodeSelect(episode);
                 }}
+                onContextMenu={(e) => handleItemContextMenu(e, episode)}
                 className={`no-underline text-inherit block group w-[220px] shrink-0 snap-start cursor-pointer rounded-[22px] p-3 transition-all duration-300 ${isSelected
                   ? "border-[1.5px] border-[#159A99] bg-white shadow-md"
                   : "border border-transparent bg-[#F2F4F7]/80 hover:bg-white"
@@ -932,14 +1003,27 @@ export default function SeriesSection() {
                 </div>
 
                 <div className="pt-2.5">
-                  <span
-                    className={`inline-block rounded-full border px-2.5 py-0.5 font-geist text-[8.5px] font-bold uppercase tracking-wider ${isSelected
-                      ? "border-[#159A99] bg-[#159A99] text-white"
-                      : "border-gray-200 bg-white text-black"
-                      }`}
-                  >
-                    Explore VOTA
-                  </span>
+                  <div className="flex items-center justify-between">
+                    <span
+                      className={`inline-block rounded-full border px-2.5 py-0.5 font-geist text-[8.5px] font-bold uppercase tracking-wider ${isSelected
+                        ? "border-[#159A99] bg-[#159A99] text-white"
+                        : "border-gray-200 bg-white text-black"
+                        }`}
+                    >
+                      Explore VOTA
+                    </span>
+
+                    <button
+                      type="button"
+                      onClick={(e) => handleCopyEpisodeLink(e, episode)}
+                      title={`Copy direct link for ${episode.name}`}
+                      className="p-1 hover:bg-[#159A99]/15 rounded-full text-gray-500 hover:text-[#159A99] cursor-pointer"
+                    >
+                      <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                    </button>
+                  </div>
 
                   <p
                     className={`mt-1.5 font-geist text-[13.5px] font-bold leading-tight line-clamp-1 ${isSelected ? "text-[#159A99]" : "text-[#222]"
@@ -958,6 +1042,76 @@ export default function SeriesSection() {
         </div>
       </div>
     </div>
+
+    {/* Custom Right-Click Context Menu */}
+    {contextMenu.isOpen && contextMenu.episode && (
+      <div
+        style={{ top: `${contextMenu.y}px`, left: `${contextMenu.x}px` }}
+        onClick={(e) => e.stopPropagation()}
+        className="fixed z-[9999] w-[290px] overflow-hidden rounded-2xl border border-gray-200/90 bg-white/95 p-2 shadow-2xl backdrop-blur-xl animate-in fade-in zoom-in-95 duration-150"
+      >
+        <div className="px-3 py-2 border-b border-gray-100">
+          <p className="font-geist text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
+            Share Video Link
+          </p>
+          <p className="font-geist text-xs font-bold text-gray-900 truncate mt-0.5">
+            {contextMenu.episode.name}
+          </p>
+        </div>
+
+        <div className="py-1 flex flex-col gap-0.5">
+          <button
+            type="button"
+            onClick={() => handleCopyEpisodeLink(null, contextMenu.episode!)}
+            className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left font-geist text-xs font-semibold text-gray-800 hover:bg-[#159A99] hover:text-white transition-all cursor-pointer group"
+          >
+            <svg className="h-4 w-4 text-[#159A99] group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+            <span>Copy Direct Video Link</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              handleEpisodeSelect(contextMenu.episode!);
+              setContextMenu((prev) => ({ ...prev, isOpen: false }));
+            }}
+            className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left font-geist text-xs font-semibold text-gray-800 hover:bg-[#159A99] hover:text-white transition-all cursor-pointer group"
+          >
+            <svg className="h-4 w-4 text-[#159A99] group-hover:text-white transition-colors" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+            <span>Play Video Now</span>
+          </button>
+
+          <a
+            href={`/?speaker=${contextMenu.episode.id}#episodes`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => setContextMenu((prev) => ({ ...prev, isOpen: false }))}
+            className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left font-geist text-xs font-semibold text-gray-800 hover:bg-[#159A99] hover:text-white transition-all cursor-pointer group no-underline"
+          >
+            <svg className="h-4 w-4 text-[#159A99] group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+            <span>Open in New Tab</span>
+          </a>
+        </div>
+      </div>
+    )}
+
+    {/* Floating Success Toast */}
+    {toastMessage && (
+      <div className="fixed bottom-6 right-6 z-[9999] flex items-center gap-2.5 rounded-2xl bg-gray-900 px-4 py-3 text-white shadow-2xl border border-white/10 animate-in fade-in slide-in-from-bottom-5 duration-200">
+        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#159A99] text-white shrink-0">
+          <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <span className="font-geist text-xs font-semibold">{toastMessage}</span>
+      </div>
+    )}
   </section>
 );
 }
