@@ -164,6 +164,22 @@ export const seriesEpisodesData: SeriesEpisode[] = [
   },
 ];
 
+export const findEpisodeByParam = (param: string): SeriesEpisode | undefined => {
+  if (!param) return undefined;
+  const num = parseInt(param, 10);
+  if (!isNaN(num) && num >= 1 && num <= seriesEpisodesData.length) {
+    const found = seriesEpisodesData.find((ep) => ep.id === num);
+    if (found) return found;
+  }
+
+  // Support slugs / names like "patrick", "mr-patrick", "ken", "chamila", etc.
+  const normalized = param.toLowerCase().replace(/[-_.]/g, " ").trim();
+  return seriesEpisodesData.find((ep) => {
+    const epName = ep.name.toLowerCase().replace(/[^a-z0-9 ]/g, "");
+    return epName.includes(normalized) || normalized.includes(epName);
+  });
+};
+
 export default function SeriesSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -334,6 +350,82 @@ export default function SeriesSection() {
     return () => observer.disconnect();
   }, []);
 
+  // Smooth scroll helper to episode video player section
+  const scrollToEpisodesContainer = (smooth = true) => {
+    const target =
+      (document.querySelector("#episodes > div") as HTMLElement | null) ||
+      document.getElementById("episodes");
+    if (target) {
+      target.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
+    }
+  };
+
+  // URL Deep Linking: Detect ?speaker=X, ?episode=X, or #speaker-X on load and hash/popstate
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const checkUrlTarget = (isInitial = false) => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const speakerQuery =
+        urlParams.get("speaker") ||
+        urlParams.get("episode") ||
+        urlParams.get("id") ||
+        urlParams.get("v");
+
+      const hash = window.location.hash.toLowerCase();
+      let matchedEpisode: SeriesEpisode | undefined;
+
+      if (speakerQuery) {
+        matchedEpisode = findEpisodeByParam(speakerQuery);
+      } else if (hash.includes("speaker") || hash.includes("episode")) {
+        const cleanedHash = hash.replace(/^[#?]+/, "");
+        const hashParams = new URLSearchParams(cleanedHash);
+        const hashVal =
+          hashParams.get("speaker") ||
+          hashParams.get("episode") ||
+          hash.replace(/[^0-9]/g, "");
+        if (hashVal) {
+          matchedEpisode = findEpisodeByParam(hashVal);
+        }
+      }
+
+      if (matchedEpisode) {
+        isManuallyClosedRef.current = false;
+        isManuallyPausedRef.current = false;
+        wasPlayingBeforeScrollOutRef.current = true;
+        setSelectedEpisode(matchedEpisode);
+        setIsPlaying(true);
+        setIsMuted(false);
+        setIsPaused(false);
+        setShowControls(true);
+        setCurrentTime(0);
+
+        // Scroll to document.querySelector("#episodes > div")
+        const delay = isInitial ? 350 : 50;
+        setTimeout(() => {
+          scrollToEpisodesContainer(true);
+        }, delay);
+      } else if (window.location.hash === "#episodes") {
+        setTimeout(() => {
+          scrollToEpisodesContainer(true);
+        }, isInitial ? 350 : 50);
+      }
+    };
+
+    checkUrlTarget(true);
+
+    const handlePopState = () => checkUrlTarget(false);
+    const handleHashChange = () => checkUrlTarget(false);
+
+    window.addEventListener("popstate", handlePopState);
+    window.addEventListener("hashchange", handleHashChange);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+      window.removeEventListener("hashchange", handleHashChange);
+    };
+  }, []);
+
   useEffect(() => {
     const handleSelectEvent = (event: Event) => {
       const customEvent = event as CustomEvent<{ episodeId: number }>;
@@ -351,6 +443,12 @@ export default function SeriesSection() {
           setShowControls(true);
           setCurrentTime(0);
           resetControlsTimeout();
+
+          if (typeof window !== "undefined") {
+            const url = new URL(window.location.href);
+            url.searchParams.set("speaker", targetEpisode.id.toString());
+            window.history.replaceState(null, "", url.toString());
+          }
         }
       }
     };
@@ -370,6 +468,12 @@ export default function SeriesSection() {
     setShowControls(true);
     setCurrentTime(0);
     resetControlsTimeout();
+
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.set("speaker", episode.id.toString());
+      window.history.replaceState(null, "", url.toString());
+    }
   };
 
   const handlePlay = () => {

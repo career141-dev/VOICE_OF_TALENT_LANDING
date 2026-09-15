@@ -234,9 +234,11 @@ export default function VoicesSlider() {
           detail: { episodeId: speakerId },
         })
       );
-      const episodesSection = document.getElementById("episodes");
-      if (episodesSection) {
-        episodesSection.scrollIntoView({ behavior: "smooth" });
+      const episodesTarget =
+        (document.querySelector("#episodes > div") as HTMLElement | null) ||
+        document.getElementById("episodes");
+      if (episodesTarget) {
+        episodesTarget.scrollIntoView({ behavior: "smooth", block: "start" });
       }
     }
   };
