@@ -813,10 +813,14 @@ export default function SeriesSection() {
               const isSelected = selectedEpisode.id === episode.id;
 
               return (
-                <article
+                <a
                   key={`desktop-${episode.id}-${index}`}
-                  onClick={() => handleEpisodeSelect(episode)}
-                  className={`group flex cursor-pointer items-center gap-3 xl:gap-4 rounded-[18px] xl:rounded-[22px] p-2.5 xl:p-3 shrink-0 h-[calc((100%-36px)/4)] xl:h-[calc((100%-57px)/4)] transition-all duration-300 ${isSelected
+                  href={`/?speaker=${episode.id}#episodes`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleEpisodeSelect(episode);
+                  }}
+                  className={`no-underline text-inherit group flex cursor-pointer items-center gap-3 xl:gap-4 rounded-[18px] xl:rounded-[22px] p-2.5 xl:p-3 shrink-0 h-[calc((100%-36px)/4)] xl:h-[calc((100%-57px)/4)] transition-all duration-300 ${isSelected
                     ? "border-[1.5px] border-[#159A99] bg-white shadow-md shadow-[#159A99]/10"
                     : "border border-transparent bg-[#F2F4F7]/70 hover:border-[#D0D7DE] hover:bg-white hover:shadow-sm"
                     }`}
@@ -873,7 +877,7 @@ export default function SeriesSection() {
                       {episode.role} · {episode.company}
                     </p>
                   </div>
-                </article>
+                </a>
               );
             })}
           </div>
@@ -885,10 +889,14 @@ export default function SeriesSection() {
             const isSelected = selectedEpisode.id === episode.id;
 
             return (
-              <article
+              <a
                 key={`responsive-${episode.id}-${index}`}
-                onClick={() => handleEpisodeSelect(episode)}
-                className={`group w-[220px] shrink-0 snap-start cursor-pointer rounded-[22px] p-3 transition-all duration-300 ${isSelected
+                href={`/?speaker=${episode.id}#episodes`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleEpisodeSelect(episode);
+                }}
+                className={`no-underline text-inherit block group w-[220px] shrink-0 snap-start cursor-pointer rounded-[22px] p-3 transition-all duration-300 ${isSelected
                   ? "border-[1.5px] border-[#159A99] bg-white shadow-md"
                   : "border border-transparent bg-[#F2F4F7]/80 hover:bg-white"
                   }`}
@@ -944,7 +952,7 @@ export default function SeriesSection() {
                     {episode.role} · {episode.company}
                   </p>
                 </div>
-              </article>
+              </a>
             );
           })}
         </div>

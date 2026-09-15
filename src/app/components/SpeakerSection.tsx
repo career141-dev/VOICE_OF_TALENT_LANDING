@@ -197,7 +197,20 @@ export default function VoicesSlider() {
   const [activeMobileIndex, setActiveMobileIndex] = useState(0);
   const [direction, setDirection] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [copiedId, setCopiedId] = useState<number | null>(null);
   const listSet = [...voicesData, ...voicesData];
+
+  const handleCopyLink = (e: React.MouseEvent, speakerId: number) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (typeof window !== "undefined") {
+      const url = `${window.location.origin}/?speaker=${speakerId}#episodes`;
+      navigator.clipboard.writeText(url).then(() => {
+        setCopiedId(speakerId);
+        setTimeout(() => setCopiedId(null), 2000);
+      });
+    }
+  };
 
   const badgeClasses = "inline-flex h-[38px] md:h-[51.968px] items-center justify-center gap-[6px] md:gap-[8.338px] rounded-[25.558px] border-[1.042px] border-[#D6D6D6] bg-[#F2F2F2] px-[16px] md:px-[25.013px] py-[6px] md:py-[12.507px] text-[12px] md:text-[14.591px] font-semibold leading-normal text-black font-geist uppercase";
 
@@ -245,10 +258,15 @@ export default function VoicesSlider() {
 
   /* ── Desktop Card ── */
   const renderDesktopCard = (item: VoiceItem, key: string) => (
-    <div
+    <a
       key={key}
+      href={`/?speaker=${item.id}#episodes`}
+      onClick={(e) => handleWatchConversation(e, item.id)}
       style={{ transform: "translateZ(0)" }}
       className="
+        no-underline
+        text-inherit
+        block
         group 
         relative
         flex 
@@ -320,6 +338,30 @@ export default function VoicesSlider() {
             <span className="inline-flex h-[36px] md:h-[40px] items-center justify-center rounded-full border border-white/20 bg-white px-4 py-1 text-[11px] md:text-[12px] font-bold leading-normal text-black font-geist uppercase shadow-sm">
               EXPLORE VOTA
             </span>
+
+            {/* Direct Copy Link Button */}
+            <button
+              type="button"
+              onClick={(e) => handleCopyLink(e, item.id)}
+              title="Copy shareable link to this speaker's video"
+              className="inline-flex items-center gap-1.5 rounded-full border border-white/40 bg-black/40 px-3 py-1.5 text-[11px] md:text-xs font-semibold text-white backdrop-blur-md hover:bg-white hover:text-black transition-all cursor-pointer shadow"
+            >
+              {copiedId === item.id ? (
+                <>
+                  <svg className="h-3.5 w-3.5 text-[#159a99]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>Link Copied!</span>
+                </>
+              ) : (
+                <>
+                  <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                  <span>Copy Link</span>
+                </>
+              )}
+            </button>
           </div>
 
           <div className="relative z-10 max-w-[60%] lg:max-w-[62%] pb-1">
@@ -347,15 +389,13 @@ export default function VoicesSlider() {
           )}
         </div>
 
-        <div className="h-[90px] shrink-0 border-t-[1.6px] border-[#E0E0E0] mx-[28px] flex items-center">
-          <a
-            href="#episodes"
-            onClick={(e) => handleWatchConversation(e, item.id)}
+        <div className="h-[90px] shrink-0 border-t-[1.6px] border-[#E0E0E0] mx-[28px] flex items-center justify-between">
+          <div
             className="flex items-center gap-2 font-geist text-[15.5px] font-semibold leading-normal text-[#159A99] uppercase transition-all hover:gap-3 cursor-pointer"
           >
             WATCH CONVERSATION
             <img src={arrowRightTeal} alt="Arrow Right" className="h-[18px] w-[18px] object-contain" />
-          </a>
+          </div>
         </div>
       </div>
 
@@ -415,7 +455,7 @@ export default function VoicesSlider() {
           </p>
         </div>
       </div>
-    </div>
+    </a>
   );
 
   const currentMobileSpeaker = voicesData[activeMobileIndex];
@@ -524,15 +564,23 @@ export default function VoicesSlider() {
                 </div>
 
                 {/* Bottom Action Section */}
-                <div className="h-[58px] sm:h-[66px] md:h-[72px] shrink-0 border-t border-[#E0E0E0] mx-6 sm:mx-8 md:mx-10 flex items-center">
+                <div className="h-[58px] sm:h-[66px] md:h-[72px] shrink-0 border-t border-[#E0E0E0] mx-6 sm:mx-8 md:mx-10 flex items-center justify-between">
                   <a
-                    href="#episodes"
+                    href={`/?speaker=${currentMobileSpeaker.id}#episodes`}
                     onClick={(e) => handleWatchConversation(e, currentMobileSpeaker.id)}
-                    className="flex items-center gap-2 font-geist text-[13px] sm:text-[14.5px] md:text-[15.5px] font-semibold uppercase text-[#159A99] tracking-wide transition-all hover:gap-3 cursor-pointer"
+                    className="flex items-center gap-2 font-geist text-[13px] sm:text-[14.5px] md:text-[15.5px] font-semibold uppercase text-[#159A99] tracking-wide transition-all hover:gap-3 cursor-pointer no-underline"
                   >
                     WATCH CONVERSATION
                     <img src={arrowRightTeal} alt="" className="h-3.5 w-3.5 object-contain" />
                   </a>
+
+                  <button
+                    type="button"
+                    onClick={(e) => handleCopyLink(e, currentMobileSpeaker.id)}
+                    className="flex items-center gap-1 rounded-full border border-[#159A99]/30 bg-white px-2.5 py-1 text-[11px] sm:text-xs font-semibold text-[#159A99] shadow-sm hover:bg-[#159A99] hover:text-white transition-all cursor-pointer"
+                  >
+                    {copiedId === currentMobileSpeaker.id ? "Copied!" : "Copy Link"}
+                  </button>
                 </div>
               </motion.div>
             </AnimatePresence>
