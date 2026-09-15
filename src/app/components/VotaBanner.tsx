@@ -53,7 +53,7 @@ export default function VotaBannerSection() {
         {/* Subtle overlay for contrast */}
         <div className="pointer-events-none absolute inset-0 bg-black/20 md:bg-black/10" />
 
-        <div className="relative z-10 flex h-full w-full flex-col justify-between items-start">
+        <div className="relative z-10 flex h-full w-full flex-col justify-start sm:justify-between items-start">
           {/* Career141 / VOTA Logo (Pinned at top) */}
           <img
             src={artboardImage}
@@ -64,7 +64,7 @@ export default function VotaBannerSection() {
           />
 
           {/* Banner Content & Buttons */}
-          <div className="mt-8 w-full sm:mt-12 md:mt-20">
+          <div className="mt-14 w-full sm:mt-12 md:mt-20">
             <h2 className="max-w-[760px] font-['Geist'] text-[22px] sm:text-[32px] md:text-[38px] lg:text-[46px] font-semibold leading-[1.22] tracking-[-0.03em] text-white">
               Sri Lanka&apos;s Talent Story Is Being Written Today.
               <br className="hidden sm:block" />{" "}
@@ -72,7 +72,7 @@ export default function VotaBannerSection() {
             </h2>
 
             {/* Buttons Row — Single row layout */}
-            <div className="mt-9 flex flex-row flex-nowrap items-center gap-2.5 sm:mt-10 sm:gap-4 md:mt-16">
+            <div className="mt-14 flex flex-row flex-nowrap items-center gap-2.5 sm:mt-10 sm:gap-4 md:mt-16">
               {/* Watch VOTA Button */}
               <a
                 href="#episodes"

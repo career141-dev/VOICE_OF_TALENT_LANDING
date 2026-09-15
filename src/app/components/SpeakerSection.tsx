@@ -32,7 +32,7 @@ const voicesData: VoiceItem[] = [
       'What makes Talent Acquisition a future ready career path?',
       'How do you see Talent Acquisition contributing to overall business success?',
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/r1png.png${IMG_V}`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/patrickspeaker.png`,
     bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-01.svg`,
   },
   {
@@ -116,7 +116,7 @@ const voicesData: VoiceItem[] = [
       'How do you see Talent Acquisition contributing to overall business success?',
       'What message would you like to share with the next generation aspiring to build a career in Talent Acquisition?',
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/r8png.png${IMG_V}`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/hasanthispeaker.png`,
     bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-08.svg`,
   },
   {

@@ -167,6 +167,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
 export default function SeriesSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const playerContainerRef = useRef<HTMLDivElement>(null);
   const isManuallyClosedRef = useRef(false);
   const isManuallyPausedRef = useRef(false);
   const wasPlayingBeforeScrollOutRef = useRef(true);
@@ -182,6 +183,7 @@ export default function SeriesSection() {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [episodeDurations, setEpisodeDurations] = useState<Record<number, string>>({});
 
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -279,6 +281,41 @@ export default function SeriesSection() {
       setCurrentTime(videoRef.current.currentTime || 0);
     }
   };
+
+  const toggleFullscreen = () => {
+    const container = playerContainerRef.current;
+    if (!container) return;
+
+    if (!document.fullscreenElement && !(document as unknown as { webkitFullscreenElement?: Element }).webkitFullscreenElement) {
+      if (container.requestFullscreen) {
+        container.requestFullscreen().catch(() => { });
+      } else if ((container as unknown as { webkitRequestFullscreen?: () => void }).webkitRequestFullscreen) {
+        (container as unknown as { webkitRequestFullscreen: () => void }).webkitRequestFullscreen();
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(() => { });
+      } else if ((document as unknown as { webkitExitFullscreen?: () => void }).webkitExitFullscreen) {
+        (document as unknown as { webkitExitFullscreen: () => void }).webkitExitFullscreen();
+      }
+    }
+  };
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(
+        Boolean(document.fullscreenElement || (document as unknown as { webkitFullscreenElement?: Element }).webkitFullscreenElement)
+      );
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
+    };
+  }, []);
 
   // Sync mute state directly without remounting video
   useEffect(() => {
@@ -427,17 +464,18 @@ export default function SeriesSection() {
           </div>
         </div>
 
-        <div className="w-full grid gap-5 xl:gap-[26px] min-[1025px]:grid-cols-[minmax(0,1128fr)_minmax(0,482fr)]">
+        <div className="w-full grid gap-5 xl:gap-[26px] min-[1025px]:grid-cols-[minmax(0,1128fr)_minmax(0,482fr)] items-stretch">
         {/* Main Featured Video / Poster */}
-        <article className="group relative w-full min-h-[500px] sm:min-h-[520px] min-[1025px]:min-h-0 min-[1025px]:aspect-[1128/660] overflow-hidden rounded-[24px] sm:rounded-[30px] max-[760px]:shadow-none max-[760px]:border-0 max-[760px]:ring-0 shadow-xl border-none outline-none bg-transparent">
+        <article className="group relative w-full max-[1024px]:min-h-[500px] max-[1024px]:sm:min-h-[520px] min-[1025px]:aspect-video min-[1025px]:min-h-0 overflow-hidden rounded-[28px] md:rounded-[32px] max-[760px]:shadow-none max-[760px]:border-0 max-[760px]:ring-0 shadow-xl border-none outline-none bg-black">
           {isPlaying ? (
             <div
+              ref={playerContainerRef}
               onClick={handleContainerClick}
               onMouseMove={() => {
                 setShowControls(true);
                 resetControlsTimeout();
               }}
-              className="relative h-full w-full min-h-[500px] sm:min-h-[520px] min-[1025px]:min-h-0 flex items-center justify-center cursor-pointer select-none overflow-hidden bg-black border-none outline-none"
+              className="relative h-full w-full max-[1024px]:min-h-[500px] max-[1024px]:sm:min-h-[520px] min-[1025px]:aspect-video min-[1025px]:min-h-0 flex items-center justify-center cursor-pointer select-none overflow-hidden bg-black border-none outline-none"
             >
               {selectedEpisode.videoUrl ? (
                 <>
@@ -461,7 +499,7 @@ export default function SeriesSection() {
                       setIsPaused(true);
                       setShowControls(true);
                     }}
-                    className="absolute inset-0 h-full w-full object-contain min-[1025px]:object-cover pointer-events-none border-none outline-none"
+                    className={`absolute inset-0 h-full w-full ${isFullscreen ? "object-contain" : "object-contain min-[1025px]:object-cover"} pointer-events-none border-none outline-none`}
                   />
 
                   {/* Top Controls: Mute/Unmute & Close Video */}
@@ -599,7 +637,7 @@ export default function SeriesSection() {
                         </span>
                       </div>
 
-                      {/* Quick -10s / +10s Skip */}
+                      {/* Quick -10s / +10s Skip & Fullscreen Button */}
                       <div className="flex items-center gap-2 text-white/80">
                         <button
                           type="button"
@@ -629,6 +667,29 @@ export default function SeriesSection() {
                         >
                           +10s
                         </button>
+
+                        {/* Fullscreen Button */}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleFullscreen();
+                            resetControlsTimeout();
+                          }}
+                          className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-all active:scale-95 cursor-pointer ml-1"
+                          aria-label={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
+                          title={isFullscreen ? "Exit Fullscreen" : "Full Screen"}
+                        >
+                          {isFullscreen ? (
+                            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M9 9L4 4m0 5h5V4m6 6l5-5m-5 5V4h5M9 15l-5 5m5-5H4v5m11-5l5 5m-5-5h5v5" />
+                            </svg>
+                          ) : (
+                            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                            </svg>
+                          )}
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -642,7 +703,7 @@ export default function SeriesSection() {
             </div>
           ) : (
             <div
-              className="relative h-full w-full min-h-[500px] sm:min-h-[520px] min-[1025px]:min-h-0 flex flex-col justify-between p-6 sm:p-8 md:p-10 overflow-hidden"
+              className="relative h-full w-full max-[1024px]:min-h-[500px] max-[1024px]:sm:min-h-[520px] min-[1025px]:aspect-video min-[1025px]:min-h-0 flex flex-col justify-between p-6 sm:p-8 md:p-10 overflow-hidden"
             >
               {/* Speaker Pillar SVG Thumbnail Image */}
               <img
@@ -704,7 +765,7 @@ export default function SeriesSection() {
 
         {/* Desktop Playlist: 14 Episodes with Custom Black Scrollbar */}
         <div className="hidden min-[1025px]:block relative h-full min-h-0">
-          <div className="absolute inset-0 flex flex-col gap-3 xl:gap-[19px] overflow-y-auto pr-2 xl:pr-3 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-black [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar]:w-1.5">
+          <div className="absolute inset-0 flex flex-col gap-2.5 xl:gap-3 overflow-y-auto pr-1.5 xl:pr-2.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-black [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar]:w-1.5">
             {seriesEpisodesData.map((episode, index) => {
               const isSelected = selectedEpisode.id === episode.id;
 
@@ -712,14 +773,14 @@ export default function SeriesSection() {
                 <article
                   key={`desktop-${episode.id}-${index}`}
                   onClick={() => handleEpisodeSelect(episode)}
-                  className={`group flex cursor-pointer items-center gap-3 xl:gap-4 rounded-[18px] xl:rounded-[22px] p-2.5 xl:p-3 shrink-0 h-[calc((100%-36px)/4)] xl:h-[calc((100%-57px)/4)] transition-all duration-300 ${isSelected
+                  className={`group flex cursor-pointer items-center gap-2.5 xl:gap-3 rounded-[16px] xl:rounded-[20px] p-2 xl:p-2.5 shrink-0 h-[calc((100%-30px)/4)] xl:h-[calc((100%-36px)/4)] transition-all duration-300 ${isSelected
                     ? "border-[1.5px] border-[#159A99] bg-white shadow-md shadow-[#159A99]/10"
                     : "border border-transparent bg-[#F2F4F7]/70 hover:border-[#D0D7DE] hover:bg-white hover:shadow-sm"
                     }`}
                 >
                   {/* Thumbnail styled like the selected widget (Figma: width 239, height 150.32, radius 21.63px) */}
                   <div
-                    className="relative h-full aspect-[239/150.32] shrink-0 overflow-hidden rounded-[14px] xl:rounded-[21.63px] shadow-sm"
+                    className="relative h-full aspect-[239/150.32] shrink-0 overflow-hidden rounded-[12px] xl:rounded-[16px] shadow-sm"
                     style={{
                       background: "radial-gradient(71.47% 191.86% at 92.83% 52.77%, rgba(21, 154, 153, 0) 0%, #159A99 100%), #FFFFFF",
                     }}
@@ -738,11 +799,11 @@ export default function SeriesSection() {
                     <img
                       src={votaLogo}
                       alt="VOTA"
-                      className="absolute top-1.5 left-1.5 xl:top-2 xl:left-2 h-[15px] xl:h-[18px] w-auto max-w-[55px] rounded-[5px] xl:rounded-[6px] object-contain z-10 shadow-sm"
+                      className="absolute top-1.5 left-1.5 xl:top-2 xl:left-2 h-[12px] xl:h-[15px] w-auto max-w-[45px] xl:max-w-[50px] rounded-[4px] xl:rounded-[5px] object-contain z-10 shadow-sm"
                     />
 
                     {/* Duration */}
-                    <span className="absolute bottom-1.5 right-1.5 xl:bottom-2 xl:right-2 z-10 rounded-md bg-black/80 px-1.5 xl:px-2 py-0.5 font-geist text-[9.5px] xl:text-[10.5px] font-medium text-white">
+                    <span className="absolute bottom-1.5 right-1.5 xl:bottom-2 xl:right-2 z-10 rounded-md bg-black/80 px-1.5 xl:px-2 py-0.5 font-geist text-[8.5px] xl:text-[9.5px] font-medium text-white">
                       {episodeDurations[episode.id] || episode.duration}
                     </span>
                   </div>
@@ -750,7 +811,7 @@ export default function SeriesSection() {
                   {/* Info */}
                   <div className="min-w-0 flex-1 flex flex-col justify-center">
                     <span
-                      className={`inline-block w-fit rounded-full border px-2 xl:px-2.5 py-0.5 xl:py-1 font-geist text-[8px] xl:text-[8.5px] font-bold uppercase tracking-wider transition-colors ${isSelected
+                      className={`inline-block w-fit rounded-full border px-2 py-0.5 font-geist text-[7.5px] xl:text-[8px] font-bold uppercase tracking-wider transition-colors ${isSelected
                         ? "border-[#159A99] bg-[#159A99] text-white"
                         : "border-gray-200 bg-white text-black group-hover:border-gray-300"
                         }`}
@@ -759,13 +820,13 @@ export default function SeriesSection() {
                     </span>
 
                     <p
-                      className={`mt-1 font-geist text-[13px] xl:text-[15px] font-bold leading-[1.25] xl:leading-[1.3] transition-colors line-clamp-1 ${isSelected ? "text-[#159A99]" : "text-[#222] group-hover:text-[#159A99]"
+                      className={`mt-0.5 xl:mt-1 font-geist text-[12px] xl:text-[13px] 2xl:text-[14px] font-bold leading-tight transition-colors line-clamp-1 ${isSelected ? "text-[#159A99]" : "text-[#222] group-hover:text-[#159A99]"
                         }`}
                     >
                       {episode.name}
                     </p>
 
-                    <p className="mt-0.5 line-clamp-1 xl:line-clamp-2 font-geist text-[11px] xl:text-[12.5px] font-normal leading-tight xl:leading-[1.35] text-[#666]">
+                    <p className="mt-0.5 line-clamp-2 font-geist text-[10px] xl:text-[11px] 2xl:text-[11.5px] font-normal leading-[1.25] xl:leading-[1.3] text-[#666]">
                       {episode.role} · {episode.company}
                     </p>
                   </div>
@@ -796,11 +857,11 @@ export default function SeriesSection() {
                     background: "radial-gradient(71.47% 191.86% at 92.83% 52.77%, rgba(21, 154, 153, 0) 0%, #159A99 100%), #FFFFFF",
                   }}
                 >
-                  {/* Speaker thumbnail */}
+                  {/* Speaker photo */}
                   <img
-                    src={episode.thumbnail || episode.bannerImage}
+                    src={episode.bannerImage}
                     alt={episode.name}
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="absolute right-0 bottom-0 h-full w-auto max-w-none object-contain object-right-bottom transition-transform duration-500 group-hover:scale-105"
                   />
 
                   {/* Gradient shadow */}

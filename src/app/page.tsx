@@ -17,6 +17,8 @@ import { getOptimizedImageUrl } from "./utils/imageLoader";
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
 
 const backgroundImage = getOptimizedImageUrl(`${R2_MEDIA_URL}/images/hero-background.webp`, 1920);
+const mobileBackgroundImage = "https://talentsuite.career141.com/images/mobile.png";
+const heroBottomMobileImage = "https://talentsuite.career141.com/images/herobottom.svg";
 const microphoneImage = getOptimizedImageUrl(`${R2_MEDIA_URL}/images/heromic.webp`, 900);
 const votaLogo = `${R2_MEDIA_URL}/icons/vota-logo.png`;
 const arrowUpRight = `${R2_MEDIA_URL}/icons/arrow-up-right.svg`;
@@ -50,12 +52,23 @@ export default function Home() {
   return (
     <>
       <main
-        className="hero-frame isolate relative min-h-[590px] sm:min-h-[640px] md:min-h-[750px] lg:min-h-[780px] xl:min-h-[850px] overflow-hidden bg-[#050505] bg-[radial-gradient(ellipse_at_center,rgba(21,154,153,0.22)_0%,#050505_75%)]"
+        className="hero-frame isolate relative min-h-[580px] max-[760px]:min-h-[680px] max-[760px]:h-[680px] sm:min-h-[640px] md:min-h-[750px] lg:min-h-[780px] xl:min-h-[850px] overflow-hidden bg-[#050505] bg-[radial-gradient(ellipse_at_center,rgba(21,154,153,0.22)_0%,#050505_75%)]"
         data-node-id="1:845">
         {/* Background */}
         <div className="absolute inset-0 z-0" aria-hidden="true">
+          {/* Mobile Background */}
           <img
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover block sm:hidden"
+            src={mobileBackgroundImage}
+            loading="eager"
+            decoding="async"
+            fetchPriority="high"
+            sizes="100vw"
+            alt=""
+          />
+          {/* Desktop / Tablet Background */}
+          <img
+            className="h-full w-full object-cover hidden sm:block"
             src={backgroundImage}
             loading="eager"
             decoding="async"
@@ -65,20 +78,20 @@ export default function Home() {
           />
         </div>
 
-        {/* Background shade */}
+        {/* Background shade (Desktop / Tablet only) */}
         <div
-          className="absolute inset-0 z-0 bg-[linear-gradient(90deg,rgba(0,0,0,.42),transparent_81%)]"
+          className="absolute inset-0 z-0 bg-[linear-gradient(90deg,rgba(0,0,0,.42),transparent_81%)] hidden sm:block"
           aria-hidden="true"
         />
 
         {/* Microphone */}
         <div
-          className="pointer-events-none absolute inset-x-0 top-[28%] sm:top-[28%] md:top-[30%] z-[4] flex justify-center overflow-visible max-[760px]:top-[24%] max-[760px]:z-[1]"
+          className="pointer-events-none absolute inset-x-0 top-[28%] sm:top-[28%] md:top-[30%] z-[3] flex justify-center overflow-visible max-[760px]:top-auto max-[760px]:bottom-[-245px]"
           aria-hidden="true"
         >
-          <div className="relative flex w-[clamp(420px,38vw,560px)] max-[760px]:w-[260px] sm:max-[760px]:w-[290px] justify-center animate-[microphone-rise_1.5s_cubic-bezier(.22,1,.36,1)_both]">
+          <div className="relative flex w-[clamp(420px,38vw,560px)] max-[760px]:w-[280px] justify-center animate-[microphone-rise_1.5s_cubic-bezier(.22,1,.36,1)_both]">
             <img
-              className="h-auto w-full object-contain pointer-events-none select-none blur-[2px] drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
+              className="h-auto w-full object-contain pointer-events-none select-none blur-none sm:blur-[2px] max-[760px]:drop-shadow-none sm:drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
               src={microphoneImage}
               loading="eager"
               decoding="async"
@@ -91,16 +104,16 @@ export default function Home() {
         <Navbar />
         <HeroTitle />
         <div
-          className="absolute left-1/2 top-[34%] sm:top-[33%] md:top-[41%] z-[5] w-full max-w-[781px] max-[760px]:max-w-[340px] -translate-x-1/2 text-center px-4 sm:px-0"
+          className="absolute left-1/2 top-[34%] sm:top-[33%] md:top-[41%] z-[5] w-full max-w-[781px] max-[760px]:max-w-[320px] max-[760px]:top-[198px] -translate-x-1/2 text-center px-3 sm:px-0"
         >
-          <p className="mx-auto mt-4 max-w-[781px] text-[clamp(14px,1.35vw,22px)] leading-[1.6] text-white max-[760px]:max-w-[340px] max-[760px]:px-0 max-[760px]:text-[13.5px] max-[760px]:leading-[1.55]">
-            The voices shaping Sri Lanka&apos;s talent story. Meet the people connecting talent with opportunity, building stronger organizations, and shaping the <br className="hidden sm:inline" />future of work in Sri Lanka.
+          <p className="mx-auto mt-2 sm:mt-4 max-w-[781px] max-[1024px]:max-w-[360px] text-[clamp(14px,1.35vw,22px)] leading-[1.6] text-white text-center font-geist font-normal max-[760px]:max-w-[300px] max-[760px]:px-0 max-[760px]:text-[10px] max-[760px]:leading-[160%] max-[760px]:tracking-[0em] max-[760px]:text-white">
+            The voices shaping Sri Lanka&apos;s talent story. Meet the people connecting talent with opportunity, building stronger organizations, and shaping the <br className="hidden lg:inline" />future of work in Sri Lanka.
           </p>
 
           <HeroCTAs />
 
-          {/* People - Identical Gap */}
-          <div className="mt-4 sm:mt-8 md:mt-[clamp(34px,3.5vw,50px)] flex justify-center" aria-label="Meet the people behind Voices of Talent Acquisition">
+          {/* People - Desktop only */}
+          <div className="mt-4 sm:mt-8 md:mt-[clamp(34px,3.5vw,50px)] hidden sm:flex justify-center" aria-label="Meet the people behind Voices of Talent Acquisition">
             <a
               href="#speakers"
               onClick={scrollToSpeakers}
@@ -123,8 +136,8 @@ export default function Home() {
             </a>
           </div>
 
-          {/* Powered by Career141 - Identical Gap */}
-          <div className="mt-4 sm:mt-8 md:mt-[clamp(34px,3.5vw,50px)] flex w-full justify-center">
+          {/* Powered by Career141 - Desktop / Tablet */}
+          <div className="mt-6 sm:mt-8 md:mt-[clamp(34px,3.5vw,50px)] hidden sm:flex w-full justify-center">
             <div
               className="flex w-max flex-row flex-nowrap items-center justify-center gap-2 sm:gap-3 md:gap-4"
             >
@@ -147,6 +160,17 @@ export default function Home() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Powered by Career141 - Mobile Bottom Image */}
+        <div className="absolute top-[518px] left-1/2 -translate-x-1/2 z-[5] flex sm:hidden items-center justify-center pointer-events-none select-none w-[min(95vw,375px)]">
+          <img
+            src={heroBottomMobileImage}
+            alt="Powered by Career141 | 20 Years of Excellence"
+            className="w-full h-auto object-contain opacity-100 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]"
+            loading="lazy"
+            decoding="async"
+          />
         </div>
       </main>
 

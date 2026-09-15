@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
-const SPEAKER_SECTION_IMG_BASE = "https://talentsuite.career141.com/images/speakerSection";
 const FULL_RELEASE_IMG_BASE = "https://talentsuite.career141.com/images/fullRelease";
 const reelBackground = `${R2_MEDIA_URL}/images/reelThumbnail/reelthumbnail.png`;
 
@@ -16,6 +15,7 @@ type Episode = {
   reels: string[];
   reelDurations?: string[];
   videoUrl?: string;
+  posterImage?: string;
 };
 
 const episodes: Episode[] = [
@@ -26,6 +26,7 @@ const episodes: Episode[] = [
     role: "Vice President Learning & Development",
     company: "Aitken Spence Hotels",
     videoUrl: "https://media.career141.com/new%20reels/Mr.%20Patrick/Mr.%20Patrick.mp4",
+    posterImage: `${FULL_RELEASE_IMG_BASE}/patrickreel.png`,
     reels: [
       "https://media.career141.com/new%20reels/Mr.%20Patrick/01%20Reel%20Mr.%20Patrick.mp4",
       "https://media.career141.com/new%20reels/Mr.%20Patrick/02%20Reel%20Mr.%20Patrick.mp4",
@@ -117,6 +118,7 @@ const episodes: Episode[] = [
     role: "Director / Senior HR Consultant",
     company: "(Former Director HR - Asiri Health)",
     videoUrl: "https://media.career141.com/new%20reels/Ms.%20Hasanthi/Ms.%20Hasanthi.mp4",
+    posterImage: `${FULL_RELEASE_IMG_BASE}/hasanthireel.png`,
     reels: [
       "https://media.career141.com/new%20reels/Ms.%20Hasanthi/01%20Reel%20Ms.%20Hasanthi.mp4",
       "https://media.career141.com/new%20reels/Ms.%20Hasanthi/02%20Reel%20Ms.%20Hasanthi.mp4",
@@ -208,27 +210,166 @@ export default function FullReleasesSection() {
   const [activeReelIndex, setActiveReelIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [showControls, setShowControls] = useState(true);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [reelDurations, setReelDurations] = useState<Record<string, string>>({});
 
   const videoRef = useRef<HTMLVideoElement>(null);
+  const playerContainerRef = useRef<HTMLDivElement>(null);
   const reelSliderRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const isProgrammaticScroll = useRef(false);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const touchStartX = useRef<number>(0);
-  const touchStartY = useRef<number>(0);
-  const touchStartTime = useRef<number>(0);
-  const isSwiping = useRef<boolean>(false);
+  const formatTime = (seconds: number) => {
+    if (isNaN(seconds) || seconds <= 0) return "00:00";
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  // Preload actual video durations for all reel episodes
+  useEffect(() => {
+    const videoElements: HTMLVideoElement[] = [];
+
+    episodes.forEach((episode) => {
+      const reels = episode.reels && episode.reels.length > 0
+        ? episode.reels
+        : [episode.videoUrl || "", episode.videoUrl || ""];
+
+      reels.forEach((reelUrl, idx) => {
+        if (reelUrl) {
+          const vid = document.createElement("video");
+          vid.preload = "metadata";
+          vid.src = reelUrl;
+          vid.onloadedmetadata = () => {
+            if (vid.duration && !isNaN(vid.duration) && vid.duration > 0) {
+              setReelDurations((prev) => ({
+                ...prev,
+                [`${episode.id}-${idx}`]: formatTime(vid.duration),
+              }));
+            }
+          };
+          videoElements.push(vid);
+        }
+      });
+    });
+
+    return () => {
+      videoElements.forEach((vid) => {
+        vid.src = "";
+        vid.removeAttribute("src");
+        vid.load();
+      });
+    };
+  }, []);
+
+  const resetControlsTimeout = () => {
+    if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
+    controlsTimeoutRef.current = setTimeout(() => {
+      if (videoRef.current && !videoRef.current.paused) {
+        setShowControls(false);
+      }
+    }, 3500);
+  };
 
   const togglePlayPause = () => {
     if (!videoRef.current) return;
     if (videoRef.current.paused) {
-      videoRef.current.play();
+      videoRef.current.play().catch(() => { });
       setIsPaused(false);
+      resetControlsTimeout();
     } else {
       videoRef.current.pause();
       setIsPaused(true);
+      setShowControls(true);
     }
   };
+
+  const handleContainerClick = () => {
+    if (!showControls) {
+      setShowControls(true);
+      resetControlsTimeout();
+    } else {
+      togglePlayPause();
+    }
+  };
+
+  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newTime = parseFloat(e.target.value);
+    setCurrentTime(newTime);
+    if (videoRef.current) {
+      videoRef.current.currentTime = newTime;
+    }
+    resetControlsTimeout();
+  };
+
+  const handleTimeUpdate = () => {
+    if (videoRef.current && !isDragging) {
+      setCurrentTime(videoRef.current.currentTime);
+    }
+  };
+
+  const handleLoadedMetadata = () => {
+    if (videoRef.current) {
+      const dur = videoRef.current.duration || 0;
+      setDuration(dur);
+      setCurrentTime(videoRef.current.currentTime || 0);
+      if (dur > 0) {
+        setReelDurations((prev) => ({
+          ...prev,
+          [`${selectedEpisode.id}-${activeReelIndex}`]: formatTime(dur),
+        }));
+      }
+    }
+  };
+
+  const toggleFullscreen = () => {
+    const container = playerContainerRef.current;
+    if (!container) return;
+
+    if (!document.fullscreenElement && !(document as unknown as { webkitFullscreenElement?: Element }).webkitFullscreenElement) {
+      if (container.requestFullscreen) {
+        container.requestFullscreen().catch(() => { });
+      } else if ((container as unknown as { webkitRequestFullscreen?: () => void }).webkitRequestFullscreen) {
+        (container as unknown as { webkitRequestFullscreen: () => void }).webkitRequestFullscreen();
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(() => { });
+      } else if ((document as unknown as { webkitExitFullscreen?: () => void }).webkitExitFullscreen) {
+        (document as unknown as { webkitExitFullscreen: () => void }).webkitExitFullscreen();
+      }
+    }
+  };
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(
+        Boolean(document.fullscreenElement || (document as unknown as { webkitFullscreenElement?: Element }).webkitFullscreenElement)
+      );
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = isMuted;
+    }
+  }, [isMuted]);
 
   const handleScroll = () => {
     if (!scrollContainerRef.current) return;
@@ -239,41 +380,8 @@ export default function FullReleasesSection() {
     }
   };
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-    touchStartY.current = e.touches[0].clientY;
-    touchStartTime.current = Date.now();
-    isSwiping.current = false;
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    const diffX = Math.abs(e.touches[0].clientX - touchStartX.current);
-    const diffY = Math.abs(e.touches[0].clientY - touchStartY.current);
-    if (diffX > 10 && diffX > diffY) {
-      isSwiping.current = true;
-    }
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    const deltaX = e.changedTouches[0].clientX - touchStartX.current;
-    const deltaY = e.changedTouches[0].clientY - touchStartY.current;
-    const deltaTime = Date.now() - touchStartTime.current;
-
-    const isHorizontalSwipe =
-      Math.abs(deltaX) > Math.abs(deltaY) &&
-      (Math.abs(deltaX) > 35 || (Math.abs(deltaX) > 20 && deltaTime < 300));
-
-    if (isHorizontalSwipe) {
-      if (deltaX < 0 && activeReelIndex === 0) {
-        scrollToReel(1);
-      } else if (deltaX > 0 && activeReelIndex === 1) {
-        scrollToReel(0);
-      }
-    }
-  };
-
   const handleReelScroll = () => {
-    if (!reelSliderRef.current) return;
+    if (!reelSliderRef.current || isProgrammaticScroll.current) return;
     const { scrollLeft, clientWidth } = reelSliderRef.current;
     if (clientWidth === 0) return;
     const newIndex = Math.round(scrollLeft / clientWidth);
@@ -284,21 +392,46 @@ export default function FullReleasesSection() {
 
   const scrollToReel = (index: number) => {
     setActiveReelIndex(index);
+    setCurrentTime(0);
+    setIsPlaying(false);
+    setIsPaused(false);
+    setShowControls(true);
+
     if (reelSliderRef.current) {
+      isProgrammaticScroll.current = true;
       const width = reelSliderRef.current.clientWidth;
       reelSliderRef.current.scrollTo({
         left: index * width,
         behavior: "smooth",
       });
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+      scrollTimeoutRef.current = setTimeout(() => {
+        isProgrammaticScroll.current = false;
+      }, 500);
     }
   };
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (reelSliderRef.current) {
+        const width = reelSliderRef.current.clientWidth;
+        reelSliderRef.current.scrollLeft = activeReelIndex * width;
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [activeReelIndex]);
 
   const selectEpisode = (episode: Episode) => {
     setSelectedEpisode(episode);
-    scrollToReel(0);
+    setActiveReelIndex(0);
+    if (reelSliderRef.current) {
+      reelSliderRef.current.scrollLeft = 0;
+    }
     setIsPlaying(false);
     setIsPaused(false);
+    setCurrentTime(0);
+    setShowControls(true);
   };
 
   const currentReels = selectedEpisode.reels && selectedEpisode.reels.length > 0
@@ -439,10 +572,11 @@ export default function FullReleasesSection() {
           <div
             ref={reelSliderRef}
             onScroll={handleReelScroll}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-            className="relative flex h-[380px] sm:h-[460px] md:h-[540px] min-[1100px]:h-auto min-[1100px]:flex-1 min-[1100px]:min-h-0 w-full max-w-full overflow-x-auto overflow-y-hidden rounded-[24px] sm:rounded-[30px] border-[1.62px] border-[#E0E0E0] bg-black shadow-lg opacity-100 snap-x snap-mandatory snap-always overscroll-x-contain touch-pan-y [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="relative flex h-[380px] sm:h-[460px] md:h-[540px] min-[1100px]:h-auto min-[1100px]:flex-1 min-[1100px]:min-h-0 w-full max-w-full overflow-x-auto min-[1100px]:overflow-x-hidden overflow-y-hidden rounded-[24px] sm:rounded-[30px] border-[1.62px] border-[#E0E0E0] bg-black shadow-lg opacity-100 snap-x min-[1100px]:snap-none snap-mandatory snap-always overscroll-x-contain touch-pan-y [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            style={{
+              scrollSnapType: "x mandatory",
+              WebkitOverflowScrolling: "touch",
+            }}
           >
             {/* Render 2 Reel Slides (Reel 1 & Reel 2) */}
             {[0, 1].map((reelIdx) => {
@@ -453,12 +587,21 @@ export default function FullReleasesSection() {
               return (
                 <article
                   key={reelIdx}
-                  className="relative h-full w-full shrink-0 snap-start overflow-hidden bg-black select-none cursor-pointer"
+                  className="relative h-full w-full min-w-full shrink-0 snap-start snap-always overflow-hidden bg-black select-none cursor-pointer"
+                  style={{
+                    scrollSnapAlign: "start",
+                    scrollSnapStop: "always",
+                  }}
                 >
                   {isCurrentSlidePlaying ? (
                     <div
-                      onClick={togglePlayPause}
-                      className="relative h-full w-full bg-black flex items-center justify-center select-none cursor-pointer"
+                      ref={isCurrentSlideActive ? playerContainerRef : null}
+                      onClick={handleContainerClick}
+                      onMouseMove={() => {
+                        setShowControls(true);
+                        resetControlsTimeout();
+                      }}
+                      className="relative h-full w-full bg-black flex items-center justify-center select-none cursor-pointer overflow-hidden"
                     >
                       {reelUrl ? (
                         <>
@@ -467,22 +610,215 @@ export default function FullReleasesSection() {
                             key={`${selectedEpisode.id}-${reelIdx}-${reelUrl}`}
                             src={reelUrl}
                             autoPlay
+                            muted={isMuted}
                             playsInline
-                            onPlay={() => setIsPaused(false)}
-                            onPause={() => setIsPaused(true)}
+                            onTimeUpdate={handleTimeUpdate}
+                            onLoadedMetadata={handleLoadedMetadata}
+                            onDurationChange={handleLoadedMetadata}
+                            onCanPlay={handleLoadedMetadata}
+                            onPlay={() => {
+                              setIsPaused(false);
+                              resetControlsTimeout();
+                            }}
+                            onPause={() => {
+                              setIsPaused(true);
+                              setShowControls(true);
+                            }}
                             className="absolute inset-0 h-full w-full object-contain bg-black pointer-events-none"
                           />
 
+                          {/* Top Controls: Mute/Unmute & Close Video */}
+                          <div
+                            className={`absolute top-4 inset-x-4 z-20 flex items-center justify-between transition-opacity duration-300 ${
+                              showControls ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                            }`}
+                          >
+                            {/* Mute/Unmute toggle button */}
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setIsMuted((prev) => !prev);
+                                resetControlsTimeout();
+                              }}
+                              className="flex items-center gap-1.5 rounded-full bg-black/75 px-3.5 py-2 font-geist text-xs font-semibold text-white backdrop-blur-md transition-all hover:bg-black cursor-pointer shadow-md"
+                              aria-label={isMuted ? "Unmute reel sound" : "Mute reel sound"}
+                            >
+                              {isMuted ? (
+                                <>
+                                  <svg className="h-4 w-4 text-[#159A99]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                                  </svg>
+                                  <span>Unmute</span>
+                                </>
+                              ) : (
+                                <>
+                                  <svg className="h-4 w-4 text-[#159A99]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                                  </svg>
+                                  <span>Mute</span>
+                                </>
+                              )}
+                            </button>
+
+                            {/* Close Video button */}
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setIsPlaying(false);
+                                setIsPaused(false);
+                              }}
+                              aria-label="Close video player"
+                              className="flex items-center gap-1.5 rounded-full bg-black/70 px-4 py-2 font-geist text-xs font-semibold text-white backdrop-blur-md transition-all hover:bg-black cursor-pointer"
+                            >
+                              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
+                              </svg>
+                              Close Video
+                            </button>
+                          </div>
+
                           {/* Center Pause/Play Indicator Overlay */}
-                          {isPaused && (
-                            <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/35 backdrop-blur-[1px] transition-all pointer-events-none">
-                              <div className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full bg-[#159A99] text-white shadow-2xl transition-transform hover:scale-110">
+                          <div
+                            className={`absolute inset-0 z-10 flex items-center justify-center transition-all duration-300 pointer-events-none ${
+                              showControls ? "opacity-100" : "opacity-0"
+                            }`}
+                          >
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                togglePlayPause();
+                              }}
+                              className="pointer-events-auto flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full bg-[#159A99]/90 text-white shadow-2xl backdrop-blur-md transition-transform duration-200 hover:scale-110 active:scale-95 cursor-pointer"
+                              aria-label={isPaused ? "Play reel" : "Pause reel"}
+                            >
+                              {isPaused ? (
                                 <svg className="ml-1 h-8 w-8 sm:h-10 sm:w-10 text-white" fill="currentColor" viewBox="0 0 24 24">
                                   <path d="M8 5v14l11-7z" />
                                 </svg>
+                              ) : (
+                                <svg className="h-8 w-8 sm:h-10 sm:w-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
+                                </svg>
+                              )}
+                            </button>
+                          </div>
+
+                          {/* Bottom Scrubber & Duration Control Bar */}
+                          <div
+                            className={`absolute inset-x-0 bottom-0 z-20 flex flex-col justify-end bg-gradient-to-t from-black/90 via-black/50 to-transparent p-4 sm:p-6 transition-opacity duration-300 ${
+                              showControls ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                            }`}
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            {/* Interactive Scrubber Bar */}
+                            <div className="relative flex w-full items-center py-2 cursor-pointer">
+                              <input
+                                type="range"
+                                min={0}
+                                max={duration || 100}
+                                step={0.1}
+                                value={currentTime}
+                                onChange={handleSeek}
+                                onMouseDown={() => setIsDragging(true)}
+                                onMouseUp={() => setIsDragging(false)}
+                                onTouchStart={() => setIsDragging(true)}
+                                onTouchEnd={() => setIsDragging(false)}
+                                className="w-full h-1.5 sm:h-2 rounded-full appearance-none bg-white/30 accent-[#159A99] cursor-pointer focus:outline-none"
+                                style={{
+                                  background: `linear-gradient(to right, #159A99 ${duration > 0 ? (currentTime / duration) * 100 : 0}%, rgba(255, 255, 255, 0.3) ${duration > 0 ? (currentTime / duration) * 100 : 0}%)`,
+                                }}
+                                aria-label="Reel timeline scrubber"
+                              />
+                            </div>
+
+                            {/* Bottom Row: Play/Pause Icon + Timestamps + Quick 10s Skip Buttons + Fullscreen */}
+                            <div className="mt-1 flex items-center justify-between font-geist text-xs sm:text-sm font-medium text-white">
+                              <div className="flex items-center gap-3">
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    togglePlayPause();
+                                  }}
+                                  className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/30 transition-all active:scale-95 cursor-pointer"
+                                  aria-label={isPaused ? "Play reel" : "Pause reel"}
+                                >
+                                  {isPaused ? (
+                                    <svg className="ml-0.5 h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                                      <path d="M8 5v14l11-7z" />
+                                    </svg>
+                                  ) : (
+                                    <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                                      <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
+                                    </svg>
+                                  )}
+                                </button>
+
+                                <span className="tabular-nums tracking-wide text-white/90">
+                                  {formatTime(currentTime)} <span className="text-white/40">/</span> {formatTime(duration)}
+                                </span>
+                              </div>
+
+                              {/* Quick -10s / +10s Skip & Fullscreen Button */}
+                              <div className="flex items-center gap-2 text-white/80">
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (videoRef.current) {
+                                      videoRef.current.currentTime = Math.max(0, videoRef.current.currentTime - 10);
+                                    }
+                                    resetControlsTimeout();
+                                  }}
+                                  className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] sm:text-xs font-semibold hover:bg-white/20 transition-all cursor-pointer"
+                                  aria-label="Rewind 10 seconds"
+                                >
+                                  -10s
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (videoRef.current) {
+                                      videoRef.current.currentTime = Math.min(duration, videoRef.current.currentTime + 10);
+                                    }
+                                    resetControlsTimeout();
+                                  }}
+                                  className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] sm:text-xs font-semibold hover:bg-white/20 transition-all cursor-pointer"
+                                  aria-label="Forward 10 seconds"
+                                >
+                                  +10s
+                                </button>
+
+                                {/* Fullscreen Button */}
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleFullscreen();
+                                    resetControlsTimeout();
+                                  }}
+                                  className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-all active:scale-95 cursor-pointer ml-1"
+                                  aria-label={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
+                                  title={isFullscreen ? "Exit Fullscreen" : "Full Screen"}
+                                >
+                                  {isFullscreen ? (
+                                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M9 9L4 4m0 5h5V4m6 6l5-5m-5 5V4h5M9 15l-5 5m5-5H4v5m11-5l5 5m-5-5h5v5" />
+                                    </svg>
+                                  ) : (
+                                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                                    </svg>
+                                  )}
+                                </button>
                               </div>
                             </div>
-                          )}
+                          </div>
                         </>
                       ) : (
                         <div className="relative flex flex-col items-center justify-center p-8 text-center text-white pointer-events-none">
@@ -490,28 +826,10 @@ export default function FullReleasesSection() {
                           <p className="mt-2 font-geist text-sm text-white/70">Reel release coming soon</p>
                         </div>
                       )}
-
-                      {/* Close Video button */}
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setIsPlaying(false);
-                          setIsPaused(false);
-                        }}
-                        aria-label="Close video player"
-                        className="absolute top-4 right-4 z-20 flex items-center gap-1.5 rounded-full bg-black/70 px-4 py-2 font-geist text-xs font-semibold text-white backdrop-blur-md transition-all hover:bg-black cursor-pointer"
-                      >
-                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                        Close Video
-                      </button>
                     </div>
                   ) : (
                     <div
                       onClick={() => {
-                        if (isSwiping.current) return;
                         scrollToReel(reelIdx);
                         setIsPlaying(true);
                         setIsPaused(false);
@@ -521,25 +839,15 @@ export default function FullReleasesSection() {
                         backgroundImage: `url('${reelBackground}')`,
                       }}
                     >
-                      {/* 1. Mobile Front Photo over reel background */}
-                      <div className="pointer-events-none absolute inset-0 overflow-hidden min-[1100px]:hidden">
+                      {/* Full Cover Thumbnail Image (Unified for Mobile & Desktop) */}
+                      <div className="pointer-events-none absolute inset-0 overflow-hidden">
                         <img
-                          src={`${SPEAKER_SECTION_IMG_BASE}/r${selectedEpisode.id}png.png?v=3`}
+                          src={
+                            selectedEpisode.posterImage || `${FULL_RELEASE_IMG_BASE}/reelspeaker${selectedEpisode.id}.png`
+                          }
                           alt={selectedEpisode.guest}
-                          className={`absolute left-1/2 -translate-x-1/2 right-auto w-auto max-w-none object-contain object-bottom select-none drop-shadow-[0_20px_40px_rgba(0,0,0,0.85)] transition-transform duration-500 group-hover:scale-105 ${
-                            selectedEpisode.id === 10
-                              ? "h-[88%] sm:h-[90%] -bottom-[6%] sm:-bottom-[6%]"
-                              : "h-[85%] sm:h-[88%] bottom-0"
-                          }`}
-                        />
-                      </div>
-
-                      {/* 2. Desktop Full Cover Thumbnail Image */}
-                      <div className="pointer-events-none absolute inset-0 overflow-hidden hidden min-[1100px]:block">
-                        <img
-                          src={`${FULL_RELEASE_IMG_BASE}/reelspeaker${selectedEpisode.id}.png`}
-                          alt={selectedEpisode.guest}
-                          className="h-full w-full object-cover object-[center_top] select-none transition-transform duration-500 group-hover:scale-105"
+                          draggable={false}
+                          className="h-full w-full object-cover object-[center_top] select-none pointer-events-none transition-transform duration-500 group-hover:scale-105"
                         />
                       </div>
 
@@ -550,7 +858,6 @@ export default function FullReleasesSection() {
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
-                            if (isSwiping.current) return;
                             scrollToReel(reelIdx);
                             setIsPlaying(true);
                             setIsPaused(false);
@@ -569,8 +876,8 @@ export default function FullReleasesSection() {
                         </button>
 
                         {/* Teal Duration Pill (Bottom-Right) */}
-                        <span className="inline-block rounded-full bg-[#159A99] px-5 py-2 font-geist text-[13px] sm:text-[14px] font-bold tracking-wide text-white shadow-md">
-                          REEL 0{reelIdx + 1} · {selectedEpisode.reelDurations?.[reelIdx] || "1 MIN"}
+                        <span className="inline-block rounded-full bg-[#159A99] px-5 py-2 font-geist text-[13px] sm:text-[14px] font-bold tracking-wide text-white shadow-md tabular-nums">
+                          REEL 0{reelIdx + 1} · {reelDurations[`${selectedEpisode.id}-${reelIdx}`] || selectedEpisode.reelDurations?.[reelIdx] || "00:00"}
                         </span>
                       </div>
                     </div>

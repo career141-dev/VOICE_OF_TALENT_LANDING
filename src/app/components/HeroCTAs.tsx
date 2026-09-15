@@ -8,17 +8,17 @@ const arrowRight     = `${R2_MEDIA_URL}/icons/arrow-right.svg`;
 const arrowRightDark = `${R2_MEDIA_URL}/icons/arrow-right-dark.svg`;
 
 function Arrow({ source }: { source: string }) {
-  return <img className="h-[17px] w-[17px] object-contain" src={source} alt="" />;
+  return <img className="h-[10px] w-[10px] sm:h-[15px] sm:w-[15px] md:h-[17px] md:w-[17px] object-contain shrink-0" src={source} alt="" />;
 }
 
 export default function HeroCTAs() {
   return (
-    <div className="mt-4 sm:mt-[clamp(34px,3.5vw,50px)] flex justify-center gap-2.5 sm:gap-[19px] max-[760px]:mx-auto max-[760px]:mt-4 max-[760px]:w-max max-[760px]:flex-col">
+    <div className="mt-6 sm:mt-6 md:mt-[clamp(34px,3.5vw,50px)] flex flex-row flex-nowrap items-center justify-center gap-2 sm:gap-3 md:gap-[19px] max-[760px]:mx-auto max-[760px]:w-full max-[760px]:px-0">
 
       {/* Primary — Watch the Series */}
       <motion.a
         href="#episodes"
-        className="group relative inline-flex h-[50px] items-center justify-center gap-2 overflow-hidden rounded-[25px] bg-[#159a99] px-[22px] text-[14px] font-semibold uppercase text-white no-underline max-[760px]:h-[44px]"
+        className="group relative inline-flex h-[32px] sm:h-[44px] md:h-[50px] items-center justify-center gap-1 sm:gap-2 overflow-hidden rounded-[25px] bg-[#159a99] px-3 sm:px-4 md:px-[22px] text-[10px] sm:text-[12.5px] md:text-[14px] font-semibold uppercase text-white no-underline whitespace-nowrap shrink-0 shadow-md"
         initial={{ boxShadow: "0 5px 10px rgba(21,154,153,0.30)" }}
         whileHover={{
           scale: 1.045,
@@ -46,6 +46,7 @@ export default function HeroCTAs() {
         Watch the Series
         <motion.span
           whileHover={{ x: 4, transition: { type: "spring", stiffness: 400, damping: 18 } }}
+          className="shrink-0 flex items-center"
         >
           <Arrow source={arrowRight} />
         </motion.span>
@@ -54,7 +55,7 @@ export default function HeroCTAs() {
       {/* Secondary — Explore VOTA */}
       <motion.a
         href="#speakers"
-        className="group relative inline-flex h-[50px] items-center justify-center gap-2 overflow-hidden rounded-[25px] border border-[#e0e0e0] bg-white px-[22px] text-[14px] font-semibold uppercase text-black no-underline max-[760px]:h-[44px]"
+        className="group relative inline-flex h-[32px] sm:h-[44px] md:h-[50px] items-center justify-center gap-1 sm:gap-2 overflow-hidden rounded-[25px] border border-[#e0e0e0] bg-white px-3 sm:px-4 md:px-[22px] text-[10px] sm:text-[12.5px] md:text-[14px] font-semibold uppercase text-black no-underline whitespace-nowrap shrink-0 shadow-sm"
         initial={{ boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}
         whileHover={{
           scale: 1.045,
@@ -83,6 +84,7 @@ export default function HeroCTAs() {
         Explore VOTA
         <motion.span
           whileHover={{ x: 4, transition: { type: "spring", stiffness: 400, damping: 18 } }}
+          className="shrink-0 flex items-center"
         >
           <Arrow source={arrowRightDark} />
         </motion.span>
