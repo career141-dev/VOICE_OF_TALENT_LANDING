@@ -279,10 +279,7 @@ export default function CoreConversationThemes() {
                 opacity: diff === 0 ? 1 : Math.abs(diff) === 1 ? 0.95 : 0,
                 backgroundColor: diff === 0 ? "#159A99" : "#F5F7FA",
                 borderColor: diff === 0 ? "transparent" : "#159A99",
-                boxShadow:
-                  diff === 0
-                    ? "0 14px 34px rgba(21, 154, 153, 0.22)"
-                    : "0 2px 8px rgba(0, 0, 0, 0.04)",
+                boxShadow: "none",
                 pointerEvents: Math.abs(diff) <= 1 ? "auto" : "none",
               }}
               transition={{
