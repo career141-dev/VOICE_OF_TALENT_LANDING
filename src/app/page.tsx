@@ -138,8 +138,12 @@ export default function Home() {
 
           {/* Powered by Career141 - Desktop / Tablet */}
           <div className="mt-6 sm:mt-8 md:mt-[clamp(34px,3.5vw,50px)] hidden sm:flex w-full justify-center">
-            <div
-              className="flex w-max flex-row flex-nowrap items-center justify-center gap-2 sm:gap-3 md:gap-4"
+            <a
+              href="https://career141.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Visit Career141 (opens in a new tab)"
+              className="group flex w-max flex-row flex-nowrap items-center justify-center gap-2 sm:gap-3 md:gap-4 transition-transform duration-300 hover:scale-105 active:scale-95 cursor-pointer"
             >
               {/* Powered by Text Wrapper Div */}
               <div className="flex h-[42px] sm:h-[56px] md:h-[72px] lg:h-[86px] shrink-0 items-center justify-center">
@@ -158,20 +162,28 @@ export default function Home() {
                   decoding="async"
                 />
               </div>
-            </div>
+            </a>
           </div>
         </div>
 
         {/* Powered by Career141 - Mobile Bottom Image */}
-        <div className="absolute top-[518px] left-1/2 -translate-x-1/2 z-[5] flex sm:hidden items-center justify-center pointer-events-none select-none w-[min(95vw,375px)]">
-          <img
-            src={heroBottomMobileImage}
-            alt="Powered by Career141 | 20 Years of Excellence"
-            className="w-full h-auto object-contain opacity-100 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]"
-            loading="eager"
-            decoding="async"
-            fetchPriority="high"
-          />
+        <div className="absolute top-[518px] left-1/2 -translate-x-1/2 z-[5] flex sm:hidden items-center justify-center select-none w-[min(95vw,375px)]">
+          <a
+            href="https://career141.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Visit Career141 (opens in a new tab)"
+            className="w-full flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
+          >
+            <img
+              src={heroBottomMobileImage}
+              alt="Powered by Career141 | 20 Years of Excellence"
+              className="w-full h-auto object-contain opacity-100 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
+            />
+          </a>
         </div>
       </main>
 

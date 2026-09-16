@@ -152,13 +152,21 @@ export default function Footer() {
 
               {/* Career141 / VOTA Logo */}
               <div className="mt-6 md:mt-7 flex justify-center md:justify-end">
-                <img
-                  src={artboardImage}
-                  alt="Career141 and VOTA"
-                  loading="lazy"
-                  decoding="async"
-                  className="h-auto w-[160px] sm:w-[190px] md:w-[200px] lg:w-[240px] xl:w-[270px] max-w-full object-contain"
-                />
+                <a
+                  href="https://career141.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Visit Career141 (opens in a new tab)"
+                  className="inline-block transition-transform duration-300 hover:scale-105 active:scale-95 cursor-pointer"
+                >
+                  <img
+                    src={artboardImage}
+                    alt="Career141 and VOTA"
+                    loading="lazy"
+                    decoding="async"
+                    className="h-auto w-[160px] sm:w-[190px] md:w-[200px] lg:w-[240px] xl:w-[270px] max-w-full object-contain"
+                  />
+                </a>
               </div>
             </div>
           </div>

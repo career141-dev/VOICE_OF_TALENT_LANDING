@@ -55,13 +55,21 @@ export default function VotaBannerSection() {
 
         <div className="relative z-10 flex h-full w-full flex-col justify-start sm:justify-between items-start">
           {/* Career141 / VOTA Logo (Pinned at top) */}
-          <img
-            src={artboardImage}
-            alt="Career141 and VOTA"
-            loading="lazy"
-            decoding="async"
-            className="h-auto w-[140px] object-contain sm:w-[220px] lg:w-[400px]"
-          />
+          <a
+            href="https://career141.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Visit Career141 (opens in a new tab)"
+            className="inline-block transition-transform duration-300 hover:scale-105 active:scale-95 cursor-pointer"
+          >
+            <img
+              src={artboardImage}
+              alt="Career141 and VOTA"
+              loading="lazy"
+              decoding="async"
+              className="h-auto w-[140px] object-contain sm:w-[220px] lg:w-[400px]"
+            />
+          </a>
 
           {/* Banner Content & Buttons */}
           <div className="mt-14 w-full sm:mt-12 md:mt-20">
