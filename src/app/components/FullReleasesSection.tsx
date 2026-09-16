@@ -117,7 +117,7 @@ const episodes: Episode[] = [
     guest: "MS. HASANTHI DE SARAM",
     role: "Director / Senior HR Consultant",
     company: "(Former Director HR - Asiri Health)",
-    videoUrl: "https://talentsuite.career141.com/videos/Ms.%20Hasanthi.mp4",
+    videoUrl: "https://media.career141.com/new%20reels/Ms.%20Hasanthi/Ms.%20Hasanthi%20Desaram.mp4",
     posterImage: `${FULL_RELEASE_IMG_BASE}/hasanthireel.png`,
     reels: [
       "https://media.career141.com/new%20reels/Ms.%20Hasanthi/01%20Reel%20Ms.%20Hasanthi.mp4",
