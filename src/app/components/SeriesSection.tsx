@@ -65,7 +65,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
   {
     id: 5,
     name: "Ms. Surani Amarasinghe",
-    role: "Director, Country People Partnering, Sri Lanka",
+    role: "Director, Country People Partnering, Sri\u00A0Lanka",
     company: "LSEG (London Stock Exchange Group)",
     duration: "15:30",
     videoUrl: "https://media.career141.com/new%20reels/Ms.%20Surani/Ms.%20Surani.mp4",
@@ -75,7 +75,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
   {
     id: 6,
     name: "Mr. Arshaq Farally",
-    role: "Chief People Officer, Sri Lanka",
+    role: "Chief People Officer, Sri\u00A0Lanka",
     company: "Daraz",
     duration: "11:45",
     videoUrl: "https://media.career141.com/new%20reels/Mr.%20Arshaq/Mr.%20Arshaq.mp4",
@@ -126,7 +126,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     id: 11,
     name: "Ms. Chamindra Perera",
     role: "Human Resources Director",
-    company: "GRI Sri Lanka",
+    company: "GRI Sri\u00A0Lanka",
     duration: "14:50",
     videoUrl: "https://media.career141.com/new%20reels/Ms.%20Chamindra/Ms.%20Chamindra.mp4",
     bannerImage: `${R2_MEDIA_URL}/images/speaker11.png`,
@@ -275,62 +275,142 @@ export default function SeriesSection() {
     }
   };
 
+  const checkIsFullscreen = () => {
+    if (typeof document === "undefined") return false;
+    const doc = document as unknown as {
+      fullscreenElement?: Element;
+      webkitFullscreenElement?: Element;
+      webkitCurrentFullScreenElement?: Element;
+      webkitIsFullScreen?: boolean;
+      mozFullScreenElement?: Element;
+      msFullscreenElement?: Element;
+    };
+    const video = videoRef.current as (HTMLVideoElement & {
+      webkitDisplayingFullscreen?: boolean;
+    }) | null;
+
+    return Boolean(
+      doc.fullscreenElement ||
+      doc.webkitFullscreenElement ||
+      doc.webkitCurrentFullScreenElement ||
+      doc.webkitIsFullScreen ||
+      doc.mozFullScreenElement ||
+      doc.msFullscreenElement ||
+      video?.webkitDisplayingFullscreen
+    );
+  };
+
+  const exitAllFullscreen = () => {
+    if (typeof document === "undefined") return;
+    const doc = document as unknown as {
+      exitFullscreen?: () => Promise<void>;
+      webkitExitFullscreen?: () => void;
+      webkitCancelFullScreen?: () => void;
+      mozCancelFullScreen?: () => void;
+      msExitFullscreen?: () => void;
+    };
+    const video = videoRef.current as (HTMLVideoElement & {
+      webkitExitFullscreen?: () => void;
+      webkitExitFullScreen?: () => void;
+      webkitDisplayingFullscreen?: boolean;
+    }) | null;
+
+    try {
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      } else if (doc.webkitExitFullscreen) {
+        doc.webkitExitFullscreen();
+      } else if (doc.webkitCancelFullScreen) {
+        doc.webkitCancelFullScreen();
+      } else if (doc.mozCancelFullScreen) {
+        doc.mozCancelFullScreen();
+      } else if (doc.msExitFullscreen) {
+        doc.msExitFullscreen();
+      }
+    } catch {
+      // ignore
+    }
+
+    if (video) {
+      try {
+        if (typeof video.webkitExitFullscreen === "function") {
+          video.webkitExitFullscreen();
+        } else if (typeof video.webkitExitFullScreen === "function") {
+          video.webkitExitFullScreen();
+        }
+      } catch {
+        // ignore
+      }
+    }
+    setIsFullscreen(false);
+  };
+
   const toggleFullscreen = () => {
-    const container = playerContainerRef.current;
+    const container = playerContainerRef.current as (HTMLDivElement & {
+      requestFullscreen?: () => Promise<void>;
+      webkitRequestFullscreen?: () => void;
+      webkitRequestFullScreen?: () => void;
+      mozRequestFullScreen?: () => void;
+      msRequestFullscreen?: () => void;
+    }) | null;
+
     const video = videoRef.current as (HTMLVideoElement & {
       webkitSupportsFullscreen?: boolean;
       webkitDisplayingFullscreen?: boolean;
       webkitEnterFullscreen?: () => void;
+      webkitEnterFullScreen?: () => void;
       webkitExitFullscreen?: () => void;
+      webkitExitFullScreen?: () => void;
     }) | null;
 
     if (!container && !video) return;
 
-    const isDocFullscreen = Boolean(
-      document.fullscreenElement ||
-      (document as unknown as { webkitFullscreenElement?: Element }).webkitFullscreenElement ||
-      video?.webkitDisplayingFullscreen
-    );
+    const isCurrentlyFullscreen = checkIsFullscreen();
 
-    if (!isDocFullscreen) {
+    if (!isCurrentlyFullscreen) {
       if (container && container.requestFullscreen) {
         container.requestFullscreen().catch(() => {
           if (video && typeof video.webkitEnterFullscreen === "function") {
             video.webkitEnterFullscreen();
+          } else if (video && typeof video.webkitEnterFullScreen === "function") {
+            video.webkitEnterFullScreen();
           }
         });
-      } else if (container && (container as unknown as { webkitRequestFullscreen?: () => void }).webkitRequestFullscreen) {
+      } else if (container && container.webkitRequestFullscreen) {
         try {
-          (container as unknown as { webkitRequestFullscreen: () => void }).webkitRequestFullscreen();
+          container.webkitRequestFullscreen();
         } catch {
           if (video && typeof video.webkitEnterFullscreen === "function") {
             video.webkitEnterFullscreen();
           }
         }
+      } else if (container && container.webkitRequestFullScreen) {
+        try {
+          container.webkitRequestFullScreen();
+        } catch {
+          if (video && typeof video.webkitEnterFullScreen === "function") {
+            video.webkitEnterFullScreen();
+          }
+        }
       } else if (video && typeof video.webkitEnterFullscreen === "function") {
         video.webkitEnterFullscreen();
+      } else if (video && typeof video.webkitEnterFullScreen === "function") {
+        video.webkitEnterFullScreen();
       }
     } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen().catch(() => { });
-      } else if ((document as unknown as { webkitExitFullscreen?: () => void }).webkitExitFullscreen) {
-        (document as unknown as { webkitExitFullscreen: () => void }).webkitExitFullscreen();
-      } else if (video && typeof video.webkitExitFullscreen === "function") {
-        video.webkitExitFullscreen();
-      }
+      exitAllFullscreen();
     }
   };
 
   useEffect(() => {
     const handleFullscreenChange = () => {
-      const video = videoRef.current as (HTMLVideoElement & { webkitDisplayingFullscreen?: boolean }) | null;
-      setIsFullscreen(
-        Boolean(
-          document.fullscreenElement ||
-          (document as unknown as { webkitFullscreenElement?: Element }).webkitFullscreenElement ||
-          video?.webkitDisplayingFullscreen
-        )
-      );
+      setIsFullscreen(checkIsFullscreen());
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && checkIsFullscreen()) {
+        exitAllFullscreen();
+      }
     };
 
     const handleWebkitBegin = () => setIsFullscreen(true);
@@ -338,6 +418,9 @@ export default function SeriesSection() {
 
     document.addEventListener("fullscreenchange", handleFullscreenChange);
     document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+    document.addEventListener("mozfullscreenchange", handleFullscreenChange);
+    document.addEventListener("MSFullscreenChange", handleFullscreenChange);
+    window.addEventListener("keydown", handleKeyDown);
 
     const videoEl = videoRef.current;
     if (videoEl) {
@@ -348,6 +431,9 @@ export default function SeriesSection() {
     return () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
       document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
+      document.removeEventListener("mozfullscreenchange", handleFullscreenChange);
+      document.removeEventListener("MSFullscreenChange", handleFullscreenChange);
+      window.removeEventListener("keydown", handleKeyDown);
       if (videoEl) {
         videoEl.removeEventListener("webkitbeginfullscreen", handleWebkitBegin);
         videoEl.removeEventListener("webkitendfullscreen", handleWebkitEnd);
@@ -446,6 +532,7 @@ export default function SeriesSection() {
   };
 
   const handleCloseVideo = () => {
+    exitAllFullscreen();
     isManuallyClosedRef.current = true;
     isManuallyPausedRef.current = true;
     wasPlayingBeforeScrollOutRef.current = false;
@@ -489,9 +576,9 @@ export default function SeriesSection() {
           </div>
         </div>
 
-        <div className="w-full grid gap-5 xl:gap-[26px] lg:grid-cols-[minmax(0,1128fr)_minmax(0,482fr)] items-stretch">
+        <div className="w-full grid gap-5 xl:gap-[26px] lg:grid-cols-[minmax(0,960fr)_minmax(0,620fr)] xl:grid-cols-[minmax(0,1000fr)_minmax(0,580fr)] 2xl:grid-cols-[minmax(0,1050fr)_minmax(0,550fr)] items-stretch">
           {/* Main Featured Video / Poster */}
-          <article className="group relative w-full aspect-video min-h-[360px] sm:min-h-[460px] md:min-h-[500px] lg:min-h-0 overflow-hidden rounded-[24px] sm:rounded-[28px] md:rounded-[32px] max-[760px]:shadow-none max-[760px]:border-0 max-[760px]:ring-0 shadow-xl border-none outline-none bg-black">
+          <article className="group relative w-full max-lg:h-[500px] max-lg:sm:h-[520px] max-lg:min-h-[500px] max-lg:sm:min-h-[520px] lg:aspect-video lg:h-auto overflow-hidden rounded-[28px] md:rounded-[32px] max-[760px]:shadow-none max-[760px]:border-0 max-[760px]:ring-0 shadow-xl border-none outline-none max-lg:bg-black lg:bg-transparent">
             {isPlaying ? (
               <div
                 ref={playerContainerRef}
@@ -500,7 +587,7 @@ export default function SeriesSection() {
                   setShowControls(true);
                   resetControlsTimeout();
                 }}
-                className="relative h-full w-full flex items-center justify-center cursor-pointer select-none overflow-hidden bg-black border-none outline-none"
+                className="relative h-full w-full max-lg:h-[500px] max-lg:sm:h-[520px] max-lg:min-h-[500px] max-lg:sm:min-h-[520px] lg:h-full lg:aspect-video flex items-center justify-center cursor-pointer select-none overflow-hidden max-lg:bg-black lg:bg-transparent border-none outline-none"
               >
                 {selectedEpisode.videoUrl ? (
                   <>
@@ -532,10 +619,10 @@ export default function SeriesSection() {
                           setShowControls(true);
                         }
                       }}
-                      className={`absolute inset-0 h-full w-full ${isFullscreen ? "object-contain" : "object-cover"} pointer-events-none border-none outline-none bg-black`}
+                      className={`absolute inset-0 h-full w-full ${isFullscreen ? "object-contain bg-black" : "max-lg:object-contain max-lg:w-full lg:object-cover"} object-center pointer-events-none border-none outline-none`}
                     />
 
-                    {/* Top Controls: Mute/Unmute & Close Video */}
+                    {/* Top Controls: Mute/Unmute & Close/Exit Fullscreen Video */}
                     <div
                       className={`absolute top-4 inset-x-4 z-20 flex items-center justify-between transition-opacity duration-300 ${
                         showControls ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
@@ -570,21 +657,42 @@ export default function SeriesSection() {
                         )}
                       </button>
 
-                      {/* Close Video button */}
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleCloseVideo();
-                        }}
-                        aria-label="Close video player"
-                        className="flex items-center gap-1.5 rounded-full bg-black/70 px-4 py-2 font-geist text-xs font-semibold text-white backdrop-blur-md transition-all hover:bg-black cursor-pointer"
-                      >
-                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                        Close Video
-                      </button>
+                      {/* Top Right Action Buttons: Exit Fullscreen + Close Video */}
+                      <div className="flex items-center gap-2">
+                        {isFullscreen && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              exitAllFullscreen();
+                              resetControlsTimeout();
+                            }}
+                            aria-label="Exit Fullscreen"
+                            className="flex items-center gap-1.5 rounded-full bg-[#159A99] px-3.5 py-2 font-geist text-xs font-bold text-white shadow-lg backdrop-blur-md transition-all hover:bg-[#128281] active:scale-95 cursor-pointer"
+                          >
+                            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M9 9L4 4m0 5h5V4m6 6l5-5m-5 5V4h5M9 15l-5 5m5-5H4v5m11-5l5 5m-5-5h5v5" />
+                            </svg>
+                            Exit Fullscreen
+                          </button>
+                        )}
+
+                        {/* Close Video button */}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleCloseVideo();
+                          }}
+                          aria-label="Close video player"
+                          className="flex items-center gap-1.5 rounded-full bg-black/70 px-4 py-2 font-geist text-xs font-semibold text-white backdrop-blur-md transition-all hover:bg-black cursor-pointer"
+                        >
+                          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                          Close Video
+                        </button>
+                      </div>
                     </div>
 
                     {/* Center Play / Pause Button Overlay */}
@@ -709,7 +817,9 @@ export default function SeriesSection() {
                               toggleFullscreen();
                               resetControlsTimeout();
                             }}
-                            className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-all active:scale-95 cursor-pointer ml-1"
+                            className={`flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full ${
+                              isFullscreen ? "bg-[#159A99] text-white" : "bg-white/10 text-white hover:bg-white/20"
+                            } transition-all active:scale-95 cursor-pointer ml-1`}
                             aria-label={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
                             title={isFullscreen ? "Exit Fullscreen" : "Full Screen"}
                           >
@@ -737,7 +847,7 @@ export default function SeriesSection() {
             ) : (
               <div
                 onClick={handlePlay}
-                className="relative h-full w-full flex flex-col justify-between p-6 sm:p-8 md:p-10 overflow-hidden cursor-pointer group"
+                className="relative h-full w-full max-lg:h-[500px] max-lg:sm:h-[520px] max-lg:min-h-[500px] max-lg:sm:min-h-[520px] lg:h-full lg:aspect-video flex flex-col justify-between p-6 sm:p-8 lg:p-7 xl:p-8 2xl:p-10 overflow-hidden cursor-pointer group"
               >
                 {/* Speaker Pillar SVG Thumbnail Image */}
                 <img
@@ -754,33 +864,33 @@ export default function SeriesSection() {
                   <img
                     src={votaLogo}
                     alt="VOTA - Voices of Talent Acquisition"
-                    className="h-[42px] sm:h-[60px] md:h-[80px] lg:h-[88px] xl:h-[96px] w-auto max-w-[170px] sm:max-w-[220px] md:max-w-[260px] lg:max-w-[280px] rounded-[12px] sm:rounded-[16px] md:rounded-[22px] object-contain shadow-md"
+                    className="h-[42px] sm:h-[60px] md:h-[80px] lg:h-[84px] xl:h-[96px] w-auto max-w-[170px] sm:max-w-[220px] md:max-w-[260px] lg:max-w-[280px] rounded-[12px] sm:rounded-[16px] md:rounded-[22px] object-contain shadow-md"
                   />
                 </div>
 
                 {/* Bottom-Left: Speaker Details & Play Button */}
                 <div className="relative z-10 max-w-full sm:max-w-[70%] md:max-w-[65%] pb-2">
-                  <h3 className="font-geist text-[24px] sm:text-[28px] md:text-[32px] lg:text-[36px] font-bold leading-tight text-white drop-shadow-md">
+                  <h3 className="font-geist text-[26px] sm:text-[30px] md:text-[34px] lg:text-[36px] font-bold leading-tight text-white drop-shadow-md">
                     {selectedEpisode.name}
                   </h3>
 
-                  <p className="mt-1.5 sm:mt-2 font-geist text-[13px] sm:text-[14px] md:text-[15px] lg:text-[16px] font-normal leading-snug text-white/90 drop-shadow">
+                  <p className="mt-2 font-geist text-[14px] sm:text-[15px] md:text-[16px] font-normal leading-snug text-white/90 drop-shadow">
                     {selectedEpisode.role},<br />
                     {selectedEpisode.company}
                   </p>
 
-                  <div className="mt-5 sm:mt-7 lg:mt-9 flex items-center gap-4 sm:gap-5">
+                  <div className="mt-7 sm:mt-9 flex items-center gap-4 sm:gap-5">
                     <button
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
                         handlePlay();
                       }}
-                      className="flex h-[50px] w-[50px] sm:h-[56px] sm:w-[56px] lg:h-[60px] lg:w-[60px] items-center justify-center rounded-full bg-white shadow-xl shadow-[#159a99]/40 transition-transform duration-300 hover:scale-110 active:scale-95 group/btn cursor-pointer"
+                      className="flex h-[56px] w-[56px] sm:h-[60px] sm:w-[60px] items-center justify-center rounded-full bg-white shadow-xl shadow-[#159a99]/40 transition-transform duration-300 hover:scale-110 active:scale-95 group/btn cursor-pointer"
                       aria-label={`Play episode video of ${selectedEpisode.name}`}
                     >
                       <svg
-                        className="ml-1 h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7 text-[#159a99] transition-transform duration-300 group-hover/btn:scale-110"
+                        className="ml-1 h-6 w-6 sm:h-7 sm:w-7 text-[#159a99] transition-transform duration-300 group-hover/btn:scale-110"
                         fill="currentColor"
                         viewBox="0 0 24 24"
                         aria-hidden="true"
@@ -789,7 +899,7 @@ export default function SeriesSection() {
                       </svg>
                     </button>
 
-                    <div className="flex items-center gap-3 font-geist text-[14px] sm:text-[15px] lg:text-[16px] font-medium text-white drop-shadow">
+                    <div className="flex items-center gap-3 font-geist text-[15px] sm:text-[16px] font-medium text-white drop-shadow">
                       <span>Watch Video</span>
                       <span className="text-white/50">|</span>
                       <span>{selectedEpisode.duration}</span>
@@ -800,9 +910,9 @@ export default function SeriesSection() {
             )}
           </article>
 
-          {/* Desktop Playlist: 14 Episodes with Custom Black Scrollbar */}
+          {/* Desktop Playlist: 14 Episodes (3 visible at 100% scale, 4 visible when zoomed out / 2xl) with Custom Black Scrollbar */}
           <div className="hidden lg:block relative h-full min-h-0">
-            <div className="absolute inset-0 flex flex-col gap-2.5 xl:gap-3 overflow-y-auto pr-1.5 xl:pr-2.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-black [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar]:w-1.5">
+            <div className="absolute inset-0 flex flex-col gap-2.5 xl:gap-3 2xl:gap-3 overflow-y-auto pr-1.5 xl:pr-2 2xl:pr-2.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-black [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar]:w-1.5 xl:[&::-webkit-scrollbar]:w-2">
               {seriesEpisodesData.map((episode, index) => {
                 const isSelected = selectedEpisode.id === episode.id;
 
@@ -810,14 +920,14 @@ export default function SeriesSection() {
                   <article
                     key={`desktop-${episode.id}-${index}`}
                     onClick={() => handleEpisodeSelect(episode)}
-                    className={`group flex cursor-pointer items-center gap-2.5 xl:gap-3 rounded-[16px] xl:rounded-[20px] p-2 xl:p-2.5 shrink-0 h-[calc((100%-30px)/4)] xl:h-[calc((100%-36px)/4)] transition-all duration-300 ${isSelected
+                    className={`group flex cursor-pointer items-center gap-2.5 xl:gap-3 2xl:gap-3.5 rounded-[16px] xl:rounded-[20px] 2xl:rounded-[22px] p-2.5 xl:p-3 2xl:p-3 shrink-0 h-[calc((100%-20px)/3)] xl:h-[calc((100%-24px)/3)] 2xl:h-[calc((100%-36px)/4)] transition-all duration-300 ${isSelected
                       ? "border-[1.5px] border-[#159A99] bg-white shadow-md shadow-[#159A99]/10"
                       : "border border-transparent bg-[#F2F4F7]/70 hover:border-[#D0D7DE] hover:bg-white hover:shadow-sm"
                       }`}
                   >
-                    {/* Thumbnail styled like the selected widget (Figma: width 239, height 150.32, radius 21.63px) */}
+                    {/* Compact thumbnail maintaining perfect native SVG aspect ratio */}
                     <div
-                      className="relative h-full aspect-[239/150.32] shrink-0 overflow-hidden rounded-[12px] xl:rounded-[16px] shadow-sm"
+                      className="relative w-[90px] min-[1150px]:w-[100px] xl:w-[112px] 2xl:w-[125px] aspect-[239/150.32] shrink-0 overflow-hidden rounded-[10px] xl:rounded-[13px] 2xl:rounded-[16px] shadow-sm"
                       style={{
                         background: "radial-gradient(71.47% 191.86% at 92.83% 52.77%, rgba(21, 154, 153, 0) 0%, #159A99 100%), #FFFFFF",
                       }}
@@ -826,7 +936,7 @@ export default function SeriesSection() {
                       <img
                         src={episode.thumbnail || episode.bannerImage}
                         alt={episode.name}
-                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="absolute inset-0 h-full w-full object-cover object-right transition-transform duration-500 group-hover:scale-105"
                       />
 
                       {/* Gradient shadow */}
@@ -836,19 +946,19 @@ export default function SeriesSection() {
                       <img
                         src={votaLogo}
                         alt="VOTA"
-                        className="absolute top-1.5 left-1.5 xl:top-2 xl:left-2 h-[12px] xl:h-[15px] w-auto max-w-[45px] xl:max-w-[50px] rounded-[4px] xl:rounded-[5px] object-contain z-10 shadow-sm"
+                        className="absolute top-1.5 left-1.5 xl:top-2 xl:left-2 h-[11px] xl:h-[13px] 2xl:h-[15px] w-auto max-w-[38px] xl:max-w-[46px] 2xl:max-w-[52px] rounded-[3px] object-contain z-10 shadow-sm"
                       />
 
                       {/* Duration */}
-                      <span className="absolute bottom-1.5 right-1.5 xl:bottom-2 xl:right-2 z-10 rounded-md bg-black/80 px-1.5 xl:px-2 py-0.5 font-geist text-[8.5px] xl:text-[9.5px] font-medium text-white">
+                      <span className="absolute bottom-1.5 right-1.5 xl:bottom-2 xl:right-2 z-10 rounded-md bg-black/80 px-1.5 xl:px-2 py-0.5 font-geist text-[8px] xl:text-[8.5px] 2xl:text-[9.5px] font-medium text-white shadow-sm">
                         {episode.duration}
                       </span>
                     </div>
 
-                    {/* Info */}
+                    {/* Info - Fully displayed text without any truncation or ellipsis */}
                     <div className="min-w-0 flex-1 flex flex-col justify-center">
                       <span
-                        className={`inline-block w-fit rounded-full border px-2 py-0.5 font-geist text-[7.5px] xl:text-[8px] font-bold uppercase tracking-wider transition-colors ${isSelected
+                        className={`inline-block w-fit rounded-full border px-2 xl:px-2.5 py-0.5 font-geist text-[7.5px] min-[1150px]:text-[8px] xl:text-[8.5px] 2xl:text-[9px] font-bold uppercase tracking-wider transition-colors ${isSelected
                           ? "border-[#159A99] bg-[#159A99] text-white"
                           : "border-gray-200 bg-white text-black group-hover:border-gray-300"
                           }`}
@@ -857,14 +967,29 @@ export default function SeriesSection() {
                       </span>
 
                       <p
-                        className={`mt-0.5 xl:mt-1 font-geist text-[12px] xl:text-[13px] 2xl:text-[14px] font-bold leading-tight transition-colors line-clamp-1 ${isSelected ? "text-[#159A99]" : "text-[#222] group-hover:text-[#159A99]"
+                        className={`mt-1 font-geist text-[12px] min-[1150px]:text-[13px] xl:text-[14px] 2xl:text-[15px] font-bold leading-tight whitespace-nowrap transition-colors ${isSelected ? "text-[#159A99]" : "text-[#222] group-hover:text-[#159A99]"
                           }`}
                       >
                         {episode.name}
                       </p>
 
-                      <p className="mt-0.5 line-clamp-2 font-geist text-[10px] xl:text-[11px] 2xl:text-[11.5px] font-normal leading-[1.25] xl:leading-[1.3] text-[#666]">
-                        {episode.role} · {episode.company}
+                      <div
+                        className="mt-0.5 font-geist text-[9px] min-[1150px]:text-[9.5px] xl:text-[10px] 2xl:text-[10.5px] font-medium leading-[1.25] text-[#555]"
+                      >
+                        {episode.role.includes(",") ? (
+                          <>
+                            <span className="block">{episode.role.split(",")[0].trim()},</span>
+                            <span className="block">{episode.role.split(",").slice(1).join(",").trim()}</span>
+                          </>
+                        ) : (
+                          <span className="block">{episode.role}</span>
+                        )}
+                      </div>
+
+                      <p
+                        className="mt-0.5 font-geist text-[8.5px] min-[1150px]:text-[9px] xl:text-[9.5px] 2xl:text-[10px] font-normal leading-tight text-[#777] whitespace-nowrap"
+                      >
+                        {episode.company}
                       </p>
                     </div>
                   </article>
@@ -882,9 +1007,9 @@ export default function SeriesSection() {
                 <article
                   key={`responsive-${episode.id}-${index}`}
                   onClick={() => handleEpisodeSelect(episode)}
-                  className={`group w-[220px] shrink-0 snap-start cursor-pointer rounded-[22px] p-3 transition-all duration-300 ${isSelected
-                    ? "border-[1.5px] border-[#159A99] bg-white shadow-md"
-                    : "border border-transparent bg-[#F2F4F7]/80 hover:bg-white"
+                  className={`group w-[225px] sm:w-[245px] shrink-0 snap-start cursor-pointer rounded-[22px] p-3 transition-all duration-300 ${isSelected
+                    ? "border-[1.5px] border-[#159A99] bg-white shadow-md shadow-[#159A99]/10"
+                    : "border border-transparent bg-[#F2F4F7]/80 hover:bg-white hover:shadow-sm"
                     }`}
                 >
                   {/* Mobile Thumbnail styled like the selected widget */}
@@ -894,11 +1019,11 @@ export default function SeriesSection() {
                       background: "radial-gradient(71.47% 191.86% at 92.83% 52.77%, rgba(21, 154, 153, 0) 0%, #159A99 100%), #FFFFFF",
                     }}
                   >
-                    {/* Speaker photo */}
+                    {/* Speaker photo / thumbnail */}
                     <img
-                      src={episode.bannerImage}
+                      src={episode.thumbnail || episode.bannerImage}
                       alt={episode.name}
-                      className="absolute right-0 bottom-0 h-full w-auto max-w-none object-contain object-right-bottom transition-transform duration-500 group-hover:scale-105"
+                      className="absolute inset-0 h-full w-full object-cover object-right transition-transform duration-500 group-hover:scale-105"
                     />
 
                     {/* Gradient shadow */}
@@ -928,14 +1053,32 @@ export default function SeriesSection() {
                     </span>
 
                     <p
-                      className={`mt-1.5 font-geist text-[13.5px] font-bold leading-tight line-clamp-1 ${isSelected ? "text-[#159A99]" : "text-[#222]"
+                      className={`mt-1.5 font-geist text-[13px] sm:text-[14px] font-bold leading-tight line-clamp-1 ${isSelected ? "text-[#159A99]" : "text-[#222]"
                         }`}
+                      title={episode.name}
                     >
                       {episode.name}
                     </p>
 
-                    <p className="mt-1 line-clamp-2 font-geist text-[11.5px] font-normal leading-[1.35] text-[#666]">
-                      {episode.role} · {episode.company}
+                    <div
+                      className="mt-1 font-geist text-[10.5px] sm:text-[11px] font-medium leading-[1.3] text-[#555]"
+                      title={episode.role}
+                    >
+                      {episode.role.includes(",") ? (
+                        <>
+                          <span className="block truncate">{episode.role.split(",")[0].trim()},</span>
+                          <span className="block truncate">{episode.role.split(",").slice(1).join(",").trim()}</span>
+                        </>
+                      ) : (
+                        <span className="block truncate">{episode.role}</span>
+                      )}
+                    </div>
+
+                    <p
+                      className="mt-0.5 font-geist text-[9.5px] sm:text-[10px] font-normal leading-tight text-[#888] truncate"
+                      title={episode.company}
+                    >
+                      {episode.company}
                     </p>
                   </div>
                 </article>

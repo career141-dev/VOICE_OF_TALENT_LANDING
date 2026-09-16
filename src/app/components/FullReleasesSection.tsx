@@ -76,7 +76,7 @@ const episodes: Episode[] = [
     id: 5,
     number: "05",
     guest: "MS. SURANI AMARASINGHE",
-    role: "Director, Country People Partnering, Sri Lanka",
+    role: "Director, Country People Partnering, Sri\u00A0Lanka",
     company: "LSEG (London Stock Exchange Group)",
     videoUrl: "https://media.career141.com/new%20reels/Ms.%20Surani/Ms.%20Surani.mp4",
     reels: [
@@ -89,7 +89,7 @@ const episodes: Episode[] = [
     id: 6,
     number: "06",
     guest: "MR. ARSHAQ FARALLY",
-    role: "Chief People Officer, Sri Lanka",
+    role: "Chief People Officer, Sri\u00A0Lanka",
     company: "Daraz",
     videoUrl: "https://media.career141.com/new%20reels/Mr.%20Arshaq/Mr.%20Arshaq.mp4",
     reels: [
@@ -156,7 +156,7 @@ const episodes: Episode[] = [
     number: "11",
     guest: "MS. CHAMINDRA PERERA",
     role: "Human Resources Director",
-    company: "GRI Sri Lanka",
+    company: "GRI Sri\u00A0Lanka",
     videoUrl: "https://media.career141.com/new%20reels/Ms.%20Chamindra/Ms.%20Chamindra.mp4",
     reels: [
       "https://media.career141.com/new%20reels/Ms.%20Chamindra/1%20Reel%20Ms.%20Chamindra.mp4",
@@ -336,62 +336,142 @@ export default function FullReleasesSection() {
     }
   };
 
+  const checkIsFullscreen = () => {
+    if (typeof document === "undefined") return false;
+    const doc = document as unknown as {
+      fullscreenElement?: Element;
+      webkitFullscreenElement?: Element;
+      webkitCurrentFullScreenElement?: Element;
+      webkitIsFullScreen?: boolean;
+      mozFullScreenElement?: Element;
+      msFullscreenElement?: Element;
+    };
+    const video = videoRef.current as (HTMLVideoElement & {
+      webkitDisplayingFullscreen?: boolean;
+    }) | null;
+
+    return Boolean(
+      doc.fullscreenElement ||
+      doc.webkitFullscreenElement ||
+      doc.webkitCurrentFullScreenElement ||
+      doc.webkitIsFullScreen ||
+      doc.mozFullScreenElement ||
+      doc.msFullscreenElement ||
+      video?.webkitDisplayingFullscreen
+    );
+  };
+
+  const exitAllFullscreen = () => {
+    if (typeof document === "undefined") return;
+    const doc = document as unknown as {
+      exitFullscreen?: () => Promise<void>;
+      webkitExitFullscreen?: () => void;
+      webkitCancelFullScreen?: () => void;
+      mozCancelFullScreen?: () => void;
+      msExitFullscreen?: () => void;
+    };
+    const video = videoRef.current as (HTMLVideoElement & {
+      webkitExitFullscreen?: () => void;
+      webkitExitFullScreen?: () => void;
+      webkitDisplayingFullscreen?: boolean;
+    }) | null;
+
+    try {
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      } else if (doc.webkitExitFullscreen) {
+        doc.webkitExitFullscreen();
+      } else if (doc.webkitCancelFullScreen) {
+        doc.webkitCancelFullScreen();
+      } else if (doc.mozCancelFullScreen) {
+        doc.mozCancelFullScreen();
+      } else if (doc.msExitFullscreen) {
+        doc.msExitFullscreen();
+      }
+    } catch {
+      // ignore
+    }
+
+    if (video) {
+      try {
+        if (typeof video.webkitExitFullscreen === "function") {
+          video.webkitExitFullscreen();
+        } else if (typeof video.webkitExitFullScreen === "function") {
+          video.webkitExitFullScreen();
+        }
+      } catch {
+        // ignore
+      }
+    }
+    setIsFullscreen(false);
+  };
+
   const toggleFullscreen = () => {
-    const container = playerContainerRef.current;
+    const container = playerContainerRef.current as (HTMLDivElement & {
+      requestFullscreen?: () => Promise<void>;
+      webkitRequestFullscreen?: () => void;
+      webkitRequestFullScreen?: () => void;
+      mozRequestFullScreen?: () => void;
+      msRequestFullscreen?: () => void;
+    }) | null;
+
     const video = videoRef.current as (HTMLVideoElement & {
       webkitSupportsFullscreen?: boolean;
       webkitDisplayingFullscreen?: boolean;
       webkitEnterFullscreen?: () => void;
+      webkitEnterFullScreen?: () => void;
       webkitExitFullscreen?: () => void;
+      webkitExitFullScreen?: () => void;
     }) | null;
 
     if (!container && !video) return;
 
-    const isDocFullscreen = Boolean(
-      document.fullscreenElement ||
-      (document as unknown as { webkitFullscreenElement?: Element }).webkitFullscreenElement ||
-      video?.webkitDisplayingFullscreen
-    );
+    const isCurrentlyFullscreen = checkIsFullscreen();
 
-    if (!isDocFullscreen) {
+    if (!isCurrentlyFullscreen) {
       if (container && container.requestFullscreen) {
         container.requestFullscreen().catch(() => {
           if (video && typeof video.webkitEnterFullscreen === "function") {
             video.webkitEnterFullscreen();
+          } else if (video && typeof video.webkitEnterFullScreen === "function") {
+            video.webkitEnterFullScreen();
           }
         });
-      } else if (container && (container as unknown as { webkitRequestFullscreen?: () => void }).webkitRequestFullscreen) {
+      } else if (container && container.webkitRequestFullscreen) {
         try {
-          (container as unknown as { webkitRequestFullscreen: () => void }).webkitRequestFullscreen();
+          container.webkitRequestFullscreen();
         } catch {
           if (video && typeof video.webkitEnterFullscreen === "function") {
             video.webkitEnterFullscreen();
           }
         }
+      } else if (container && container.webkitRequestFullScreen) {
+        try {
+          container.webkitRequestFullScreen();
+        } catch {
+          if (video && typeof video.webkitEnterFullScreen === "function") {
+            video.webkitEnterFullScreen();
+          }
+        }
       } else if (video && typeof video.webkitEnterFullscreen === "function") {
         video.webkitEnterFullscreen();
+      } else if (video && typeof video.webkitEnterFullScreen === "function") {
+        video.webkitEnterFullScreen();
       }
     } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen().catch(() => { });
-      } else if ((document as unknown as { webkitExitFullscreen?: () => void }).webkitExitFullscreen) {
-        (document as unknown as { webkitExitFullscreen: () => void }).webkitExitFullscreen();
-      } else if (video && typeof video.webkitExitFullscreen === "function") {
-        video.webkitExitFullscreen();
-      }
+      exitAllFullscreen();
     }
   };
 
   useEffect(() => {
     const handleFullscreenChange = () => {
-      const video = videoRef.current as (HTMLVideoElement & { webkitDisplayingFullscreen?: boolean }) | null;
-      setIsFullscreen(
-        Boolean(
-          document.fullscreenElement ||
-          (document as unknown as { webkitFullscreenElement?: Element }).webkitFullscreenElement ||
-          video?.webkitDisplayingFullscreen
-        )
-      );
+      setIsFullscreen(checkIsFullscreen());
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && checkIsFullscreen()) {
+        exitAllFullscreen();
+      }
     };
 
     const handleWebkitBegin = () => setIsFullscreen(true);
@@ -399,6 +479,9 @@ export default function FullReleasesSection() {
 
     document.addEventListener("fullscreenchange", handleFullscreenChange);
     document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+    document.addEventListener("mozfullscreenchange", handleFullscreenChange);
+    document.addEventListener("MSFullscreenChange", handleFullscreenChange);
+    window.addEventListener("keydown", handleKeyDown);
 
     const videoEl = videoRef.current;
     if (videoEl) {
@@ -409,6 +492,9 @@ export default function FullReleasesSection() {
     return () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
       document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
+      document.removeEventListener("mozfullscreenchange", handleFullscreenChange);
+      document.removeEventListener("MSFullscreenChange", handleFullscreenChange);
+      window.removeEventListener("keydown", handleKeyDown);
       if (videoEl) {
         videoEl.removeEventListener("webkitbeginfullscreen", handleWebkitBegin);
         videoEl.removeEventListener("webkitendfullscreen", handleWebkitEnd);
@@ -634,25 +720,46 @@ export default function FullReleasesSection() {
                     </p>
 
                     {/* Guest & Role Info (Right-Aligned with plenty of room) */}
-                    <div className="relative z-10 ml-auto flex min-w-0 max-w-[66%] sm:max-w-[68%] min-[1100px]:max-w-[72%] flex-col justify-center text-right">
+                    <div className="relative z-10 ml-auto flex min-w-0 max-w-[82%] sm:max-w-[85%] min-[1100px]:max-w-[86%] xl:max-w-[88%] flex-col justify-center text-right">
                       <p
                         className={[
-                          "font-geist text-[13px] sm:text-[15px] md:text-[16.5px] lg:text-[17.5px] font-bold uppercase tracking-tight sm:tracking-wide leading-tight sm:leading-snug transition-colors duration-300 line-clamp-2 sm:line-clamp-1",
+                          "font-geist text-[13px] sm:text-[14.5px] md:text-[15.5px] lg:text-[16px] xl:text-[16.5px] font-bold uppercase tracking-tight sm:tracking-wide leading-tight sm:leading-snug transition-colors duration-300 truncate",
                           isSelected ? "text-[#159A99]" : "text-[#202020] group-hover:text-[#159A99]",
                         ].join(" ")}
+                        title={episode.guest}
                       >
                         {episode.guest}
                       </p>
 
+                      <div
+                        className={[
+                          "mt-0.5 sm:mt-1 font-geist text-[10px] sm:text-[11px] md:text-[11.5px] lg:text-[12px] xl:text-[12.5px] font-medium leading-[1.25] sm:leading-[1.3] transition-colors duration-300",
+                          isSelected
+                            ? "text-[#202020]"
+                            : "text-[#555555] group-hover:text-[#202020]",
+                        ].join(" ")}
+                        title={episode.role}
+                      >
+                        {episode.role.includes(",") ? (
+                          <>
+                            <span className="block truncate">{episode.role.split(",")[0].trim()},</span>
+                            <span className="block truncate">{episode.role.split(",").slice(1).join(",").trim()}</span>
+                          </>
+                        ) : (
+                          <span className="block truncate">{episode.role}</span>
+                        )}
+                      </div>
+
                       <p
                         className={[
-                          "mt-1 sm:mt-1.5 font-geist text-[11px] sm:text-[13px] md:text-[13.5px] lg:text-[14.5px] leading-[1.35] sm:leading-[1.4] transition-colors duration-300 line-clamp-3 sm:line-clamp-2",
+                          "mt-0.5 font-geist text-[9.5px] sm:text-[10px] md:text-[10.5px] lg:text-[11px] xl:text-[11.5px] font-normal leading-tight transition-colors duration-300 truncate",
                           isSelected
-                            ? "font-medium text-[#202020]"
-                            : "font-normal text-[#71767B] group-hover:text-[#333333]",
+                            ? "text-[#666666]"
+                            : "text-[#7A828A] group-hover:text-[#444444]",
                         ].join(" ")}
+                        title={episode.company}
                       >
-                        {episode.role} · {episode.company}
+                        {episode.company}
                       </p>
                     </div>
                   </button>
@@ -761,22 +868,44 @@ export default function FullReleasesSection() {
                               )}
                             </button>
 
-                            {/* Close Video button */}
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setIsPlaying(false);
-                                setIsPaused(false);
-                              }}
-                              aria-label="Close video player"
-                              className="flex items-center gap-1.5 rounded-full bg-black/70 px-4 py-2 font-geist text-xs font-semibold text-white backdrop-blur-md transition-all hover:bg-black cursor-pointer"
-                            >
-                              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
-                              </svg>
-                              Close Video
-                            </button>
+                            {/* Top Right Action Buttons: Exit Fullscreen + Close Video */}
+                            <div className="flex items-center gap-2">
+                              {isFullscreen && (
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    exitAllFullscreen();
+                                    resetControlsTimeout();
+                                  }}
+                                  aria-label="Exit Fullscreen"
+                                  className="flex items-center gap-1.5 rounded-full bg-[#159A99] px-3.5 py-2 font-geist text-xs font-bold text-white shadow-lg backdrop-blur-md transition-all hover:bg-[#128281] active:scale-95 cursor-pointer"
+                                >
+                                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M9 9L4 4m0 5h5V4m6 6l5-5m-5 5V4h5M9 15l-5 5m5-5H4v5m11-5l5 5m-5-5h5v5" />
+                                  </svg>
+                                  Exit Fullscreen
+                                </button>
+                              )}
+
+                              {/* Close Video button */}
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  exitAllFullscreen();
+                                  setIsPlaying(false);
+                                  setIsPaused(false);
+                                }}
+                                aria-label="Close video player"
+                                className="flex items-center gap-1.5 rounded-full bg-black/70 px-4 py-2 font-geist text-xs font-semibold text-white backdrop-blur-md transition-all hover:bg-black cursor-pointer"
+                              >
+                                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                                Close Video
+                              </button>
+                            </div>
                           </div>
 
                           {/* Center Pause/Play Indicator Overlay */}
@@ -901,7 +1030,9 @@ export default function FullReleasesSection() {
                                     toggleFullscreen();
                                     resetControlsTimeout();
                                   }}
-                                  className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-all active:scale-95 cursor-pointer ml-1"
+                                  className={`flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full ${
+                                    isFullscreen ? "bg-[#159A99] text-white" : "bg-white/10 text-white hover:bg-white/20"
+                                  } transition-all active:scale-95 cursor-pointer ml-1`}
                                   aria-label={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
                                   title={isFullscreen ? "Exit Fullscreen" : "Full Screen"}
                                 >

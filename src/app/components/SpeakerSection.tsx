@@ -74,7 +74,7 @@ const voicesData: VoiceItem[] = [
   {
     id: 5,
     name: 'Ms. Surani Amarasinghe',
-    role: 'Director, Country People Partnering, Sri Lanka',
+    role: 'Director, Country People Partnering, Sri\u00A0Lanka',
     company: 'LSEG (London Stock Exchange Group)',
     bulletPoints: [
       'How do you define Talent Acquisition in today’s context?',
@@ -86,7 +86,7 @@ const voicesData: VoiceItem[] = [
   {
     id: 6,
     name: 'Mr. Arshaq Farally',
-    role: 'Chief People Officer, Sri Lanka',
+    role: 'Chief People Officer, Sri\u00A0Lanka',
     company: 'Daraz',
     bulletPoints: [
       'How does Talent Acquisition contribute to building and strengthening organizational culture?',
@@ -147,7 +147,7 @@ const voicesData: VoiceItem[] = [
     id: 11,
     name: 'Ms. Chamindra Perera',
     role: 'Human Resources Director',
-    company: 'GRI Sri Lanka',
+    company: 'GRI Sri\u00A0Lanka',
     bulletPoints: [
       'How do you see Talent Acquisition contributing to overall business success?',
       'What advice would you offer to someone considering a career in Talent Acquisition?',
