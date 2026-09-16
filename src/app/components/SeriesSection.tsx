@@ -509,6 +509,23 @@ export default function SeriesSection() {
     return () => window.removeEventListener("vota-select-episode", handleSelectEvent);
   }, []);
 
+  // Automatically scroll playlist to active episode whenever selectedEpisode changes
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const activeDesktop = document.getElementById(`desktop-playlist-item-${selectedEpisode.id}`);
+      if (activeDesktop) {
+        activeDesktop.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+
+      const activeMobile = document.getElementById(`mobile-playlist-item-${selectedEpisode.id}`);
+      if (activeMobile) {
+        activeMobile.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      }
+    }, 120);
+
+    return () => clearTimeout(timer);
+  }, [selectedEpisode.id]);
+
   const handleEpisodeSelect = (episode: SeriesEpisode) => {
     isManuallyClosedRef.current = false;
     isManuallyPausedRef.current = false;
@@ -918,10 +935,11 @@ export default function SeriesSection() {
 
                 return (
                   <article
+                    id={`desktop-playlist-item-${episode.id}`}
                     key={`desktop-${episode.id}-${index}`}
                     onClick={() => handleEpisodeSelect(episode)}
                     className={`group flex cursor-pointer items-center gap-2.5 xl:gap-3 2xl:gap-3.5 rounded-[16px] xl:rounded-[20px] 2xl:rounded-[22px] p-2.5 xl:p-3 2xl:p-3 shrink-0 h-[calc((100%-20px)/3)] xl:h-[calc((100%-24px)/3)] 2xl:h-[calc((100%-36px)/4)] transition-all duration-300 ${isSelected
-                      ? "border-[1.5px] border-[#159A99] bg-white shadow-md shadow-[#159A99]/10"
+                      ? "border-[2px] border-[#159A99] bg-white shadow-md shadow-[#159A99]/15 ring-2 ring-[#159A99]/20"
                       : "border border-transparent bg-[#F2F4F7]/70 hover:border-[#D0D7DE] hover:bg-white hover:shadow-sm"
                       }`}
                   >
@@ -949,21 +967,48 @@ export default function SeriesSection() {
                         className="absolute top-1.5 left-1.5 xl:top-2 xl:left-2 h-[11px] xl:h-[13px] 2xl:h-[15px] w-auto max-w-[38px] xl:max-w-[46px] 2xl:max-w-[52px] rounded-[3px] object-contain z-10 shadow-sm"
                       />
 
-                      {/* Duration */}
+                      {/* Duration or Playing Badge on Thumbnail */}
                       <span className="absolute bottom-1.5 right-1.5 xl:bottom-2 xl:right-2 z-10 rounded-md bg-black/80 px-1.5 xl:px-2 py-0.5 font-geist text-[8px] xl:text-[8.5px] 2xl:text-[9.5px] font-medium text-white shadow-sm">
                         {episode.duration}
                       </span>
+
+                      {/* Now Playing live overlay on thumbnail */}
+                      {isSelected && isPlaying && (
+                        <div className="absolute inset-0 bg-[#159A99]/25 backdrop-blur-[0.5px] flex items-center justify-center z-10 pointer-events-none">
+                          <div className="flex items-center gap-1 bg-[#159A99]/90 px-2 py-0.5 rounded-full shadow-md">
+                            <span className="flex items-end gap-[1.5px] h-2 pb-0.5">
+                              <span className="w-[1.5px] h-full bg-white rounded-full animate-bounce [animation-delay:-0.3s]" />
+                              <span className="w-[1.5px] h-2/3 bg-white rounded-full animate-bounce [animation-delay:-0.15s]" />
+                              <span className="w-[1.5px] h-4/5 bg-white rounded-full animate-bounce" />
+                            </span>
+                            <span className="text-[7.5px] font-bold uppercase tracking-wider text-white">Playing</span>
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                     {/* Info - Fully displayed text without any truncation or ellipsis */}
                     <div className="min-w-0 flex-1 flex flex-col justify-center">
                       <span
-                        className={`inline-block w-fit rounded-full border px-2 xl:px-2.5 py-0.5 font-geist text-[7.5px] min-[1150px]:text-[8px] xl:text-[8.5px] 2xl:text-[9px] font-bold uppercase tracking-wider transition-colors ${isSelected
-                          ? "border-[#159A99] bg-[#159A99] text-white"
+                        className={`inline-flex items-center gap-1.5 w-fit rounded-full border px-2 xl:px-2.5 py-0.5 font-geist text-[7.5px] min-[1150px]:text-[8px] xl:text-[8.5px] 2xl:text-[9px] font-bold uppercase tracking-wider transition-all duration-300 ${isSelected
+                          ? "border-[#159A99] bg-[#159A99] text-white shadow-xs"
                           : "border-gray-200 bg-white text-black group-hover:border-gray-300"
                           }`}
                       >
-                        Explore VOTA
+                        {isSelected && isPlaying ? (
+                          <>
+                            <span className="flex items-end gap-[1.5px] h-2 pb-0.5">
+                              <span className="w-[1.5px] h-full bg-white rounded-full animate-bounce [animation-delay:-0.3s]" />
+                              <span className="w-[1.5px] h-2/3 bg-white rounded-full animate-bounce [animation-delay:-0.15s]" />
+                              <span className="w-[1.5px] h-4/5 bg-white rounded-full animate-bounce" />
+                            </span>
+                            Now Playing
+                          </>
+                        ) : isSelected ? (
+                          "Selected"
+                        ) : (
+                          "Explore VOTA"
+                        )}
                       </span>
 
                       <p
@@ -1005,10 +1050,11 @@ export default function SeriesSection() {
 
               return (
                 <article
+                  id={`mobile-playlist-item-${episode.id}`}
                   key={`responsive-${episode.id}-${index}`}
                   onClick={() => handleEpisodeSelect(episode)}
                   className={`group w-[225px] sm:w-[245px] shrink-0 snap-start cursor-pointer rounded-[22px] p-3 transition-all duration-300 ${isSelected
-                    ? "border-[1.5px] border-[#159A99] bg-white shadow-md shadow-[#159A99]/10"
+                    ? "border-[2px] border-[#159A99] bg-white shadow-md shadow-[#159A99]/15 ring-2 ring-[#159A99]/20"
                     : "border border-transparent bg-[#F2F4F7]/80 hover:bg-white hover:shadow-sm"
                     }`}
                 >
@@ -1040,16 +1086,43 @@ export default function SeriesSection() {
                     <span className="absolute bottom-2 right-2 z-10 rounded-md bg-black/80 px-1.5 py-0.5 font-geist text-[10px] font-medium text-white">
                       {episode.duration}
                     </span>
+
+                    {/* Now Playing live overlay on mobile thumbnail */}
+                    {isSelected && isPlaying && (
+                      <div className="absolute inset-0 bg-[#159A99]/25 backdrop-blur-[0.5px] flex items-center justify-center z-10 pointer-events-none">
+                        <div className="flex items-center gap-1.5 bg-[#159A99]/90 px-2.5 py-1 rounded-full shadow-md">
+                          <span className="flex items-end gap-[1.5px] h-2.5 pb-0.5">
+                            <span className="w-[1.5px] h-full bg-white rounded-full animate-bounce [animation-delay:-0.3s]" />
+                            <span className="w-[1.5px] h-2/3 bg-white rounded-full animate-bounce [animation-delay:-0.15s]" />
+                            <span className="w-[1.5px] h-4/5 bg-white rounded-full animate-bounce" />
+                          </span>
+                          <span className="text-[8.5px] font-bold uppercase tracking-wider text-white">Playing</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   <div className="pt-2.5">
                     <span
-                      className={`inline-block rounded-full border px-2.5 py-0.5 font-geist text-[8.5px] font-bold uppercase tracking-wider ${isSelected
-                        ? "border-[#159A99] bg-[#159A99] text-white"
+                      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 font-geist text-[8.5px] font-bold uppercase tracking-wider transition-all duration-300 ${isSelected
+                        ? "border-[#159A99] bg-[#159A99] text-white shadow-xs"
                         : "border-gray-200 bg-white text-black"
                         }`}
                     >
-                      Explore VOTA
+                      {isSelected && isPlaying ? (
+                        <>
+                          <span className="flex items-end gap-[1.5px] h-2 pb-0.5">
+                            <span className="w-[1.5px] h-full bg-white rounded-full animate-bounce [animation-delay:-0.3s]" />
+                            <span className="w-[1.5px] h-2/3 bg-white rounded-full animate-bounce [animation-delay:-0.15s]" />
+                            <span className="w-[1.5px] h-4/5 bg-white rounded-full animate-bounce" />
+                          </span>
+                          Now Playing
+                        </>
+                      ) : isSelected ? (
+                        "Selected"
+                      ) : (
+                        "Explore VOTA"
+                      )}
                     </span>
 
                     <p
