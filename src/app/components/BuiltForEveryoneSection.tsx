@@ -57,32 +57,28 @@ export default function BuiltForEveryoneSection() {
         {/* ── DESKTOP GRID (>= xl): 4-Column Interactive Hover View ── */}
         <div className="hidden grid w-full grid-cols-4 gap-5 xl:gap-6 xl:grid">
           {audiences.map((audience) => (
-            <article
-              key={`desktop-${audience.number}`}
-              className="
-                group
-                relative
-                h-[390px]
-                xl:h-[410px]
-                w-full
-                shrink-0
-                cursor-pointer
-                overflow-hidden
-                rounded-[28px]
-                border-[1.62px]
-                border-[#E0E0E0]
-                bg-[#F5F7FA]
-                p-7
-                xl:p-8
-                transition-all
-                duration-500
-                ease-out
-                hover:-translate-y-1.5
-                hover:border-[#159A99]
-                hover:bg-[#159A99]
-                hover:shadow-[0_20px_40px_-10px_rgba(21,154,153,0.35)]
-              "
-            >
+            <div key={`desktop-${audience.number}`} className="group relative h-[390px] xl:h-[410px] w-full shrink-0">
+              <article
+                className="
+                  absolute
+                  inset-0
+                  cursor-pointer
+                  overflow-hidden
+                  rounded-[28px]
+                  border-[1.62px]
+                  border-[#E0E0E0]
+                  bg-[#F5F7FA]
+                  p-7
+                  xl:p-8
+                  transition-all
+                  duration-500
+                  ease-out
+                  group-hover:-translate-y-1.5
+                  group-hover:border-[#159A99]
+                  group-hover:bg-[#159A99]
+                  group-hover:shadow-[0_20px_40px_-10px_rgba(21,154,153,0.35)]
+                "
+              >
               {/* Number exits upward on hover */}
               <span
                 className="
@@ -124,8 +120,8 @@ export default function BuiltForEveryoneSection() {
                   transition-all
                   duration-600
                   ease-[cubic-bezier(0.22,1,0.36,1)]
-                  group-hover:top-7
-                  xl:group-hover:top-8
+                  group-hover:top-1/2
+                  group-hover:-translate-y-1/2
                 "
               >
                 {/* Title */}
@@ -178,7 +174,8 @@ export default function BuiltForEveryoneSection() {
                   {audience.description}
                 </p>
               </div>
-            </article>
+              </article>
+            </div>
           ))}
         </div>
 
