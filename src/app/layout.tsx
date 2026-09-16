@@ -38,6 +38,10 @@ export default function RootLayout({
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
+        <link rel="preconnect" href="https://talentsuite.career141.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://talentsuite.career141.com" />
+        <link rel="preload" as="image" href="https://talentsuite.career141.com/images/herobottom.svg" type="image/svg+xml" fetchPriority="high" />
+        <link rel="preload" as="image" href="https://talentsuite.career141.com/images/mobile.png" fetchPriority="high" />
         {R2_MEDIA_URL ? (
           <>
             <link rel="preconnect" href={R2_MEDIA_URL} crossOrigin="anonymous" />

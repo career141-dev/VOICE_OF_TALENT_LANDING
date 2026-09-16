@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
@@ -216,7 +216,8 @@ export default function VoicesSlider() {
     setActiveMobileIndex(idx);
   };
 
-  /* ── Auto-advance on Mobile & Tablet (4s interval, pauses on touch) ── */
+  const isDraggingMobile = useRef(false);
+
   useEffect(() => {
     if (isPaused) return;
     const interval = setInterval(() => {
@@ -226,17 +227,22 @@ export default function VoicesSlider() {
     return () => clearInterval(interval);
   }, [isPaused, nextMobile]);
 
-  const handleWatchConversation = (e: React.MouseEvent, speakerId: number) => {
-    e.preventDefault();
+  const handleWatchConversation = (e?: React.MouseEvent | React.TouchEvent, speakerId?: number) => {
+    if (e && e.preventDefault) {
+      e.preventDefault();
+    }
+    const targetId = speakerId ?? voicesData[activeMobileIndex]?.id ?? 1;
     if (typeof window !== "undefined") {
       window.dispatchEvent(
         new CustomEvent("vota-select-episode", {
-          detail: { episodeId: speakerId },
+          detail: { episodeId: targetId },
         })
       );
       const episodesSection = document.getElementById("episodes");
       if (episodesSection) {
-        episodesSection.scrollIntoView({ behavior: "smooth" });
+        episodesSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        window.location.hash = "episodes";
       }
     }
   };
@@ -245,6 +251,7 @@ export default function VoicesSlider() {
   const renderDesktopCard = (item: VoiceItem, key: string) => (
     <div
       key={key}
+      onClick={(e) => handleWatchConversation(e, item.id)}
       style={{ transform: "translateZ(0)" }}
       className="
         group 
@@ -465,14 +472,25 @@ export default function VoicesSlider() {
                 drag="x"
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={0.2}
+                onDragStart={() => {
+                  isDraggingMobile.current = true;
+                }}
                 onDragEnd={(_, info) => {
                   if (info.offset.x < -40 || info.velocity.x < -200) {
                     nextMobile();
                   } else if (info.offset.x > 40 || info.velocity.x > 200) {
                     prevMobile();
                   }
+                  setTimeout(() => {
+                    isDraggingMobile.current = false;
+                  }, 120);
                 }}
-                className="w-full flex flex-col justify-between overflow-hidden bg-[#F5F7FA] rounded-[28px] border-[1.5px] border-[#E0E0E0] shadow-md cursor-grab active:cursor-grabbing"
+                onClick={(e) => {
+                  if (!isDraggingMobile.current) {
+                    handleWatchConversation(e, currentMobileSpeaker.id);
+                  }
+                }}
+                className="w-full flex flex-col justify-between overflow-hidden bg-[#F5F7FA] rounded-[28px] border-[1.5px] border-[#E0E0E0] shadow-md cursor-pointer active:cursor-grabbing"
               >
                 {/* Top Banner with Pillar SVG */}
                 <div

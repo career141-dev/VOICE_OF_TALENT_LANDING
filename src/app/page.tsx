@@ -168,8 +168,9 @@ export default function Home() {
             src={heroBottomMobileImage}
             alt="Powered by Career141 | 20 Years of Excellence"
             className="w-full h-auto object-contain opacity-100 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]"
-            loading="lazy"
+            loading="eager"
             decoding="async"
+            fetchPriority="high"
           />
         </div>
       </main>

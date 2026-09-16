@@ -184,7 +184,6 @@ export default function SeriesSection() {
   const [duration, setDuration] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [episodeDurations, setEpisodeDurations] = useState<Record<number, string>>({});
 
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -195,36 +194,6 @@ export default function SeriesSection() {
     return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
 
-  // Preload actual video durations for all playlist episodes
-  useEffect(() => {
-    const videoElements: HTMLVideoElement[] = [];
-
-    seriesEpisodesData.forEach((episode) => {
-      if (episode.videoUrl) {
-        const vid = document.createElement("video");
-        vid.preload = "metadata";
-        vid.src = episode.videoUrl;
-        vid.onloadedmetadata = () => {
-          if (vid.duration && !isNaN(vid.duration) && vid.duration > 0) {
-            setEpisodeDurations((prev) => ({
-              ...prev,
-              [episode.id]: formatTime(vid.duration),
-            }));
-          }
-        };
-        videoElements.push(vid);
-      }
-    });
-
-    return () => {
-      videoElements.forEach((vid) => {
-        vid.src = "";
-        vid.removeAttribute("src");
-        vid.load();
-      });
-    };
-  }, []);
-
   const resetControlsTimeout = () => {
     if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
     controlsTimeoutRef.current = setTimeout(() => {
@@ -234,14 +203,41 @@ export default function SeriesSection() {
     }, 3500);
   };
 
+  const safePlay = () => {
+    if (!videoRef.current) return;
+    const playPromise = videoRef.current.play();
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          setIsPaused(false);
+          resetControlsTimeout();
+        })
+        .catch(() => {
+          // If browser blocked unmuted autoplay, mute and retry automatically
+          if (videoRef.current) {
+            videoRef.current.muted = true;
+            setIsMuted(true);
+            videoRef.current
+              .play()
+              .then(() => {
+                setIsPaused(false);
+                resetControlsTimeout();
+              })
+              .catch(() => {
+                setIsPaused(true);
+                setShowControls(true);
+              });
+          }
+        });
+    }
+  };
+
   const togglePlayPause = () => {
     if (!videoRef.current) return;
     if (videoRef.current.paused) {
       isManuallyPausedRef.current = false;
       wasPlayingBeforeScrollOutRef.current = true;
-      videoRef.current.play().catch(() => { });
-      setIsPaused(false);
-      resetControlsTimeout();
+      safePlay();
     } else {
       isManuallyPausedRef.current = true;
       wasPlayingBeforeScrollOutRef.current = false;
@@ -252,12 +248,9 @@ export default function SeriesSection() {
   };
 
   const handleContainerClick = () => {
-    if (!showControls) {
-      setShowControls(true);
-      resetControlsTimeout();
-    } else {
-      togglePlayPause();
-    }
+    setShowControls(true);
+    resetControlsTimeout();
+    togglePlayPause();
   };
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -284,38 +277,83 @@ export default function SeriesSection() {
 
   const toggleFullscreen = () => {
     const container = playerContainerRef.current;
-    if (!container) return;
+    const video = videoRef.current as (HTMLVideoElement & {
+      webkitSupportsFullscreen?: boolean;
+      webkitDisplayingFullscreen?: boolean;
+      webkitEnterFullscreen?: () => void;
+      webkitExitFullscreen?: () => void;
+    }) | null;
 
-    if (!document.fullscreenElement && !(document as unknown as { webkitFullscreenElement?: Element }).webkitFullscreenElement) {
-      if (container.requestFullscreen) {
-        container.requestFullscreen().catch(() => { });
-      } else if ((container as unknown as { webkitRequestFullscreen?: () => void }).webkitRequestFullscreen) {
-        (container as unknown as { webkitRequestFullscreen: () => void }).webkitRequestFullscreen();
+    if (!container && !video) return;
+
+    const isDocFullscreen = Boolean(
+      document.fullscreenElement ||
+      (document as unknown as { webkitFullscreenElement?: Element }).webkitFullscreenElement ||
+      video?.webkitDisplayingFullscreen
+    );
+
+    if (!isDocFullscreen) {
+      if (container && container.requestFullscreen) {
+        container.requestFullscreen().catch(() => {
+          if (video && typeof video.webkitEnterFullscreen === "function") {
+            video.webkitEnterFullscreen();
+          }
+        });
+      } else if (container && (container as unknown as { webkitRequestFullscreen?: () => void }).webkitRequestFullscreen) {
+        try {
+          (container as unknown as { webkitRequestFullscreen: () => void }).webkitRequestFullscreen();
+        } catch {
+          if (video && typeof video.webkitEnterFullscreen === "function") {
+            video.webkitEnterFullscreen();
+          }
+        }
+      } else if (video && typeof video.webkitEnterFullscreen === "function") {
+        video.webkitEnterFullscreen();
       }
     } else {
       if (document.exitFullscreen) {
         document.exitFullscreen().catch(() => { });
       } else if ((document as unknown as { webkitExitFullscreen?: () => void }).webkitExitFullscreen) {
         (document as unknown as { webkitExitFullscreen: () => void }).webkitExitFullscreen();
+      } else if (video && typeof video.webkitExitFullscreen === "function") {
+        video.webkitExitFullscreen();
       }
     }
   };
 
   useEffect(() => {
     const handleFullscreenChange = () => {
+      const video = videoRef.current as (HTMLVideoElement & { webkitDisplayingFullscreen?: boolean }) | null;
       setIsFullscreen(
-        Boolean(document.fullscreenElement || (document as unknown as { webkitFullscreenElement?: Element }).webkitFullscreenElement)
+        Boolean(
+          document.fullscreenElement ||
+          (document as unknown as { webkitFullscreenElement?: Element }).webkitFullscreenElement ||
+          video?.webkitDisplayingFullscreen
+        )
       );
     };
+
+    const handleWebkitBegin = () => setIsFullscreen(true);
+    const handleWebkitEnd = () => setIsFullscreen(false);
 
     document.addEventListener("fullscreenchange", handleFullscreenChange);
     document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
 
+    const videoEl = videoRef.current;
+    if (videoEl) {
+      videoEl.addEventListener("webkitbeginfullscreen", handleWebkitBegin);
+      videoEl.addEventListener("webkitendfullscreen", handleWebkitEnd);
+    }
+
     return () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
       document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
+      if (videoEl) {
+        videoEl.removeEventListener("webkitbeginfullscreen", handleWebkitBegin);
+        videoEl.removeEventListener("webkitendfullscreen", handleWebkitEnd);
+      }
     };
-  }, []);
+  }, [isPlaying, selectedEpisode]);
 
   // Sync mute state directly without remounting video
   useEffect(() => {
@@ -326,10 +364,8 @@ export default function SeriesSection() {
 
   // Ensure newly mounted video starts playing if entered while not manually paused
   useEffect(() => {
-    if (isPlaying && videoRef.current && !isManuallyPausedRef.current) {
-      videoRef.current.play().catch(() => { });
-      setIsPaused(false);
-      resetControlsTimeout();
+    if (isPlaying && !isManuallyPausedRef.current) {
+      safePlay();
     }
   }, [isPlaying, selectedEpisode]);
 
@@ -337,30 +373,22 @@ export default function SeriesSection() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          // Play video when user enters this section (if not manually closed/paused)
+        if (entry.isIntersecting && entry.intersectionRatio > 0) {
           if (!isManuallyClosedRef.current && !isManuallyPausedRef.current && wasPlayingBeforeScrollOutRef.current) {
             setIsPlaying(true);
-            if (videoRef.current) {
-              videoRef.current.play().catch(() => { });
-              setIsPaused(false);
-              resetControlsTimeout();
-            }
+            safePlay();
           }
-        } else {
-          // Immediately stop/pause video when user scrolls away from this section
+        } else if (!entry.isIntersecting || entry.intersectionRatio === 0) {
           if (videoRef.current && !videoRef.current.paused) {
             wasPlayingBeforeScrollOutRef.current = true;
             videoRef.current.pause();
             setIsPaused(true);
             setShowControls(true);
-          } else if (videoRef.current && videoRef.current.paused) {
-            wasPlayingBeforeScrollOutRef.current = false;
           }
         }
       },
       {
-        threshold: 0.25,
+        threshold: 0,
       }
     );
 
@@ -383,7 +411,6 @@ export default function SeriesSection() {
           wasPlayingBeforeScrollOutRef.current = true;
           setSelectedEpisode(targetEpisode);
           setIsPlaying(true);
-          setIsMuted(false);
           setIsPaused(false);
           setShowControls(true);
           setCurrentTime(0);
@@ -402,7 +429,6 @@ export default function SeriesSection() {
     wasPlayingBeforeScrollOutRef.current = true;
     setSelectedEpisode(episode);
     setIsPlaying(true);
-    setIsMuted(false);
     setIsPaused(false);
     setShowControls(true);
     setCurrentTime(0);
@@ -414,7 +440,6 @@ export default function SeriesSection() {
     isManuallyPausedRef.current = false;
     wasPlayingBeforeScrollOutRef.current = true;
     setIsPlaying(true);
-    setIsMuted(false);
     setIsPaused(false);
     setShowControls(true);
     resetControlsTimeout();
@@ -440,7 +465,7 @@ export default function SeriesSection() {
         <div className="mb-12 flex items-center justify-between gap-8 xl:gap-24 max-[760px]:flex-col max-[760px]:items-center max-[760px]:gap-6">
           <p
             id="series-title"
-            className="m-0 max-w-[880px] font-geist text-[26px] font-medium leading-[1.3] text-[#333] xl:text-[28px] max-[1024px]:text-[24px] max-[760px]:text-center max-[760px]:text-[22px]"
+            className="m-0 max-w-[880px] font-geist text-[26px] font-medium leading-[1.3] text-[#333] xl:text-[28px] max-lg:text-[24px] max-[760px]:text-center max-[760px]:text-[22px]"
           >
             This is more than a video series — It is a platform for leaders to{" "}
             <br className="hidden xl:block" />
@@ -454,342 +479,426 @@ export default function SeriesSection() {
 
           {/* Counter Block Centered on Mobile View */}
           <div className="shrink-0 text-right max-[760px]:w-full max-[760px]:text-center">
-            <p className="m-0 font-geist text-[72px] font-semibold leading-none tracking-tight text-[#222] max-[1024px]:text-[56px] max-[760px]:text-[46px]">
+            <p className="m-0 font-geist text-[72px] font-semibold leading-none tracking-tight text-[#222] max-lg:text-[56px] max-[760px]:text-[46px]">
               <AnimatedCounter to={150} suffix="K+" />
             </p>
 
-            <p className="mt-3 font-geist text-[16px] font-medium uppercase tracking-widest text-[#888] max-[1024px]:text-[13px] max-[760px]:text-[10px]">
+            <p className="mt-3 font-geist text-[16px] font-medium uppercase tracking-widest text-[#888] max-lg:text-[13px] max-[760px]:text-[10px]">
               Viewers worldwide
             </p>
           </div>
         </div>
 
-        <div className="w-full grid gap-5 xl:gap-[26px] min-[1025px]:grid-cols-[minmax(0,1128fr)_minmax(0,482fr)] items-stretch">
-        {/* Main Featured Video / Poster */}
-        <article className="group relative w-full max-[1024px]:min-h-[500px] max-[1024px]:sm:min-h-[520px] min-[1025px]:aspect-video min-[1025px]:min-h-0 overflow-hidden rounded-[28px] md:rounded-[32px] max-[760px]:shadow-none max-[760px]:border-0 max-[760px]:ring-0 shadow-xl border-none outline-none bg-black">
-          {isPlaying ? (
-            <div
-              ref={playerContainerRef}
-              onClick={handleContainerClick}
-              onMouseMove={() => {
-                setShowControls(true);
-                resetControlsTimeout();
-              }}
-              className="relative h-full w-full max-[1024px]:min-h-[500px] max-[1024px]:sm:min-h-[520px] min-[1025px]:aspect-video min-[1025px]:min-h-0 flex items-center justify-center cursor-pointer select-none overflow-hidden bg-black border-none outline-none"
-            >
-              {selectedEpisode.videoUrl ? (
-                <>
-                  <video
-                    ref={videoRef}
-                    key={selectedEpisode.videoUrl}
-                    src={selectedEpisode.videoUrl}
-                    autoPlay
-                    muted={isMuted}
-                    loop
-                    playsInline
-                    onTimeUpdate={handleTimeUpdate}
-                    onLoadedMetadata={handleLoadedMetadata}
-                    onDurationChange={handleLoadedMetadata}
-                    onCanPlay={handleLoadedMetadata}
-                    onPlay={() => {
-                      setIsPaused(false);
-                      resetControlsTimeout();
-                    }}
-                    onPause={() => {
-                      setIsPaused(true);
-                      setShowControls(true);
-                    }}
-                    className={`absolute inset-0 h-full w-full ${isFullscreen ? "object-contain" : "object-contain min-[1025px]:object-cover"} pointer-events-none border-none outline-none`}
-                  />
-
-                  {/* Top Controls: Mute/Unmute & Close Video */}
-                  <div
-                    className={`absolute top-4 inset-x-4 z-20 flex items-center justify-between transition-opacity duration-300 ${
-                      showControls ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-                    }`}
-                  >
-                    {/* Mute/Unmute toggle button */}
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setIsMuted((prev) => !prev);
+        <div className="w-full grid gap-5 xl:gap-[26px] lg:grid-cols-[minmax(0,1128fr)_minmax(0,482fr)] items-stretch">
+          {/* Main Featured Video / Poster */}
+          <article className="group relative w-full aspect-video min-h-[360px] sm:min-h-[460px] md:min-h-[500px] lg:min-h-0 overflow-hidden rounded-[24px] sm:rounded-[28px] md:rounded-[32px] max-[760px]:shadow-none max-[760px]:border-0 max-[760px]:ring-0 shadow-xl border-none outline-none bg-black">
+            {isPlaying ? (
+              <div
+                ref={playerContainerRef}
+                onClick={handleContainerClick}
+                onMouseMove={() => {
+                  setShowControls(true);
+                  resetControlsTimeout();
+                }}
+                className="relative h-full w-full flex items-center justify-center cursor-pointer select-none overflow-hidden bg-black border-none outline-none"
+              >
+                {selectedEpisode.videoUrl ? (
+                  <>
+                    <video
+                      ref={videoRef}
+                      key={selectedEpisode.videoUrl}
+                      src={selectedEpisode.videoUrl}
+                      autoPlay
+                      muted={isMuted}
+                      loop
+                      playsInline
+                      preload="auto"
+                      onTimeUpdate={handleTimeUpdate}
+                      onLoadedMetadata={handleLoadedMetadata}
+                      onDurationChange={handleLoadedMetadata}
+                      onCanPlay={() => {
+                        handleLoadedMetadata();
+                        if (isPlaying && !isManuallyPausedRef.current) {
+                          safePlay();
+                        }
+                      }}
+                      onPlay={() => {
+                        setIsPaused(false);
                         resetControlsTimeout();
                       }}
-                      className="flex items-center gap-1.5 rounded-full bg-black/75 px-3.5 py-2 font-geist text-xs font-semibold text-white backdrop-blur-md transition-all hover:bg-black cursor-pointer shadow-md"
-                      aria-label={isMuted ? "Unmute video sound" : "Mute video sound"}
-                    >
-                      {isMuted ? (
-                        <>
-                          <svg className="h-4 w-4 text-[#159A99]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
-                          </svg>
-                          <span>Unmute</span>
-                        </>
-                      ) : (
-                        <>
-                          <svg className="h-4 w-4 text-[#159A99]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                          </svg>
-                          <span>Mute</span>
-                        </>
-                      )}
-                    </button>
-
-                    {/* Close Video button */}
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleCloseVideo();
+                      onPause={() => {
+                        if (isManuallyPausedRef.current) {
+                          setIsPaused(true);
+                          setShowControls(true);
+                        }
                       }}
-                      aria-label="Close video player"
-                      className="flex items-center gap-1.5 rounded-full bg-black/70 px-4 py-2 font-geist text-xs font-semibold text-white backdrop-blur-md transition-all hover:bg-black cursor-pointer"
-                    >
-                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                      Close Video
-                    </button>
-                  </div>
+                      className={`absolute inset-0 h-full w-full ${isFullscreen ? "object-contain" : "object-cover"} pointer-events-none border-none outline-none bg-black`}
+                    />
 
-                  {/* Center Play / Pause Button Overlay */}
-                  <div
-                    className={`absolute inset-0 z-10 flex items-center justify-center transition-all duration-300 pointer-events-none ${
-                      showControls ? "opacity-100" : "opacity-0"
-                    }`}
-                  >
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        togglePlayPause();
-                      }}
-                      className="pointer-events-auto flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full bg-[#159A99]/90 text-white shadow-2xl backdrop-blur-md transition-transform duration-200 hover:scale-110 active:scale-95 cursor-pointer"
-                      aria-label={isPaused ? "Play video" : "Pause video"}
+                    {/* Top Controls: Mute/Unmute & Close Video */}
+                    <div
+                      className={`absolute top-4 inset-x-4 z-20 flex items-center justify-between transition-opacity duration-300 ${
+                        showControls ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                      }`}
                     >
-                      {isPaused ? (
-                        <svg className="ml-1 h-8 w-8 sm:h-10 sm:w-10 text-white" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M8 5v14l11-7z" />
-                        </svg>
-                      ) : (
-                        <svg className="h-8 w-8 sm:h-10 sm:w-10 text-white" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
-                        </svg>
-                      )}
-                    </button>
-                  </div>
-
-                  {/* Bottom Scrubber & Duration Control Bar */}
-                  <div
-                    className={`absolute inset-x-0 bottom-0 z-20 flex flex-col justify-end bg-gradient-to-t from-black/90 via-black/50 to-transparent p-4 sm:p-6 transition-opacity duration-300 ${
-                      showControls ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-                    }`}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    {/* Interactive Scrubber Bar */}
-                    <div className="relative flex w-full items-center py-2 cursor-pointer">
-                      <input
-                        type="range"
-                        min={0}
-                        max={duration || 100}
-                        step={0.1}
-                        value={currentTime}
-                        onChange={handleSeek}
-                        onMouseDown={() => setIsDragging(true)}
-                        onMouseUp={() => setIsDragging(false)}
-                        onTouchStart={() => setIsDragging(true)}
-                        onTouchEnd={() => setIsDragging(false)}
-                        className="w-full h-1.5 sm:h-2 rounded-full appearance-none bg-white/30 accent-[#159A99] cursor-pointer focus:outline-none"
-                        style={{
-                          background: `linear-gradient(to right, #159A99 ${duration > 0 ? (currentTime / duration) * 100 : 0}%, rgba(255, 255, 255, 0.3) ${duration > 0 ? (currentTime / duration) * 100 : 0}%)`,
+                      {/* Mute/Unmute toggle button */}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsMuted((prev) => !prev);
+                          resetControlsTimeout();
                         }}
-                        aria-label="Video timeline scrubber"
-                      />
+                        className="flex items-center gap-1.5 rounded-full bg-black/75 px-3.5 py-2 font-geist text-xs font-semibold text-white backdrop-blur-md transition-all hover:bg-black cursor-pointer shadow-md"
+                        aria-label={isMuted ? "Unmute video sound" : "Mute video sound"}
+                      >
+                        {isMuted ? (
+                          <>
+                            <svg className="h-4 w-4 text-[#159A99]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                            </svg>
+                            <span>Unmute</span>
+                          </>
+                        ) : (
+                          <>
+                            <svg className="h-4 w-4 text-[#159A99]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                            </svg>
+                            <span>Mute</span>
+                          </>
+                        )}
+                      </button>
+
+                      {/* Close Video button */}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCloseVideo();
+                        }}
+                        aria-label="Close video player"
+                        className="flex items-center gap-1.5 rounded-full bg-black/70 px-4 py-2 font-geist text-xs font-semibold text-white backdrop-blur-md transition-all hover:bg-black cursor-pointer"
+                      >
+                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                        Close Video
+                      </button>
                     </div>
 
-                    {/* Bottom Row: Play/Pause Icon + Timestamps + Quick 10s Skip Buttons */}
-                    <div className="mt-1 flex items-center justify-between font-geist text-xs sm:text-sm font-medium text-white">
-                      <div className="flex items-center gap-3">
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            togglePlayPause();
-                          }}
-                          className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/30 transition-all active:scale-95 cursor-pointer"
-                          aria-label={isPaused ? "Play video" : "Pause video"}
-                        >
-                          {isPaused ? (
-                            <svg className="ml-0.5 h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M8 5v14l11-7z" />
-                            </svg>
-                          ) : (
-                            <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
-                            </svg>
-                          )}
-                        </button>
-
-                        <span className="tabular-nums tracking-wide text-white/90">
-                          {formatTime(currentTime)} <span className="text-white/40">/</span> {formatTime(duration)}
-                        </span>
-                      </div>
-
-                      {/* Quick -10s / +10s Skip & Fullscreen Button */}
-                      <div className="flex items-center gap-2 text-white/80">
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (videoRef.current) {
-                              videoRef.current.currentTime = Math.max(0, videoRef.current.currentTime - 10);
-                            }
-                            resetControlsTimeout();
-                          }}
-                          className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] sm:text-xs font-semibold hover:bg-white/20 transition-all cursor-pointer"
-                          aria-label="Rewind 10 seconds"
-                        >
-                          -10s
-                        </button>
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (videoRef.current) {
-                              videoRef.current.currentTime = Math.min(duration, videoRef.current.currentTime + 10);
-                            }
-                            resetControlsTimeout();
-                          }}
-                          className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] sm:text-xs font-semibold hover:bg-white/20 transition-all cursor-pointer"
-                          aria-label="Forward 10 seconds"
-                        >
-                          +10s
-                        </button>
-
-                        {/* Fullscreen Button */}
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleFullscreen();
-                            resetControlsTimeout();
-                          }}
-                          className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-all active:scale-95 cursor-pointer ml-1"
-                          aria-label={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
-                          title={isFullscreen ? "Exit Fullscreen" : "Full Screen"}
-                        >
-                          {isFullscreen ? (
-                            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M9 9L4 4m0 5h5V4m6 6l5-5m-5 5V4h5M9 15l-5 5m5-5H4v5m11-5l5 5m-5-5h5v5" />
-                            </svg>
-                          ) : (
-                            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-                            </svg>
-                          )}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <div className="relative flex flex-col items-center justify-center p-8 text-center text-white pointer-events-none">
-                  <p className="font-geist text-2xl font-bold">{selectedEpisode.name}</p>
-                  <p className="mt-2 font-geist text-sm text-white/70">Video release coming soon</p>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div
-              className="relative h-full w-full max-[1024px]:min-h-[500px] max-[1024px]:sm:min-h-[520px] min-[1025px]:aspect-video min-[1025px]:min-h-0 flex flex-col justify-between p-6 sm:p-8 md:p-10 overflow-hidden"
-            >
-              {/* Speaker Pillar SVG Thumbnail Image */}
-              <img
-                src={selectedEpisode.thumbnail}
-                alt={selectedEpisode.name}
-                loading="eager"
-                decoding="async"
-                fetchPriority="high"
-                className="absolute inset-0 h-full w-full object-cover max-[760px]:object-[92%_center] max-[1024px]:object-[80%_center] min-[1025px]:object-center pointer-events-none z-0"
-              />
-
-              {/* Top-Left: VOTA Logo Badge */}
-              <div className="relative z-10 pt-1 sm:pt-3 md:pt-4">
-                <img
-                  src={votaLogo}
-                  alt="VOTA - Voices of Talent Acquisition"
-                  className="h-[42px] sm:h-[60px] md:h-[88px] xl:h-[96px] w-auto max-w-[170px] sm:max-w-[220px] md:max-w-[280px] rounded-[12px] sm:rounded-[16px] md:rounded-[22px] object-contain shadow-md"
-                />
-              </div>
-
-              {/* Bottom-Left: Speaker Details & Play Button */}
-              <div className="relative z-10 max-w-full sm:max-w-[70%] md:max-w-[60%] pb-2">
-                <h3 className="font-geist text-[26px] sm:text-[32px] md:text-[36px] font-bold leading-tight text-white drop-shadow-md">
-                  {selectedEpisode.name}
-                </h3>
-
-                <p className="mt-2 font-geist text-[14px] sm:text-[15px] md:text-[16px] font-normal leading-snug text-white/90 drop-shadow">
-                  {selectedEpisode.role},<br />
-                  {selectedEpisode.company}
-                </p>
-
-                <div className="mt-7 sm:mt-9 flex items-center gap-4 sm:gap-5">
-                  <button
-                    type="button"
-                    onClick={handlePlay}
-                    className="flex h-[56px] w-[56px] sm:h-[60px] sm:w-[60px] items-center justify-center rounded-full bg-white shadow-xl shadow-[#159a99]/40 transition-transform duration-300 hover:scale-110 active:scale-95 group/btn cursor-pointer"
-                    aria-label={`Play episode video of ${selectedEpisode.name}`}
-                  >
-                    <svg
-                      className="ml-1 h-6 w-6 sm:h-7 sm:w-7 text-[#159a99] transition-transform duration-300 group-hover/btn:scale-110"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
+                    {/* Center Play / Pause Button Overlay */}
+                    <div
+                      className={`absolute inset-0 z-10 flex items-center justify-center transition-all duration-300 pointer-events-none ${
+                        showControls ? "opacity-100" : "opacity-0"
+                      }`}
                     >
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                  </button>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          togglePlayPause();
+                        }}
+                        className="pointer-events-auto flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full bg-[#159A99]/90 text-white shadow-2xl backdrop-blur-md transition-transform duration-200 hover:scale-110 active:scale-95 cursor-pointer"
+                        aria-label={isPaused ? "Play video" : "Pause video"}
+                      >
+                        {isPaused ? (
+                          <svg className="ml-1 h-8 w-8 sm:h-10 sm:w-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        ) : (
+                          <svg className="h-8 w-8 sm:h-10 sm:w-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
+                          </svg>
+                        )}
+                      </button>
+                    </div>
 
-                  <div className="flex items-center gap-3 font-geist text-[15px] sm:text-[16px] font-medium text-white drop-shadow">
-                    <span>Watch Video</span>
-                    <span className="text-white/50">|</span>
-                    <span>{episodeDurations[selectedEpisode.id] || selectedEpisode.duration}</span>
+                    {/* Bottom Scrubber & Duration Control Bar */}
+                    <div
+                      className={`absolute inset-x-0 bottom-0 z-20 flex flex-col justify-end bg-gradient-to-t from-black/90 via-black/50 to-transparent p-4 sm:p-6 transition-opacity duration-300 ${
+                        showControls ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                      }`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {/* Interactive Scrubber Bar */}
+                      <div className="relative flex w-full items-center py-2 cursor-pointer">
+                        <input
+                          type="range"
+                          min={0}
+                          max={duration || 100}
+                          step={0.1}
+                          value={currentTime}
+                          onChange={handleSeek}
+                          onMouseDown={() => setIsDragging(true)}
+                          onMouseUp={() => setIsDragging(false)}
+                          onTouchStart={() => setIsDragging(true)}
+                          onTouchEnd={() => setIsDragging(false)}
+                          className="w-full h-1.5 sm:h-2 rounded-full appearance-none bg-white/30 accent-[#159A99] cursor-pointer focus:outline-none"
+                          style={{
+                            background: `linear-gradient(to right, #159A99 ${duration > 0 ? (currentTime / duration) * 100 : 0}%, rgba(255, 255, 255, 0.3) ${duration > 0 ? (currentTime / duration) * 100 : 0}%)`,
+                          }}
+                          aria-label="Video timeline scrubber"
+                        />
+                      </div>
+
+                      {/* Bottom Row: Play/Pause Icon + Timestamps + Quick 10s Skip Buttons */}
+                      <div className="mt-1 flex items-center justify-between font-geist text-xs sm:text-sm font-medium text-white">
+                        <div className="flex items-center gap-3">
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              togglePlayPause();
+                            }}
+                            className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/30 transition-all active:scale-95 cursor-pointer"
+                            aria-label={isPaused ? "Play video" : "Pause video"}
+                          >
+                            {isPaused ? (
+                              <svg className="ml-0.5 h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z" />
+                              </svg>
+                            ) : (
+                              <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
+                              </svg>
+                            )}
+                          </button>
+
+                          <span className="tabular-nums tracking-wide text-white/90">
+                            {formatTime(currentTime)} <span className="text-white/40">/</span> {formatTime(duration)}
+                          </span>
+                        </div>
+
+                        {/* Quick -10s / +10s Skip & Fullscreen Button */}
+                        <div className="flex items-center gap-2 text-white/80">
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (videoRef.current) {
+                                videoRef.current.currentTime = Math.max(0, videoRef.current.currentTime - 10);
+                              }
+                              resetControlsTimeout();
+                            }}
+                            className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] sm:text-xs font-semibold hover:bg-white/20 transition-all cursor-pointer"
+                            aria-label="Rewind 10 seconds"
+                          >
+                            -10s
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (videoRef.current) {
+                                videoRef.current.currentTime = Math.min(duration, videoRef.current.currentTime + 10);
+                              }
+                              resetControlsTimeout();
+                            }}
+                            className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] sm:text-xs font-semibold hover:bg-white/20 transition-all cursor-pointer"
+                            aria-label="Forward 10 seconds"
+                          >
+                            +10s
+                          </button>
+
+                          {/* Fullscreen Button */}
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleFullscreen();
+                              resetControlsTimeout();
+                            }}
+                            className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-all active:scale-95 cursor-pointer ml-1"
+                            aria-label={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
+                            title={isFullscreen ? "Exit Fullscreen" : "Full Screen"}
+                          >
+                            {isFullscreen ? (
+                              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M9 9L4 4m0 5h5V4m6 6l5-5m-5 5V4h5M9 15l-5 5m5-5H4v5m11-5l5 5m-5-5h5v5" />
+                              </svg>
+                            ) : (
+                              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                              </svg>
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="relative flex flex-col items-center justify-center p-8 text-center text-white pointer-events-none">
+                    <p className="font-geist text-2xl font-bold">{selectedEpisode.name}</p>
+                    <p className="mt-2 font-geist text-sm text-white/70">Video release coming soon</p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div
+                onClick={handlePlay}
+                className="relative h-full w-full flex flex-col justify-between p-6 sm:p-8 md:p-10 overflow-hidden cursor-pointer group"
+              >
+                {/* Speaker Pillar SVG Thumbnail Image */}
+                <img
+                  src={selectedEpisode.thumbnail}
+                  alt={selectedEpisode.name}
+                  loading="eager"
+                  decoding="async"
+                  fetchPriority="high"
+                  className="absolute inset-0 h-full w-full object-cover max-[760px]:object-[92%_center] max-lg:object-[80%_center] lg:object-center pointer-events-none z-0 transition-transform duration-500 group-hover:scale-105"
+                />
+
+                {/* Top-Left: VOTA Logo Badge */}
+                <div className="relative z-10 pt-1 sm:pt-3 md:pt-4">
+                  <img
+                    src={votaLogo}
+                    alt="VOTA - Voices of Talent Acquisition"
+                    className="h-[42px] sm:h-[60px] md:h-[80px] lg:h-[88px] xl:h-[96px] w-auto max-w-[170px] sm:max-w-[220px] md:max-w-[260px] lg:max-w-[280px] rounded-[12px] sm:rounded-[16px] md:rounded-[22px] object-contain shadow-md"
+                  />
+                </div>
+
+                {/* Bottom-Left: Speaker Details & Play Button */}
+                <div className="relative z-10 max-w-full sm:max-w-[70%] md:max-w-[65%] pb-2">
+                  <h3 className="font-geist text-[24px] sm:text-[28px] md:text-[32px] lg:text-[36px] font-bold leading-tight text-white drop-shadow-md">
+                    {selectedEpisode.name}
+                  </h3>
+
+                  <p className="mt-1.5 sm:mt-2 font-geist text-[13px] sm:text-[14px] md:text-[15px] lg:text-[16px] font-normal leading-snug text-white/90 drop-shadow">
+                    {selectedEpisode.role},<br />
+                    {selectedEpisode.company}
+                  </p>
+
+                  <div className="mt-5 sm:mt-7 lg:mt-9 flex items-center gap-4 sm:gap-5">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handlePlay();
+                      }}
+                      className="flex h-[50px] w-[50px] sm:h-[56px] sm:w-[56px] lg:h-[60px] lg:w-[60px] items-center justify-center rounded-full bg-white shadow-xl shadow-[#159a99]/40 transition-transform duration-300 hover:scale-110 active:scale-95 group/btn cursor-pointer"
+                      aria-label={`Play episode video of ${selectedEpisode.name}`}
+                    >
+                      <svg
+                        className="ml-1 h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7 text-[#159a99] transition-transform duration-300 group-hover/btn:scale-110"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                      >
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </button>
+
+                    <div className="flex items-center gap-3 font-geist text-[14px] sm:text-[15px] lg:text-[16px] font-medium text-white drop-shadow">
+                      <span>Watch Video</span>
+                      <span className="text-white/50">|</span>
+                      <span>{selectedEpisode.duration}</span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          )}
-        </article>
+            )}
+          </article>
 
-        {/* Desktop Playlist: 14 Episodes with Custom Black Scrollbar */}
-        <div className="hidden min-[1025px]:block relative h-full min-h-0">
-          <div className="absolute inset-0 flex flex-col gap-2.5 xl:gap-3 overflow-y-auto pr-1.5 xl:pr-2.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-black [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar]:w-1.5">
+          {/* Desktop Playlist: 14 Episodes with Custom Black Scrollbar */}
+          <div className="hidden lg:block relative h-full min-h-0">
+            <div className="absolute inset-0 flex flex-col gap-2.5 xl:gap-3 overflow-y-auto pr-1.5 xl:pr-2.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-black [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar]:w-1.5">
+              {seriesEpisodesData.map((episode, index) => {
+                const isSelected = selectedEpisode.id === episode.id;
+
+                return (
+                  <article
+                    key={`desktop-${episode.id}-${index}`}
+                    onClick={() => handleEpisodeSelect(episode)}
+                    className={`group flex cursor-pointer items-center gap-2.5 xl:gap-3 rounded-[16px] xl:rounded-[20px] p-2 xl:p-2.5 shrink-0 h-[calc((100%-30px)/4)] xl:h-[calc((100%-36px)/4)] transition-all duration-300 ${isSelected
+                      ? "border-[1.5px] border-[#159A99] bg-white shadow-md shadow-[#159A99]/10"
+                      : "border border-transparent bg-[#F2F4F7]/70 hover:border-[#D0D7DE] hover:bg-white hover:shadow-sm"
+                      }`}
+                  >
+                    {/* Thumbnail styled like the selected widget (Figma: width 239, height 150.32, radius 21.63px) */}
+                    <div
+                      className="relative h-full aspect-[239/150.32] shrink-0 overflow-hidden rounded-[12px] xl:rounded-[16px] shadow-sm"
+                      style={{
+                        background: "radial-gradient(71.47% 191.86% at 92.83% 52.77%, rgba(21, 154, 153, 0) 0%, #159A99 100%), #FFFFFF",
+                      }}
+                    >
+                      {/* Speaker thumbnail */}
+                      <img
+                        src={episode.thumbnail || episode.bannerImage}
+                        alt={episode.name}
+                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+
+                      {/* Gradient shadow */}
+                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
+
+                      {/* VOTA Logo on thumbnail */}
+                      <img
+                        src={votaLogo}
+                        alt="VOTA"
+                        className="absolute top-1.5 left-1.5 xl:top-2 xl:left-2 h-[12px] xl:h-[15px] w-auto max-w-[45px] xl:max-w-[50px] rounded-[4px] xl:rounded-[5px] object-contain z-10 shadow-sm"
+                      />
+
+                      {/* Duration */}
+                      <span className="absolute bottom-1.5 right-1.5 xl:bottom-2 xl:right-2 z-10 rounded-md bg-black/80 px-1.5 xl:px-2 py-0.5 font-geist text-[8.5px] xl:text-[9.5px] font-medium text-white">
+                        {episode.duration}
+                      </span>
+                    </div>
+
+                    {/* Info */}
+                    <div className="min-w-0 flex-1 flex flex-col justify-center">
+                      <span
+                        className={`inline-block w-fit rounded-full border px-2 py-0.5 font-geist text-[7.5px] xl:text-[8px] font-bold uppercase tracking-wider transition-colors ${isSelected
+                          ? "border-[#159A99] bg-[#159A99] text-white"
+                          : "border-gray-200 bg-white text-black group-hover:border-gray-300"
+                          }`}
+                      >
+                        Explore VOTA
+                      </span>
+
+                      <p
+                        className={`mt-0.5 xl:mt-1 font-geist text-[12px] xl:text-[13px] 2xl:text-[14px] font-bold leading-tight transition-colors line-clamp-1 ${isSelected ? "text-[#159A99]" : "text-[#222] group-hover:text-[#159A99]"
+                          }`}
+                      >
+                        {episode.name}
+                      </p>
+
+                      <p className="mt-0.5 line-clamp-2 font-geist text-[10px] xl:text-[11px] 2xl:text-[11.5px] font-normal leading-[1.25] xl:leading-[1.3] text-[#666]">
+                        {episode.role} · {episode.company}
+                      </p>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Tablet/Mobile Playlist: Horizontal Swipeable 14 Episodes */}
+          <div className="flex gap-4 overflow-x-auto pb-4 pt-1 lg:hidden snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {seriesEpisodesData.map((episode, index) => {
               const isSelected = selectedEpisode.id === episode.id;
 
               return (
                 <article
-                  key={`desktop-${episode.id}-${index}`}
+                  key={`responsive-${episode.id}-${index}`}
                   onClick={() => handleEpisodeSelect(episode)}
-                  className={`group flex cursor-pointer items-center gap-2.5 xl:gap-3 rounded-[16px] xl:rounded-[20px] p-2 xl:p-2.5 shrink-0 h-[calc((100%-30px)/4)] xl:h-[calc((100%-36px)/4)] transition-all duration-300 ${isSelected
-                    ? "border-[1.5px] border-[#159A99] bg-white shadow-md shadow-[#159A99]/10"
-                    : "border border-transparent bg-[#F2F4F7]/70 hover:border-[#D0D7DE] hover:bg-white hover:shadow-sm"
+                  className={`group w-[220px] shrink-0 snap-start cursor-pointer rounded-[22px] p-3 transition-all duration-300 ${isSelected
+                    ? "border-[1.5px] border-[#159A99] bg-white shadow-md"
+                    : "border border-transparent bg-[#F2F4F7]/80 hover:bg-white"
                     }`}
                 >
-                  {/* Thumbnail styled like the selected widget (Figma: width 239, height 150.32, radius 21.63px) */}
+                  {/* Mobile Thumbnail styled like the selected widget */}
                   <div
-                    className="relative h-full aspect-[239/150.32] shrink-0 overflow-hidden rounded-[12px] xl:rounded-[16px] shadow-sm"
+                    className="relative h-[115px] w-full overflow-hidden rounded-[16px] shadow-sm"
                     style={{
                       background: "radial-gradient(71.47% 191.86% at 92.83% 52.77%, rgba(21, 154, 153, 0) 0%, #159A99 100%), #FFFFFF",
                     }}
                   >
-                    {/* Speaker thumbnail */}
+                    {/* Speaker photo */}
                     <img
-                      src={episode.thumbnail || episode.bannerImage}
+                      src={episode.bannerImage}
                       alt={episode.name}
-                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="absolute right-0 bottom-0 h-full w-auto max-w-none object-contain object-right-bottom transition-transform duration-500 group-hover:scale-105"
                     />
 
                     {/* Gradient shadow */}
@@ -799,34 +908,33 @@ export default function SeriesSection() {
                     <img
                       src={votaLogo}
                       alt="VOTA"
-                      className="absolute top-1.5 left-1.5 xl:top-2 xl:left-2 h-[12px] xl:h-[15px] w-auto max-w-[45px] xl:max-w-[50px] rounded-[4px] xl:rounded-[5px] object-contain z-10 shadow-sm"
+                      className="absolute top-2 left-2 h-[18px] w-auto max-w-[55px] rounded-[5px] object-contain z-10 shadow-sm"
                     />
 
                     {/* Duration */}
-                    <span className="absolute bottom-1.5 right-1.5 xl:bottom-2 xl:right-2 z-10 rounded-md bg-black/80 px-1.5 xl:px-2 py-0.5 font-geist text-[8.5px] xl:text-[9.5px] font-medium text-white">
-                      {episodeDurations[episode.id] || episode.duration}
+                    <span className="absolute bottom-2 right-2 z-10 rounded-md bg-black/80 px-1.5 py-0.5 font-geist text-[10px] font-medium text-white">
+                      {episode.duration}
                     </span>
                   </div>
 
-                  {/* Info */}
-                  <div className="min-w-0 flex-1 flex flex-col justify-center">
+                  <div className="pt-2.5">
                     <span
-                      className={`inline-block w-fit rounded-full border px-2 py-0.5 font-geist text-[7.5px] xl:text-[8px] font-bold uppercase tracking-wider transition-colors ${isSelected
+                      className={`inline-block rounded-full border px-2.5 py-0.5 font-geist text-[8.5px] font-bold uppercase tracking-wider ${isSelected
                         ? "border-[#159A99] bg-[#159A99] text-white"
-                        : "border-gray-200 bg-white text-black group-hover:border-gray-300"
+                        : "border-gray-200 bg-white text-black"
                         }`}
                     >
                       Explore VOTA
                     </span>
 
                     <p
-                      className={`mt-0.5 xl:mt-1 font-geist text-[12px] xl:text-[13px] 2xl:text-[14px] font-bold leading-tight transition-colors line-clamp-1 ${isSelected ? "text-[#159A99]" : "text-[#222] group-hover:text-[#159A99]"
+                      className={`mt-1.5 font-geist text-[13.5px] font-bold leading-tight line-clamp-1 ${isSelected ? "text-[#159A99]" : "text-[#222]"
                         }`}
                     >
                       {episode.name}
                     </p>
 
-                    <p className="mt-0.5 line-clamp-2 font-geist text-[10px] xl:text-[11px] 2xl:text-[11.5px] font-normal leading-[1.25] xl:leading-[1.3] text-[#666]">
+                    <p className="mt-1 line-clamp-2 font-geist text-[11.5px] font-normal leading-[1.35] text-[#666]">
                       {episode.role} · {episode.company}
                     </p>
                   </div>
@@ -835,78 +943,7 @@ export default function SeriesSection() {
             })}
           </div>
         </div>
-
-        {/* Tablet/Mobile Playlist: Horizontal Swipeable 14 Episodes */}
-        <div className="flex gap-4 overflow-x-auto pb-4 pt-1 min-[1025px]:hidden snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {seriesEpisodesData.map((episode, index) => {
-            const isSelected = selectedEpisode.id === episode.id;
-
-            return (
-              <article
-                key={`responsive-${episode.id}-${index}`}
-                onClick={() => handleEpisodeSelect(episode)}
-                className={`group w-[220px] shrink-0 snap-start cursor-pointer rounded-[22px] p-3 transition-all duration-300 ${isSelected
-                  ? "border-[1.5px] border-[#159A99] bg-white shadow-md"
-                  : "border border-transparent bg-[#F2F4F7]/80 hover:bg-white"
-                  }`}
-              >
-                {/* Mobile Thumbnail styled like the selected widget */}
-                <div
-                  className="relative h-[115px] w-full overflow-hidden rounded-[16px] shadow-sm"
-                  style={{
-                    background: "radial-gradient(71.47% 191.86% at 92.83% 52.77%, rgba(21, 154, 153, 0) 0%, #159A99 100%), #FFFFFF",
-                  }}
-                >
-                  {/* Speaker photo */}
-                  <img
-                    src={episode.bannerImage}
-                    alt={episode.name}
-                    className="absolute right-0 bottom-0 h-full w-auto max-w-none object-contain object-right-bottom transition-transform duration-500 group-hover:scale-105"
-                  />
-
-                  {/* Gradient shadow */}
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
-
-                  {/* VOTA Logo on thumbnail */}
-                  <img
-                    src={votaLogo}
-                    alt="VOTA"
-                    className="absolute top-2 left-2 h-[18px] w-auto max-w-[55px] rounded-[5px] object-contain z-10 shadow-sm"
-                  />
-
-                  {/* Duration */}
-                  <span className="absolute bottom-2 right-2 z-10 rounded-md bg-black/80 px-1.5 py-0.5 font-geist text-[10px] font-medium text-white">
-                    {episodeDurations[episode.id] || episode.duration}
-                  </span>
-                </div>
-
-                <div className="pt-2.5">
-                  <span
-                    className={`inline-block rounded-full border px-2.5 py-0.5 font-geist text-[8.5px] font-bold uppercase tracking-wider ${isSelected
-                      ? "border-[#159A99] bg-[#159A99] text-white"
-                      : "border-gray-200 bg-white text-black"
-                      }`}
-                  >
-                    Explore VOTA
-                  </span>
-
-                  <p
-                    className={`mt-1.5 font-geist text-[13.5px] font-bold leading-tight line-clamp-1 ${isSelected ? "text-[#159A99]" : "text-[#222]"
-                      }`}
-                  >
-                    {episode.name}
-                  </p>
-
-                  <p className="mt-1 line-clamp-2 font-geist text-[11.5px] font-normal leading-[1.35] text-[#666]">
-                    {episode.role} · {episode.company}
-                  </p>
-                </div>
-              </article>
-            );
-          })}
-        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
 }

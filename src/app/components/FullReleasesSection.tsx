@@ -227,6 +227,12 @@ export default function FullReleasesSection() {
   const isProgrammaticScroll = useRef(false);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  /* Touch Swiping Refs */
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+  const touchStartTime = useRef<number>(0);
+  const isSwipingTouch = useRef<boolean>(false);
+
   const formatTime = (seconds: number) => {
     if (isNaN(seconds) || seconds <= 0) return "00:00";
     const mins = Math.floor(seconds / 60);
@@ -332,38 +338,83 @@ export default function FullReleasesSection() {
 
   const toggleFullscreen = () => {
     const container = playerContainerRef.current;
-    if (!container) return;
+    const video = videoRef.current as (HTMLVideoElement & {
+      webkitSupportsFullscreen?: boolean;
+      webkitDisplayingFullscreen?: boolean;
+      webkitEnterFullscreen?: () => void;
+      webkitExitFullscreen?: () => void;
+    }) | null;
 
-    if (!document.fullscreenElement && !(document as unknown as { webkitFullscreenElement?: Element }).webkitFullscreenElement) {
-      if (container.requestFullscreen) {
-        container.requestFullscreen().catch(() => { });
-      } else if ((container as unknown as { webkitRequestFullscreen?: () => void }).webkitRequestFullscreen) {
-        (container as unknown as { webkitRequestFullscreen: () => void }).webkitRequestFullscreen();
+    if (!container && !video) return;
+
+    const isDocFullscreen = Boolean(
+      document.fullscreenElement ||
+      (document as unknown as { webkitFullscreenElement?: Element }).webkitFullscreenElement ||
+      video?.webkitDisplayingFullscreen
+    );
+
+    if (!isDocFullscreen) {
+      if (container && container.requestFullscreen) {
+        container.requestFullscreen().catch(() => {
+          if (video && typeof video.webkitEnterFullscreen === "function") {
+            video.webkitEnterFullscreen();
+          }
+        });
+      } else if (container && (container as unknown as { webkitRequestFullscreen?: () => void }).webkitRequestFullscreen) {
+        try {
+          (container as unknown as { webkitRequestFullscreen: () => void }).webkitRequestFullscreen();
+        } catch {
+          if (video && typeof video.webkitEnterFullscreen === "function") {
+            video.webkitEnterFullscreen();
+          }
+        }
+      } else if (video && typeof video.webkitEnterFullscreen === "function") {
+        video.webkitEnterFullscreen();
       }
     } else {
       if (document.exitFullscreen) {
         document.exitFullscreen().catch(() => { });
       } else if ((document as unknown as { webkitExitFullscreen?: () => void }).webkitExitFullscreen) {
         (document as unknown as { webkitExitFullscreen: () => void }).webkitExitFullscreen();
+      } else if (video && typeof video.webkitExitFullscreen === "function") {
+        video.webkitExitFullscreen();
       }
     }
   };
 
   useEffect(() => {
     const handleFullscreenChange = () => {
+      const video = videoRef.current as (HTMLVideoElement & { webkitDisplayingFullscreen?: boolean }) | null;
       setIsFullscreen(
-        Boolean(document.fullscreenElement || (document as unknown as { webkitFullscreenElement?: Element }).webkitFullscreenElement)
+        Boolean(
+          document.fullscreenElement ||
+          (document as unknown as { webkitFullscreenElement?: Element }).webkitFullscreenElement ||
+          video?.webkitDisplayingFullscreen
+        )
       );
     };
+
+    const handleWebkitBegin = () => setIsFullscreen(true);
+    const handleWebkitEnd = () => setIsFullscreen(false);
 
     document.addEventListener("fullscreenchange", handleFullscreenChange);
     document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
 
+    const videoEl = videoRef.current;
+    if (videoEl) {
+      videoEl.addEventListener("webkitbeginfullscreen", handleWebkitBegin);
+      videoEl.addEventListener("webkitendfullscreen", handleWebkitEnd);
+    }
+
     return () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
       document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
+      if (videoEl) {
+        videoEl.removeEventListener("webkitbeginfullscreen", handleWebkitBegin);
+        videoEl.removeEventListener("webkitendfullscreen", handleWebkitEnd);
+      }
     };
-  }, []);
+  }, [isPlaying, selectedEpisode, activeReelIndex]);
 
   useEffect(() => {
     if (videoRef.current) {
@@ -432,6 +483,50 @@ export default function FullReleasesSection() {
     setIsPaused(false);
     setCurrentTime(0);
     setShowControls(true);
+  };
+
+  /* ── Mobile Touch Swiping Handlers ── */
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (isPlaying) return;
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+    touchStartTime.current = Date.now();
+    isSwipingTouch.current = false;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (isPlaying || touchStartX.current === null || touchStartY.current === null) return;
+    const currentX = e.touches[0].clientX;
+    const currentY = e.touches[0].clientY;
+    const diffX = Math.abs(currentX - touchStartX.current);
+    const diffY = Math.abs(currentY - touchStartY.current);
+    if (diffX > 8 && diffX > diffY) {
+      isSwipingTouch.current = true;
+    }
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (isPlaying || touchStartX.current === null || touchStartY.current === null) return;
+    const endX = e.changedTouches[0]?.clientX ?? touchStartX.current;
+    const endY = e.changedTouches[0]?.clientY ?? touchStartY.current;
+    const diffX = endX - touchStartX.current;
+    const diffY = endY - touchStartY.current;
+    const elapsed = Date.now() - touchStartTime.current;
+    const speedX = Math.abs(diffX) / Math.max(elapsed, 1);
+
+    if ((Math.abs(diffX) > 25 || (Math.abs(diffX) > 12 && speedX > 0.15)) && Math.abs(diffX) > Math.abs(diffY)) {
+      if (diffX < 0) {
+        scrollToReel(1);
+      } else {
+        scrollToReel(0);
+      }
+    }
+
+    touchStartX.current = null;
+    touchStartY.current = null;
+    setTimeout(() => {
+      isSwipingTouch.current = false;
+    }, 150);
   };
 
   const currentReels = selectedEpisode.reels && selectedEpisode.reels.length > 0
@@ -572,10 +667,14 @@ export default function FullReleasesSection() {
           <div
             ref={reelSliderRef}
             onScroll={handleReelScroll}
-            className="relative flex h-[380px] sm:h-[460px] md:h-[540px] min-[1100px]:h-auto min-[1100px]:flex-1 min-[1100px]:min-h-0 w-full max-w-full overflow-x-auto min-[1100px]:overflow-x-hidden overflow-y-hidden rounded-[24px] sm:rounded-[30px] border-[1.62px] border-[#E0E0E0] bg-black shadow-lg opacity-100 snap-x min-[1100px]:snap-none snap-mandatory snap-always overscroll-x-contain touch-pan-y [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            className="relative flex h-[380px] sm:h-[460px] md:h-[540px] min-[1100px]:h-auto min-[1100px]:flex-1 min-[1100px]:min-h-0 w-full max-w-full overflow-x-auto min-[1100px]:overflow-x-hidden overflow-y-hidden rounded-[24px] sm:rounded-[30px] border-[1.62px] border-[#E0E0E0] bg-black shadow-lg opacity-100 snap-x min-[1100px]:snap-none snap-mandatory snap-always overscroll-x-contain touch-pan-x touch-pan-y [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             style={{
               scrollSnapType: "x mandatory",
               WebkitOverflowScrolling: "touch",
+              touchAction: "pan-x pan-y",
             }}
           >
             {/* Render 2 Reel Slides (Reel 1 & Reel 2) */}
@@ -830,6 +929,7 @@ export default function FullReleasesSection() {
                   ) : (
                     <div
                       onClick={() => {
+                        if (isSwipingTouch.current) return;
                         scrollToReel(reelIdx);
                         setIsPlaying(true);
                         setIsPaused(false);
@@ -858,6 +958,7 @@ export default function FullReleasesSection() {
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
+                            if (isSwipingTouch.current) return;
                             scrollToReel(reelIdx);
                             setIsPlaying(true);
                             setIsPaused(false);
