@@ -4,7 +4,7 @@ import React from "react";
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
 const footerMobImage = `${R2_MEDIA_URL}/images/footermob.png`;
-const containerImage = `${R2_MEDIA_URL}/images/Container.png`;
+const containerImage = `${R2_MEDIA_URL}/images/Container.webp`;
 const artboardImage = `${R2_MEDIA_URL}/images/Artboard.svg`;
 
 export default function VotaBannerSection() {

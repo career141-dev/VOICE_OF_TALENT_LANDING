@@ -17,17 +17,17 @@ import { getOptimizedImageUrl } from "./utils/imageLoader";
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
 
 const backgroundImage = getOptimizedImageUrl(`${R2_MEDIA_URL}/images/hero-background.webp`, 1920);
-const mobileBackgroundImage = "https://talentsuite.career141.com/images/mobile.png";
-const heroBottomMobileImage = "https://talentsuite.career141.com/images/herobottom.svg";
+const mobileBackgroundImage = "https://talentsuite.career141.com/images/mobile.webp";
+const heroBottomMobileImage = "https://talentsuite.career141.com/images/herobottom.webp";
 const microphoneImage = getOptimizedImageUrl(`${R2_MEDIA_URL}/images/heromic.webp`, 900);
 const votaLogo = `${R2_MEDIA_URL}/icons/vota-logo.png`;
 const arrowUpRight = `${R2_MEDIA_URL}/icons/arrow-up-right.svg`;
 const arrowRight = `${R2_MEDIA_URL}/icons/arrow-right.svg`;
 const arrowRightDark = `${R2_MEDIA_URL}/icons/arrow-right-dark.svg`;
 const arrowAngle = `${R2_MEDIA_URL}/icons/arrow-angle.svg`;
-const speakerImage1 = `${R2_MEDIA_URL}/images/speaker1.png`;
-const speakerImage2 = `${R2_MEDIA_URL}/images/speaker2.png`;
-const speakerImage4 = `${R2_MEDIA_URL}/images/speaker4.png`;
+const speakerImage1 = `${R2_MEDIA_URL}/images/speaker1.webp`;
+const speakerImage2 = `${R2_MEDIA_URL}/images/speaker2.webp`;
+const speakerImage4 = `${R2_MEDIA_URL}/images/speaker4.webp`;
 
 
 function Arrow({ source }: { source: string }) {

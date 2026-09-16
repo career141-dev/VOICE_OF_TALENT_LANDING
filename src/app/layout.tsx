@@ -40,15 +40,15 @@ export default function RootLayout({
         />
         <link rel="preconnect" href="https://talentsuite.career141.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://talentsuite.career141.com" />
-        <link rel="preload" as="image" href="https://talentsuite.career141.com/images/herobottom.svg" type="image/svg+xml" fetchPriority="high" />
-        <link rel="preload" as="image" href="https://talentsuite.career141.com/images/mobile.png" fetchPriority="high" />
+        <link rel="preload" as="image" href="https://talentsuite.career141.com/images/herobottom.webp" fetchPriority="high" />
+        <link rel="preload" as="image" href="https://talentsuite.career141.com/images/mobile.webp" fetchPriority="high" />
         {R2_MEDIA_URL ? (
           <>
             <link rel="preconnect" href={R2_MEDIA_URL} crossOrigin="anonymous" />
             <link rel="dns-prefetch" href={R2_MEDIA_URL} />
             <link rel="preload" as="image" href={getOptimizedImageUrl(`${R2_MEDIA_URL}/images/hero-background.webp`, 1920)} />
-            <link rel="preload" as="image" href={getOptimizedImageUrl(`${R2_MEDIA_URL}/images/speaker1.png`, 800)} />
-            <link rel="preload" as="image" href={getOptimizedImageUrl(`${R2_MEDIA_URL}/images/speaker2.png`, 800)} />
+            <link rel="preload" as="image" href={`${R2_MEDIA_URL}/images/speaker1.webp`} />
+            <link rel="preload" as="image" href={`${R2_MEDIA_URL}/images/speaker2.webp`} />
           </>
         ) : null}
         <link

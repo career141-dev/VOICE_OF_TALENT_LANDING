@@ -30,7 +30,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     duration: "04:46",
     videoUrl: "https://media.career141.com/new%20reels/Mr.%20Patrick/Mr.%20Patrick.mp4",
     bannerImage: `${R2_MEDIA_URL}/images/speaker1.png`,
-    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-01.svg`,
+    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-01.webp`,
   },
   {
     id: 2,
@@ -40,7 +40,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     duration: "04:18",
     videoUrl: "https://media.career141.com/new%20reels/Mr.%20Ken/Mr.%20Ken.mp4",
     bannerImage: `${R2_MEDIA_URL}/images/speaker2.png`,
-    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-02.svg`,
+    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-02.webp`,
   },
   {
     id: 3,
@@ -50,7 +50,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     duration: "03:57",
     videoUrl: "https://media.career141.com/new%20reels/Mr.%20Chamila%20C%20Perera/Mr.%20Chamila%20C%20Perera.mp4",
     bannerImage: `${R2_MEDIA_URL}/images/speaker3.png`,
-    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-03.svg`,
+    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-03.webp`,
   },
   {
     id: 4,
@@ -60,7 +60,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     duration: "04:13",
     videoUrl: "https://media.career141.com/new%20reels/Ms.Thrimuthi/Ms.Thrimuthi.mp4",
     bannerImage: `${R2_MEDIA_URL}/images/speaker4.png`,
-    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-04.svg`,
+    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-04.webp`,
   },
   {
     id: 5,
@@ -70,7 +70,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     duration: "03:10",
     videoUrl: "https://media.career141.com/new%20reels/Ms.%20Surani/Ms.%20Surani.mp4",
     bannerImage: `${R2_MEDIA_URL}/images/speaker5.png`,
-    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-05.svg`,
+    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-05.webp`,
   },
   {
     id: 6,
@@ -80,7 +80,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     duration: "05:13",
     videoUrl: "https://media.career141.com/new%20reels/Mr.%20Arshaq/Mr.%20Arshaq.mp4",
     bannerImage: `${R2_MEDIA_URL}/images/speaker6.png`,
-    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-06.svg`,
+    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-06.webp`,
   },
   {
     id: 7,
@@ -90,7 +90,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     duration: "03:47",
     videoUrl: "https://media.career141.com/new%20reels/Mr.%20Danushaka/Mr.%20Danushaka.mp4",
     bannerImage: `${R2_MEDIA_URL}/images/speaker7.png`,
-    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-07.svg`,
+    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-07.webp`,
   },
   {
     id: 8,
@@ -100,7 +100,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     duration: "06:55",
     videoUrl: "https://media.career141.com/new%20reels/Ms.%20Hasanthi/Ms.%20Hasanthi%20Desaram.mp4",
     bannerImage: `${R2_MEDIA_URL}/images/speaker8.png`,
-    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-08.svg`,
+    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-08.webp`,
   },
   {
     id: 9,
@@ -110,7 +110,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     duration: "08:56",
     videoUrl: "https://media.career141.com/new%20reels/Mr%20Ashan/Mr%20Ashan.mp4",
     bannerImage: `${R2_MEDIA_URL}/images/speaker9.png`,
-    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-09.svg`,
+    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-09.webp`,
   },
   {
     id: 10,
@@ -120,7 +120,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     duration: "06:03",
     videoUrl: "https://media.career141.com/new%20reels/Mr.%20Indika/Mr.%20Indika.mp4",
     bannerImage: `${R2_MEDIA_URL}/images/speaker10.png`,
-    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-10.svg`,
+    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-10.webp`,
   },
   {
     id: 11,
@@ -130,7 +130,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     duration: "05:11",
     videoUrl: "https://media.career141.com/new%20reels/Ms.%20Chamindra/Ms.%20Chamindra.mp4",
     bannerImage: `${R2_MEDIA_URL}/images/speaker11.png`,
-    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-11.svg`,
+    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-11.webp`,
   },
   {
     id: 12,
@@ -140,7 +140,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     duration: "07:38",
     videoUrl: "https://media.career141.com/new%20reels/Ms.%20Chandima/Ms.%20Chandima.mp4",
     bannerImage: `${R2_MEDIA_URL}/images/speaker12.png`,
-    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-12.svg`,
+    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-12.webp`,
   },
   {
     id: 13,
@@ -150,7 +150,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     duration: "03:44",
     videoUrl: "https://media.career141.com/new%20reels/Mr.%20Gehan/Mr.%20Gehan.mp4",
     bannerImage: `${R2_MEDIA_URL}/images/speaker13.png`,
-    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-13.svg`,
+    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-13.webp`,
   },
   {
     id: 14,
@@ -160,7 +160,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     duration: "07:23",
     videoUrl: "https://media.career141.com/new%20reels/Mr.%20Kanishka/Mr.%20Kanishka.mp4",
     bannerImage: `${R2_MEDIA_URL}/images/speaker14.png`,
-    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-14.svg`,
+    thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-14.webp`,
   },
 ];
 

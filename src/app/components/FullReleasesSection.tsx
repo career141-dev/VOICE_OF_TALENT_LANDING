@@ -4,7 +4,7 @@ import React, { useRef, useState, useEffect } from "react";
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
 const FULL_RELEASE_IMG_BASE = "https://talentsuite.career141.com/images/fullRelease";
-const reelBackground = `${R2_MEDIA_URL}/images/reelThumbnail/reelthumbnail.png`;
+const reelBackground = `${R2_MEDIA_URL}/images/reelThumbnail/reelthumbnail.webp`;
 
 type Episode = {
   id: number;
@@ -26,7 +26,7 @@ const episodes: Episode[] = [
     role: "Vice President Learning & Development",
     company: "Aitken Spence Hotels",
     videoUrl: "https://media.career141.com/new%20reels/Mr.%20Patrick/Mr.%20Patrick.mp4",
-    posterImage: `${FULL_RELEASE_IMG_BASE}/patrickreel.png`,
+    posterImage: `${FULL_RELEASE_IMG_BASE}/patrickreel.webp`,
     reels: [
       "https://media.career141.com/new%20reels/Mr.%20Patrick/01%20Reel%20Mr.%20Patrick.mp4",
       "https://media.career141.com/new%20reels/Mr.%20Patrick/02%20Reel%20Mr.%20Patrick.mp4",
@@ -118,7 +118,7 @@ const episodes: Episode[] = [
     role: "Director / Senior HR Consultant",
     company: "(Former Director HR - Asiri Health)",
     videoUrl: "https://media.career141.com/new%20reels/Ms.%20Hasanthi/Ms.%20Hasanthi%20Desaram.mp4",
-    posterImage: `${FULL_RELEASE_IMG_BASE}/hasanthireel.png`,
+    posterImage: `${FULL_RELEASE_IMG_BASE}/hasanthireel.webp`,
     reels: [
       "https://media.career141.com/new%20reels/Ms.%20Hasanthi/01%20Reel%20Ms.%20Hasanthi.mp4",
       "https://media.career141.com/new%20reels/Ms.%20Hasanthi/02%20Reel%20Ms.%20Hasanthi.mp4",
@@ -1074,7 +1074,7 @@ export default function FullReleasesSection() {
                       <div className="pointer-events-none absolute inset-0 overflow-hidden">
                         <img
                           src={
-                            selectedEpisode.posterImage || `${FULL_RELEASE_IMG_BASE}/reelspeaker${selectedEpisode.id}.png`
+                            selectedEpisode.posterImage || `${FULL_RELEASE_IMG_BASE}/reelspeaker${selectedEpisode.id}.webp`
                           }
                           alt={selectedEpisode.guest}
                           draggable={false}

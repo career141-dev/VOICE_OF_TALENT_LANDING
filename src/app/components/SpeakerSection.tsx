@@ -20,7 +20,6 @@ interface VoiceItem {
 
 const SPEAKER_SECTION_IMG_BASE = "https://talentsuite.career141.com/images/speakerSection";
 const SERIES_SECTION_IMG_BASE = "https://talentsuite.career141.com/images/seriesSection";
-const IMG_V = "?v=2";
 
 const voicesData: VoiceItem[] = [
   {
@@ -32,8 +31,8 @@ const voicesData: VoiceItem[] = [
       'What makes Talent Acquisition a future ready career path?',
       'How do you see Talent Acquisition contributing to overall business success?',
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/patrickspeaker.png`,
-    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-01.svg`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/patrickspeaker.webp`,
+    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-01.webp`,
   },
   {
     id: 2,
@@ -44,8 +43,8 @@ const voicesData: VoiceItem[] = [
       'How do you define Talent Acquisition in today’s context?',
       'How do you see Talent Acquisition contributing to overall business success?',
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/r2png.png${IMG_V}`,
-    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-02.svg`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r2png.webp`,
+    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-02.webp`,
   },
   {
     id: 3,
@@ -56,8 +55,8 @@ const voicesData: VoiceItem[] = [
       'What makes Talent Acquisition a future ready career path?',
       'In your opinion, why is there a growing need for skilled Talent Acquisition professionals in Sri Lanka?',
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/r3png.png${IMG_V}`,
-    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-03.svg`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r3png.webp`,
+    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-03.webp`,
   },
   {
     id: 4,
@@ -68,8 +67,8 @@ const voicesData: VoiceItem[] = [
       'How do you define Talent Acquisition in today’s context?',
       'In your view, why is Talent Acquisition becoming increasingly important for organizations?',
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/r4png.png${IMG_V}`,
-    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-04.svg`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r4png.webp`,
+    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-04.webp`,
   },
   {
     id: 5,
@@ -80,8 +79,8 @@ const voicesData: VoiceItem[] = [
       'How do you define Talent Acquisition in today’s context?',
       'What key skills do you believe are essential to succeed in Talent Acquisition?',
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/r5png.png${IMG_V}`,
-    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-05.svg`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r5png.webp`,
+    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-05.webp`,
   },
   {
     id: 6,
@@ -92,8 +91,8 @@ const voicesData: VoiceItem[] = [
       'How does Talent Acquisition contribute to building and strengthening organizational culture?',
       'How does a career in Talent Acquisition support individuals in achieving their broader career aspirations?',
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/r6png.png${IMG_V}`,
-    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-06.svg`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r6png.webp`,
+    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-06.webp`,
   },
   {
     id: 7,
@@ -104,8 +103,8 @@ const voicesData: VoiceItem[] = [
       'How important is the Talent Acquisition function within an organization?',
       "How does working in Talent Acquisition help broaden an individual's mindset?",
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/r7png.png${IMG_V}`,
-    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-07.svg`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r7png.webp`,
+    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-07.webp`,
   },
   {
     id: 8,
@@ -116,8 +115,8 @@ const voicesData: VoiceItem[] = [
       'How do you see Talent Acquisition contributing to overall business success?',
       'What message would you like to share with the next generation aspiring to build a career in Talent Acquisition?',
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/hasanthispeaker.png`,
-    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-08.svg`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/hasanthispeaker.webp`,
+    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-08.webp`,
   },
   {
     id: 9,
@@ -128,8 +127,8 @@ const voicesData: VoiceItem[] = [
       'How does Talent Acquisition contribute to building and strengthening organizational culture?',
       'How does a career in Talent Acquisition support individuals in achieving their broader career aspirations?',
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/r9png.png${IMG_V}`,
-    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-09.svg`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r9png.webp`,
+    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-09.webp`,
   },
   {
     id: 10,
@@ -140,8 +139,8 @@ const voicesData: VoiceItem[] = [
       'How do you see Talent Acquisition contributing to overall business success?',
       'From your perspective, how does Talent Acquisition differ from traditional HR roles?',
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/r10png.png${IMG_V}`,
-    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-10.svg`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r10png.webp`,
+    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-10.webp`,
   },
   {
     id: 11,
@@ -152,8 +151,8 @@ const voicesData: VoiceItem[] = [
       'How do you see Talent Acquisition contributing to overall business success?',
       'What advice would you offer to someone considering a career in Talent Acquisition?',
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/r11png.png${IMG_V}`,
-    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-11.svg`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r11png.webp`,
+    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-11.webp`,
   },
   {
     id: 12,
@@ -164,8 +163,8 @@ const voicesData: VoiceItem[] = [
       'How does Talent Acquisition contribute to building and strengthening organizational culture?',
       'What makes Talent Acquisition a future ready career path?',
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/r12png.png${IMG_V}`,
-    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-12.svg`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r12png.webp`,
+    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-12.webp`,
   },
   {
     id: 13,
@@ -176,8 +175,8 @@ const voicesData: VoiceItem[] = [
       'In your opinion, why is there a growing need for skilled Talent Acquisition professionals in Sri Lanka?',
       'What is your perspective on developing Talent Acquisition professionals who are globally competitive?',
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/r13png.png${IMG_V}`,
-    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-13.svg`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r13png.webp`,
+    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-13.webp`,
   },
   {
     id: 14,
@@ -188,8 +187,8 @@ const voicesData: VoiceItem[] = [
       'How important is hands-on experience in building a successful career in Talent Acquisition?',
       'In your opinion, why is there a growing need for skilled Talent Acquisition professionals in Sri Lanka?',
     ],
-    avatar: `${SPEAKER_SECTION_IMG_BASE}/r14png.png${IMG_V}`,
-    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-14.svg`,
+    avatar: `${SPEAKER_SECTION_IMG_BASE}/r14png.webp`,
+    bannerImage: `${SERIES_SECTION_IMG_BASE}/Pillar-14.webp`,
   },
 ];
 

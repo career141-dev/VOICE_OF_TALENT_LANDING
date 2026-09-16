@@ -125,7 +125,7 @@ export function IndustryVoicesSection() {
           lg:min-h-[505px]
         "
         style={{
-          backgroundImage: `url('${R2_MEDIA_URL}/images/Movement Banner.png')`,
+          backgroundImage: `url('${R2_MEDIA_URL}/images/Movement-Banner.webp')`,
         }}
       >
         {/* Interactive swipeable/draggable headline row */}
