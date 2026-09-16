@@ -87,14 +87,14 @@ export default function CoreConversationThemes() {
 
   const triggerPrev = useCallback(() => {
     const now = Date.now();
-    if (now - lastSwipeTime.current < 350) return;
+    if (now - lastSwipeTime.current < 400) return;
     lastSwipeTime.current = now;
     handlePrev();
   }, [handlePrev]);
 
   const triggerNext = useCallback(() => {
     const now = Date.now();
-    if (now - lastSwipeTime.current < 350) return;
+    if (now - lastSwipeTime.current < 400) return;
     lastSwipeTime.current = now;
     handleNext();
   }, [handleNext]);
@@ -267,24 +267,27 @@ export default function CoreConversationThemes() {
                   diff === 0
                     ? "-50%"
                     : diff === -1
-                    ? "calc(-50% - 22px)"
+                    ? "calc(-50% - 24px)"
                     : diff === 1
-                    ? "calc(-50% + 22px)"
+                    ? "calc(-50% + 24px)"
                     : diff < -1
-                    ? "calc(-50% - 150%)"
-                    : "calc(-50% + 150%)",
-                width: "78%",
-                height: diff === 0 ? "328px" : "258px",
+                    ? "calc(-50% - 110%)"
+                    : "calc(-50% + 110%)",
+                width: "82%",
+                height: diff === 0 ? "330px" : "260px",
                 zIndex: diff === 0 ? 20 : 10,
                 opacity: diff === 0 ? 1 : Math.abs(diff) === 1 ? 0.95 : 0,
                 backgroundColor: diff === 0 ? "#159A99" : "#F5F7FA",
                 borderColor: diff === 0 ? "transparent" : "#159A99",
-                boxShadow: "none",
+                boxShadow:
+                  diff === 0
+                    ? "0 14px 34px rgba(21, 154, 153, 0.22)"
+                    : "0 2px 8px rgba(0, 0, 0, 0.04)",
                 pointerEvents: Math.abs(diff) <= 1 ? "auto" : "none",
               }}
               transition={{
-                duration: 0.65,
-                ease: [0.25, 1, 0.5, 1],
+                duration: 0.45,
+                ease: [0.22, 1, 0.36, 1],
               }}
               style={{
                 backfaceVisibility: "hidden",
@@ -295,18 +298,18 @@ export default function CoreConversationThemes() {
                 if (diff === -1) triggerPrev();
                 if (diff === 1) triggerNext();
               }}
-              className="absolute top-1/2 -translate-y-1/2 w-full max-w-[290px] sm:max-w-[480px] md:max-w-[620px] flex flex-col justify-center items-center text-center rounded-[26px] sm:rounded-[34px] border-[1.5px] px-5 py-6 sm:px-9 sm:py-8 md:px-12 md:py-9 cursor-pointer"
+              className="absolute top-1/2 -translate-y-1/2 w-full max-w-[310px] sm:max-w-[480px] md:max-w-[600px] flex flex-col justify-center items-center text-center rounded-[26px] sm:rounded-[34px] border-[1.5px] px-5 py-6 sm:px-9 sm:py-8 md:px-12 md:py-9 cursor-pointer overflow-hidden"
             >
-              {/* Content: Continuous smooth opacity transition with NO unmounting or blinking */}
+              {/* Content: Smooth fade and slight scale transition */}
               <div
-                className={`flex flex-col items-center justify-center gap-[22px] sm:gap-[26px] md:gap-[30px] transition-opacity duration-500 ease-in-out ${
-                  isActive ? "opacity-100" : "opacity-0 pointer-events-none"
+                className={`flex flex-col items-center justify-center gap-[18px] sm:gap-[24px] md:gap-[28px] transition-all duration-300 ease-out ${
+                  isActive ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
                 }`}
               >
-                <h3 className="font-cal text-[21.5px] sm:text-[25px] md:text-[29px] font-normal leading-[1.2] text-white max-w-[255px] sm:max-w-[420px] md:max-w-[540px]">
+                <h3 className="font-cal text-[21px] sm:text-[25px] md:text-[29px] font-normal leading-[1.2] text-white max-w-[255px] sm:max-w-[420px] md:max-w-[540px]">
                   {theme.title}
                 </h3>
-                <p className="font-geist text-[14px] sm:text-[15.5px] md:text-[17.5px] font-light leading-[1.5] text-white/95 max-w-[255px] sm:max-w-[420px] md:max-w-[520px]">
+                <p className="font-geist text-[13.5px] sm:text-[15px] md:text-[17px] font-light leading-[1.5] text-white/95 max-w-[255px] sm:max-w-[420px] md:max-w-[520px]">
                   {theme.description}
                 </p>
               </div>
