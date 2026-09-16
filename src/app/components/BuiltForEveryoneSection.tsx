@@ -133,10 +133,11 @@ export default function BuiltForEveryoneSection() {
                     leading-[118%]
                     tracking-normal
                     text-black
-                    transition-colors
+                    transition-all
                     duration-500
                     ease-out
                     group-hover:text-white
+                    group-hover:font-bold
                     xl:text-[26px]
                     2xl:text-[28px]
                   "
@@ -232,8 +233,8 @@ export default function BuiltForEveryoneSection() {
                 <div className="relative z-10 flex flex-col flex-1">
                   <h3
                     className={[
-                      "font-geist text-[20px] sm:text-[22px] font-normal leading-[1.22] tracking-normal transition-colors duration-500",
-                      isActive ? "text-white" : "text-black",
+                      "font-geist text-[20px] sm:text-[22px] leading-[1.22] tracking-normal transition-all duration-500",
+                      isActive ? "text-white font-bold" : "text-black font-normal",
                     ].join(" ")}
                   >
                     {audience.title}
