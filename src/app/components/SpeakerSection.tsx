@@ -327,11 +327,19 @@ export default function VoicesSlider() {
             </span>
           </div>
 
-          <div className="relative z-10 max-w-[60%] lg:max-w-[62%] pb-1">
+          <div className="relative z-10 max-w-[62%] lg:max-w-[65%] pb-1">
             <h3 className="font-geist text-[21px] lg:text-[25px] font-bold leading-[1.2] text-white drop-shadow-md">{item.name}</h3>
-            <p className="mt-1.5 font-geist text-[12.5px] lg:text-[13.5px] font-normal leading-snug text-white/90 drop-shadow">
-              {item.role},<br />{item.company}
-            </p>
+            <div className="mt-1.5 font-geist text-[12px] lg:text-[13px] font-normal leading-snug text-white/90 drop-shadow">
+              {item.role.includes(",") ? (
+                <>
+                  <span className="block">{item.role.split(",")[0].trim()},</span>
+                  <span className="block">{item.role.split(",").slice(1).join(",").trim()}</span>
+                </>
+              ) : (
+                <span className="block">{item.role}</span>
+              )}
+              <span className="block mt-0.5 text-white/80">{item.company}</span>
+            </div>
           </div>
         </div>
 
@@ -400,12 +408,12 @@ export default function VoicesSlider() {
         </div>
 
         {/* Content Block: Uniform horizontal baseline alignment across 2-line & 3-line cards */}
-        <div className="mt-auto flex flex-col gap-3.5 xl:gap-4">
-          <div className="flex items-center justify-between gap-3 min-h-[58px] xl:min-h-[62px]">
-            <h3 className="font-geist text-[23px] xl:text-[25px] font-normal leading-[1.22] text-black">
+        <div className="mt-auto flex flex-col gap-2.5 xl:gap-3">
+          <div className="flex items-center justify-between gap-3 min-h-[54px] xl:min-h-[58px]">
+            <h3 className="font-geist text-[22px] xl:text-[24px] font-normal leading-[1.2] text-black">
               {item.name}
             </h3>
-            <div className="w-[76px] h-[76px] xl:w-[80px] xl:h-[80px] rounded-full bg-[#159A99] overflow-hidden shrink-0 shadow-md flex items-center justify-center">
+            <div className="w-[72px] h-[72px] xl:w-[76px] xl:h-[76px] rounded-full bg-[#159A99] overflow-hidden shrink-0 shadow-md flex items-center justify-center">
               <img
                 src={item.avatar}
                 alt={item.name}
@@ -415,9 +423,17 @@ export default function VoicesSlider() {
             </div>
           </div>
 
-          <p className="min-h-[68px] xl:min-h-[72px] font-geist text-[16px] xl:text-[17px] font-light leading-[1.4] text-[#666666]">
-            {item.role} · {item.company}
-          </p>
+          <div className="min-h-[72px] xl:min-h-[76px] font-geist text-[14px] xl:text-[15px] font-light leading-[1.35] text-[#666666] flex flex-col justify-end">
+            {item.role.includes(",") ? (
+              <>
+                <span className="block">{item.role.split(",")[0].trim()},</span>
+                <span className="block">{item.role.split(",").slice(1).join(",").trim()}</span>
+              </>
+            ) : (
+              <span className="block">{item.role}</span>
+            )}
+            <span className="block text-[#888] font-normal text-[13px] xl:text-[14px] mt-0.5">{item.company}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -511,13 +527,21 @@ export default function VoicesSlider() {
                   </div>
 
                   {/* Speaker Name & Role on Left Half */}
-                  <div className="relative z-10 max-w-[60%] sm:max-w-[55%] pb-1">
+                  <div className="relative z-10 max-w-[62%] sm:max-w-[58%] pb-1">
                     <h3 className="mb-1 font-geist text-[17px] sm:text-[21px] md:text-[25px] min-[900px]:text-[28px] font-bold leading-[1.2] text-white drop-shadow-md">
                       {currentMobileSpeaker.name}
                     </h3>
-                    <p className="font-geist text-[11.5px] sm:text-[13px] md:text-[14.5px] min-[900px]:text-[15.5px] font-normal leading-snug text-white/90 mt-1 drop-shadow">
-                      {currentMobileSpeaker.role},<br />{currentMobileSpeaker.company}
-                    </p>
+                    <div className="font-geist text-[11.5px] sm:text-[13px] md:text-[14.5px] min-[900px]:text-[15.5px] font-normal leading-snug text-white/90 mt-1 drop-shadow">
+                      {currentMobileSpeaker.role.includes(",") ? (
+                        <>
+                          <span className="block">{currentMobileSpeaker.role.split(",")[0].trim()},</span>
+                          <span className="block">{currentMobileSpeaker.role.split(",").slice(1).join(",").trim()}</span>
+                        </>
+                      ) : (
+                        <span className="block">{currentMobileSpeaker.role}</span>
+                      )}
+                      <span className="block mt-0.5 text-white/80">{currentMobileSpeaker.company}</span>
+                    </div>
                   </div>
                 </div>
 
