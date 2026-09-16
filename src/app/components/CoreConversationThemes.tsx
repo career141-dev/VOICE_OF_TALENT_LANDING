@@ -178,7 +178,6 @@ export default function CoreConversationThemes() {
 
           return (
             <motion.article
-              layout
               key={`desktop-theme-card-${theme.id}`}
               initial={false}
               animate={{
@@ -260,7 +259,6 @@ export default function CoreConversationThemes() {
 
           return (
             <motion.article
-              layout
               key={`mobile-theme-card-${theme.id}`}
               initial={false}
               animate={{
