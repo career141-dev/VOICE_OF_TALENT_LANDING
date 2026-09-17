@@ -216,7 +216,7 @@ export default function CoreConversationThemes() {
                   zIndex: diff === 0 ? 30 : 20,
                   opacity: Math.abs(diff) <= 1 ? 1 : 0,
                   backgroundColor: diff === 0 ? "#159A99" : "#F5F7FA",
-                  borderColor: diff === 0 ? "transparent" : "#159A99",
+                  borderColor: diff === 0 ? "rgba(21, 154, 153, 0)" : "rgba(21, 154, 153, 1)",
                   boxShadow:
                     diff === 0
                       ? "0 22px 56px rgba(21, 154, 153, 0.32)"
@@ -304,7 +304,7 @@ export default function CoreConversationThemes() {
                   zIndex: diff === 0 ? 20 : 10,
                   opacity: diff === 0 ? 1 : Math.abs(diff) === 1 ? 0.95 : 0,
                   backgroundColor: diff === 0 ? "#159A99" : "#F5F7FA",
-                  borderColor: diff === 0 ? "transparent" : "#159A99",
+                  borderColor: diff === 0 ? "rgba(21, 154, 153, 0)" : "rgba(21, 154, 153, 1)",
                   boxShadow: "none",
                   pointerEvents: Math.abs(diff) <= 1 ? "auto" : "none",
                 }}
