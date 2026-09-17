@@ -78,7 +78,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     role: "Chief People Officer, Sri\u00A0Lanka",
     company: "Daraz",
     duration: "05:13",
-    videoUrl: "https://media.career141.com/new%20reels/Mr.%20Arshaq/Mr.%20Arshaq.mp4",
+    videoUrl: "https://media.career141.com/new%20reels/Mr.%20Arshaq/Mr.%20ArshaqF.mp4",
     bannerImage: `${R2_MEDIA_URL}/images/speaker6.png`,
     thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-06.webp`,
   },
@@ -320,7 +320,7 @@ export default function SeriesSection() {
 
     try {
       if (document.exitFullscreen) {
-        document.exitFullscreen().catch(() => {});
+        document.exitFullscreen().catch(() => { });
       } else if (doc.webkitExitFullscreen) {
         doc.webkitExitFullscreen();
       } else if (doc.webkitCancelFullScreen) {
@@ -633,7 +633,7 @@ export default function SeriesSection() {
 
         <div className="w-full grid gap-5 xl:gap-[26px] lg:grid-cols-[minmax(0,960fr)_minmax(0,620fr)] xl:grid-cols-[minmax(0,1000fr)_minmax(0,580fr)] 2xl:grid-cols-[minmax(0,1050fr)_minmax(0,550fr)] items-stretch">
           {/* Main Featured Video / Poster */}
-          <article className="group relative w-full max-lg:h-[500px] max-lg:sm:h-[520px] max-lg:min-h-[500px] max-lg:sm:min-h-[520px] lg:aspect-video lg:h-auto overflow-hidden rounded-[28px] md:rounded-[32px] max-[760px]:shadow-none max-[760px]:border-0 max-[760px]:ring-0 shadow-xl border-none outline-none max-lg:bg-black lg:bg-transparent">
+          <article className="group relative w-full max-lg:h-[500px] max-lg:sm:h-[520px] max-lg:min-h-[500px] max-lg:sm:min-h-[520px] lg:aspect-video lg:h-auto overflow-hidden rounded-[28px] md:rounded-[32px] max-[760px]:shadow-none max-[760px]:border-0 max-[760px]:ring-0 shadow-xl border-none outline-none bg-black">
             {isPlaying ? (
               <div
                 ref={playerContainerRef}
@@ -642,7 +642,7 @@ export default function SeriesSection() {
                   setShowControls(true);
                   resetControlsTimeout();
                 }}
-                className="relative h-full w-full max-lg:h-[500px] max-lg:sm:h-[520px] max-lg:min-h-[500px] max-lg:sm:min-h-[520px] lg:h-full lg:aspect-video flex items-center justify-center cursor-pointer select-none overflow-hidden max-lg:bg-black lg:bg-transparent border-none outline-none"
+                className="relative h-full w-full max-lg:h-[500px] max-lg:sm:h-[520px] max-lg:min-h-[500px] max-lg:sm:min-h-[520px] lg:h-full lg:aspect-video flex items-center justify-center cursor-pointer select-none overflow-hidden bg-black border-none outline-none"
               >
                 {selectedEpisode.videoUrl ? (
                   <>
@@ -679,9 +679,8 @@ export default function SeriesSection() {
 
                     {/* Top Controls: Mute/Unmute & Close/Exit Fullscreen Video */}
                     <div
-                      className={`absolute top-4 inset-x-4 z-20 flex items-center justify-between transition-opacity duration-300 ${
-                        showControls ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-                      }`}
+                      className={`absolute top-4 inset-x-4 z-20 flex items-center justify-between transition-opacity duration-300 ${showControls ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                        }`}
                     >
                       {/* Mute/Unmute toggle button */}
                       <button
@@ -753,9 +752,8 @@ export default function SeriesSection() {
 
                     {/* Center Play / Pause Button Overlay */}
                     <div
-                      className={`absolute inset-0 z-10 flex items-center justify-center transition-all duration-300 pointer-events-none ${
-                        showControls ? "opacity-100" : "opacity-0"
-                      }`}
+                      className={`absolute inset-0 z-10 flex items-center justify-center transition-all duration-300 pointer-events-none ${showControls ? "opacity-100" : "opacity-0"
+                        }`}
                     >
                       <button
                         type="button"
@@ -780,9 +778,8 @@ export default function SeriesSection() {
 
                     {/* Bottom Scrubber & Duration Control Bar */}
                     <div
-                      className={`absolute inset-x-0 bottom-0 z-20 flex flex-col justify-end bg-gradient-to-t from-black/90 via-black/50 to-transparent p-4 sm:p-6 transition-opacity duration-300 ${
-                        showControls ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-                      }`}
+                      className={`absolute inset-x-0 bottom-0 z-20 flex flex-col justify-end bg-gradient-to-t from-black/90 via-black/50 to-transparent p-4 sm:p-6 transition-opacity duration-300 ${showControls ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                        }`}
                       onClick={(e) => e.stopPropagation()}
                     >
                       {/* Interactive Scrubber Bar */}
@@ -873,9 +870,8 @@ export default function SeriesSection() {
                               toggleFullscreen();
                               resetControlsTimeout();
                             }}
-                            className={`flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full ${
-                              isFullscreen ? "bg-[#159A99] text-white shadow-md" : "bg-white/10 text-white hover:bg-white/20"
-                            } transition-all active:scale-95 cursor-pointer ml-1`}
+                            className={`flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full ${isFullscreen ? "bg-[#159A99] text-white shadow-md" : "bg-white/10 text-white hover:bg-white/20"
+                              } transition-all active:scale-95 cursor-pointer ml-1`}
                             aria-label={isFullscreen ? "Exit Fullscreen / Minimize" : "Enter Fullscreen"}
                             title={isFullscreen ? "Exit Fullscreen / Minimize" : "Enter Fullscreen"}
                           >
