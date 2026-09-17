@@ -36,8 +36,16 @@ function Arrow({ source }: { source: string }) {
 
 export default function Home() {
   useEffect(() => {
-    if (typeof window !== "undefined" && (window.location.hash === "#top" || window.location.hash === "#hero")) {
-      window.history.replaceState(null, "", window.location.pathname + window.location.search);
+    if (typeof window !== "undefined") {
+      if ("scrollRestoration" in window.history) {
+        window.history.scrollRestoration = "manual";
+      }
+      if (!window.location.hash || window.location.hash === "#top" || window.location.hash === "#hero") {
+        window.scrollTo(0, 0);
+        if (window.location.hash) {
+          window.history.replaceState(null, "", window.location.pathname + window.location.search);
+        }
+      }
     }
   }, []);
 

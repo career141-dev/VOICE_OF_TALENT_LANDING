@@ -171,6 +171,7 @@ export default function SeriesSection() {
   const isManuallyClosedRef = useRef(false);
   const isManuallyPausedRef = useRef(false);
   const wasPlayingBeforeScrollOutRef = useRef(true);
+  const isFirstMountRef = useRef(true);
 
   // Default to Episode 1 (Mr. Patrick Pereira)
   const [selectedEpisode, setSelectedEpisode] = useState<SeriesEpisode>(
@@ -511,15 +512,24 @@ export default function SeriesSection() {
 
   // Automatically scroll playlist to active episode whenever selectedEpisode changes
   useEffect(() => {
+    if (isFirstMountRef.current) {
+      isFirstMountRef.current = false;
+      return;
+    }
+
     const timer = setTimeout(() => {
       const activeDesktop = document.getElementById(`desktop-playlist-item-${selectedEpisode.id}`);
-      if (activeDesktop) {
-        activeDesktop.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      if (activeDesktop && activeDesktop.parentElement) {
+        const container = activeDesktop.parentElement;
+        const targetTop = activeDesktop.offsetTop - container.offsetTop;
+        container.scrollTo({ top: targetTop, behavior: "smooth" });
       }
 
       const activeMobile = document.getElementById(`mobile-playlist-item-${selectedEpisode.id}`);
-      if (activeMobile) {
-        activeMobile.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      if (activeMobile && activeMobile.parentElement) {
+        const container = activeMobile.parentElement;
+        const targetLeft = activeMobile.offsetLeft - container.offsetLeft - (container.clientWidth / 2) + (activeMobile.clientWidth / 2);
+        container.scrollTo({ left: Math.max(0, targetLeft), behavior: "smooth" });
       }
     }, 120);
 

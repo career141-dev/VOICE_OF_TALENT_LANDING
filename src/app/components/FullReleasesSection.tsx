@@ -218,14 +218,12 @@ export default function FullReleasesSection() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [reelDurations, setReelDurations] = useState<Record<string, string>>({});
+  const [touchOffset, setTouchOffset] = useState(0);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerContainerRef = useRef<HTMLDivElement>(null);
-  const reelSliderRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const isProgrammaticScroll = useRef(false);
-  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   /* Touch Swiping Refs */
   const touchStartX = useRef<number | null>(null);
@@ -517,99 +515,76 @@ export default function FullReleasesSection() {
     }
   };
 
-  const handleReelScroll = () => {
-    if (!reelSliderRef.current || isProgrammaticScroll.current) return;
-    const { scrollLeft, clientWidth } = reelSliderRef.current;
-    if (clientWidth === 0) return;
-    const newIndex = Math.round(scrollLeft / clientWidth);
-    if (newIndex !== activeReelIndex && (newIndex === 0 || newIndex === 1)) {
-      setActiveReelIndex(newIndex);
-    }
-  };
-
   const scrollToReel = (index: number) => {
     setActiveReelIndex(index);
     setCurrentTime(0);
     setIsPlaying(false);
     setIsPaused(false);
     setShowControls(true);
-
-    if (reelSliderRef.current) {
-      isProgrammaticScroll.current = true;
-      const width = reelSliderRef.current.clientWidth;
-      reelSliderRef.current.scrollTo({
-        left: index * width,
-        behavior: "smooth",
-      });
-      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
-      scrollTimeoutRef.current = setTimeout(() => {
-        isProgrammaticScroll.current = false;
-      }, 500);
-    }
   };
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (reelSliderRef.current) {
-        const width = reelSliderRef.current.clientWidth;
-        reelSliderRef.current.scrollLeft = activeReelIndex * width;
-      }
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [activeReelIndex]);
 
   const selectEpisode = (episode: Episode) => {
     setSelectedEpisode(episode);
     setActiveReelIndex(0);
-    if (reelSliderRef.current) {
-      reelSliderRef.current.scrollLeft = 0;
-    }
     setIsPlaying(false);
     setIsPaused(false);
     setCurrentTime(0);
     setShowControls(true);
   };
 
-  /* ── Mobile Touch Swiping Handlers ── */
+  /* ── Mobile & Touch Swiping Handlers ── */
   const handleTouchStart = (e: React.TouchEvent) => {
     if (isPlaying) return;
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
     touchStartTime.current = Date.now();
     isSwipingTouch.current = false;
+    setTouchOffset(0);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
     if (isPlaying || touchStartX.current === null || touchStartY.current === null) return;
     const currentX = e.touches[0].clientX;
     const currentY = e.touches[0].clientY;
-    const diffX = Math.abs(currentX - touchStartX.current);
-    const diffY = Math.abs(currentY - touchStartY.current);
-    if (diffX > 8 && diffX > diffY) {
+    const diffX = currentX - touchStartX.current;
+    const diffY = currentY - touchStartY.current;
+
+    // Detect horizontal swipe intent
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 6) {
       isSwipingTouch.current = true;
+      // Resistance at outer edges
+      let boundedDiffX = diffX;
+      if (activeReelIndex === 0 && diffX > 0) {
+        boundedDiffX = diffX * 0.25;
+      } else if (activeReelIndex === 1 && diffX < 0) {
+        boundedDiffX = diffX * 0.25;
+      }
+      setTouchOffset(boundedDiffX);
     }
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (isPlaying || touchStartX.current === null || touchStartY.current === null) return;
     const endX = e.changedTouches[0]?.clientX ?? touchStartX.current;
-    const endY = e.changedTouches[0]?.clientY ?? touchStartY.current;
     const diffX = endX - touchStartX.current;
-    const diffY = endY - touchStartY.current;
+    const diffY = (e.changedTouches[0]?.clientY ?? touchStartY.current) - touchStartY.current;
     const elapsed = Date.now() - touchStartTime.current;
     const speedX = Math.abs(diffX) / Math.max(elapsed, 1);
 
-    if ((Math.abs(diffX) > 25 || (Math.abs(diffX) > 12 && speedX > 0.15)) && Math.abs(diffX) > Math.abs(diffY)) {
+    if (Math.abs(diffX) > Math.abs(diffY) && (Math.abs(diffX) > 28 || (Math.abs(diffX) > 12 && speedX > 0.15))) {
       if (diffX < 0) {
+        // Swiped Left -> Reel 2
         scrollToReel(1);
       } else {
+        // Swiped Right -> Reel 1
         scrollToReel(0);
       }
     }
 
     touchStartX.current = null;
     touchStartY.current = null;
+    setTouchOffset(0);
+
     setTimeout(() => {
       isSwipingTouch.current = false;
     }, 150);
@@ -772,33 +747,33 @@ export default function FullReleasesSection() {
         {/* Video Player Section with Reel Thumbnail Poster & Swipeable 2-Reel Slider */}
         <div className="flex w-full min-[1100px]:h-[660px] max-w-full flex-col items-center min-[1100px]:justify-between">
           <div
-            ref={reelSliderRef}
-            onScroll={handleReelScroll}
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
-            className="relative flex h-[380px] sm:h-[460px] md:h-[540px] min-[1100px]:h-auto min-[1100px]:flex-1 min-[1100px]:min-h-0 w-full max-w-full overflow-x-auto min-[1100px]:overflow-x-hidden overflow-y-hidden rounded-[24px] sm:rounded-[30px] border-[1.62px] border-[#E0E0E0] bg-black shadow-lg opacity-100 snap-x min-[1100px]:snap-none snap-mandatory snap-always overscroll-x-contain touch-pan-x touch-pan-y [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-            style={{
-              scrollSnapType: "x mandatory",
-              WebkitOverflowScrolling: "touch",
-              touchAction: "pan-x pan-y",
-            }}
+            className="relative flex h-[380px] sm:h-[460px] md:h-[540px] min-[1100px]:h-auto min-[1100px]:flex-1 min-[1100px]:min-h-0 w-full max-w-full overflow-hidden rounded-[24px] sm:rounded-[30px] border-[1.62px] border-[#E0E0E0] bg-black shadow-lg opacity-100 select-none touch-pan-y"
           >
-            {/* Render 2 Reel Slides (Reel 1 & Reel 2) */}
-            {[0, 1].map((reelIdx) => {
-              const reelUrl = currentReels[reelIdx];
-              const isCurrentSlideActive = activeReelIndex === reelIdx;
-              const isCurrentSlidePlaying = isPlaying && isCurrentSlideActive;
+            {/* Smooth 2-Reel Hardware-Accelerated Sliding Track */}
+            <div
+              className="flex h-full w-full items-stretch"
+              style={{
+                transform: `translate3d(calc(-${activeReelIndex * 100}% + ${touchOffset}px), 0, 0)`,
+                transition: isSwipingTouch.current
+                  ? "none"
+                  : "transform 0.45s cubic-bezier(0.25, 1, 0.5, 1)",
+                willChange: "transform",
+              }}
+            >
+              {/* Render 2 Reel Slides (Reel 1 & Reel 2) */}
+              {[0, 1].map((reelIdx) => {
+                const reelUrl = currentReels[reelIdx];
+                const isCurrentSlideActive = activeReelIndex === reelIdx;
+                const isCurrentSlidePlaying = isPlaying && isCurrentSlideActive;
 
-              return (
-                <article
-                  key={reelIdx}
-                  className="relative h-full w-full min-w-full shrink-0 snap-start snap-always overflow-hidden bg-black select-none cursor-pointer"
-                  style={{
-                    scrollSnapAlign: "start",
-                    scrollSnapStop: "always",
-                  }}
-                >
+                return (
+                  <article
+                    key={reelIdx}
+                    className="relative h-full w-full min-w-full shrink-0 overflow-hidden bg-black select-none cursor-pointer"
+                  >
                   {isCurrentSlidePlaying ? (
                     <div
                       ref={isCurrentSlideActive ? playerContainerRef : null}
@@ -1117,6 +1092,7 @@ export default function FullReleasesSection() {
                 </article>
               );
             })}
+            </div>
           </div>
 
           {/* Navigation Controls: < (1) (2) > */}

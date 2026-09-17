@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 type ThemeItem = {
   id: number;
@@ -60,6 +60,15 @@ const themes: ThemeItem[] = [
   },
 ];
 
+// Keep this in sync with the box `transition.duration` values below (in ms).
+const DESKTOP_BOX_DURATION_MS = 450;
+const MOBILE_BOX_DURATION_MS = 450;
+// Text only needs to stay hidden long enough to mask the one instant
+// reflow (font-size/max-width swap), not the whole box move — since
+// the text has a fixed max-width, it doesn't keep reflowing as the box
+// continues resizing. Keep this short so the reveal feels immediate.
+const REVEAL_DELAY_MS = 160;
+
 function getCircularDiff(index: number, active: number, total: number) {
   let diff = index - active;
   if (diff > total / 2) diff -= total;
@@ -71,6 +80,12 @@ export default function CoreConversationThemes() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState<number>(0);
   const [isPaused, setIsPaused] = useState(false);
+
+  // NEW: while true, all title/description text is opacity-0.
+  // This is what actually kills the shake — text only ever becomes
+  // visible once the card has finished resizing/moving.
+  const [textHidden, setTextHidden] = useState(false);
+  const textTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const lastSwipeTime = useRef<number>(0);
   const totalThemes = themes.length;
@@ -104,6 +119,19 @@ export default function CoreConversationThemes() {
     setDirection(index > activeIndex ? 1 : -1);
     setActiveIndex(index);
   };
+
+  // NEW: every time the active card changes, hide text immediately,
+  // then reveal it once the box animation has essentially finished.
+  useEffect(() => {
+    setTextHidden(true);
+    if (textTimeoutRef.current) clearTimeout(textTimeoutRef.current);
+    textTimeoutRef.current = setTimeout(() => {
+      setTextHidden(false);
+    }, REVEAL_DELAY_MS);
+    return () => {
+      if (textTimeoutRef.current) clearTimeout(textTimeoutRef.current);
+    };
+  }, [activeIndex]);
 
   /* ── Auto-play Movement (Advances every 6.5s, pauses on hover / touch) ── */
   useEffect(() => {
@@ -163,241 +191,239 @@ export default function CoreConversationThemes() {
           </h2>
         </div>
 
-      {/* ── DESKTOP 3-WIDGET CONTINUOUS CAROUSEL (Left -> Center -> Right Real Movement) ── */}
-      <div
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
-        className="hidden lg:block relative w-full h-[470px] xl:h-[510px]"
-      >
-        {themes.map((theme, idx) => {
-          const diff = getCircularDiff(idx, activeIndex, totalThemes);
-          const isVisible = Math.abs(diff) <= 2;
-          if (!isVisible) return null;
-
-          const isActive = diff === 0;
-
-          return (
-            <motion.article
-              key={`desktop-theme-card-${theme.id}`}
-              initial={false}
-              animate={{
-                left: diff === 0 ? "50%" : diff === -1 ? "0%" : diff === 1 ? "72%" : diff < -1 ? "-32%" : "104%",
-                x: diff === 0 ? "-50%" : "0%",
-                width: diff === 0 ? "42%" : "28%",
-                height: diff === 0 ? "440px" : "330px",
-                zIndex: diff === 0 ? 30 : 20,
-                opacity: Math.abs(diff) <= 1 ? 1 : 0,
-                backgroundColor: diff === 0 ? "#159A99" : "#F5F7FA",
-                borderColor: diff === 0 ? "transparent" : "#159A99",
-                boxShadow:
-                  diff === 0
-                    ? "0 22px 56px rgba(21, 154, 153, 0.32)"
-                    : "0 4px 14px rgba(0, 0, 0, 0.04)",
-                pointerEvents: Math.abs(diff) <= 1 ? "auto" : "none",
-              }}
-              transition={{
-                duration: 0.75,
-                ease: [0.25, 1, 0.5, 1],
-              }}
-              style={{
-                backfaceVisibility: "hidden",
-                WebkitFontSmoothing: "antialiased",
-                transform: "translate3d(0,0,0)",
-              }}
-              onClick={() => {
-                if (diff === -1) handlePrev();
-                if (diff === 1) handleNext();
-              }}
-              className={`absolute top-1/2 -translate-y-1/2 flex flex-col items-center text-center rounded-[28px] xl:rounded-[34px] border-[1.5px] select-none ${
-                isActive
-                  ? "justify-between px-8 pt-11 pb-13 xl:px-12 xl:pt-13 xl:pb-16 cursor-default"
-                  : "justify-center px-7 xl:px-10 py-6 cursor-pointer hover:bg-white hover:shadow-md transition-colors"
-              }`}
-            >
-              {/* Title */}
-              <h3
-                className={`font-cal font-normal leading-[1.2] transition-colors duration-500 ${
-                  isActive
-                    ? "text-white text-[28px] sm:text-[32px] xl:text-[36px] max-w-[490px]"
-                    : "text-[#161616] text-[21px] sm:text-[23px] xl:text-[25px] max-w-[280px]"
-                }`}
-              >
-                {theme.title}
-              </h3>
-
-              {/* Description (Only in active widget) */}
-              {isActive && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.45 }}
-                  className="max-w-[470px]"
-                >
-                  <p className="font-geist text-[17px] sm:text-[19px] xl:text-[21px] font-light leading-[1.6] text-white/95">
-                    {theme.description}
-                  </p>
-                </motion.div>
-              )}
-            </motion.article>
-          );
-        })}
-      </div>
-
-      {/* ── TABLET & MOBILE VIEW (Continuous Carousel: Prev glides left, Next glides to center) ── */}
-      <div
-        onTouchStart={handleContainerTouchStart}
-        onTouchEnd={handleContainerTouchEnd}
-        className="relative flex w-full items-center justify-center py-4 min-h-[365px] sm:min-h-[400px] md:min-h-[440px] lg:hidden select-none overflow-hidden"
-        style={{ touchAction: "pan-y" }}
-      >
-        {themes.map((theme, idx) => {
-          const diff = getCircularDiff(idx, activeIndex, totalThemes);
-          const isVisible = Math.abs(diff) <= 2;
-          if (!isVisible) return null;
-
-          const isActive = diff === 0;
-
-          return (
-            <motion.article
-              key={`mobile-theme-card-${theme.id}`}
-              initial={false}
-              animate={{
-                left: "50%",
-                x:
-                  diff === 0
-                    ? "-50%"
-                    : diff === -1
-                    ? "calc(-50% - 24px)"
-                    : diff === 1
-                    ? "calc(-50% + 24px)"
-                    : diff < -1
-                    ? "calc(-50% - 110%)"
-                    : "calc(-50% + 110%)",
-                width: "82%",
-                height: diff === 0 ? "330px" : "260px",
-                zIndex: diff === 0 ? 20 : 10,
-                opacity: diff === 0 ? 1 : Math.abs(diff) === 1 ? 0.95 : 0,
-                backgroundColor: diff === 0 ? "#159A99" : "#F5F7FA",
-                borderColor: diff === 0 ? "transparent" : "#159A99",
-                boxShadow: "none",
-                pointerEvents: Math.abs(diff) <= 1 ? "auto" : "none",
-              }}
-              transition={{
-                duration: 0.45,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              style={{
-                backfaceVisibility: "hidden",
-                WebkitFontSmoothing: "antialiased",
-                transform: "translate3d(0,0,0)",
-              }}
-              onClick={() => {
-                if (diff === -1) triggerPrev();
-                if (diff === 1) triggerNext();
-              }}
-              className="absolute top-1/2 -translate-y-1/2 w-full max-w-[310px] sm:max-w-[480px] md:max-w-[600px] flex flex-col justify-center items-center text-center rounded-[26px] sm:rounded-[34px] border-[1.5px] px-5 py-6 sm:px-9 sm:py-8 md:px-12 md:py-9 cursor-pointer overflow-hidden"
-            >
-              {/* Content: Smooth fade and slight scale transition */}
-              <div
-                className={`flex flex-col items-center justify-center gap-[18px] sm:gap-[24px] md:gap-[28px] transition-all duration-300 ease-out ${
-                  isActive ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
-                }`}
-              >
-                <h3 className="font-cal text-[21px] sm:text-[25px] md:text-[29px] font-normal leading-[1.2] text-white max-w-[255px] sm:max-w-[420px] md:max-w-[540px]">
-                  {theme.title}
-                </h3>
-                <p className="font-geist text-[13.5px] sm:text-[15px] md:text-[17px] font-light leading-[1.5] text-white/95 max-w-[255px] sm:max-w-[420px] md:max-w-[520px]">
-                  {theme.description}
-                </p>
-              </div>
-            </motion.article>
-          );
-        })}
-      </div>
-
-      {/* ── DOWN DOT PAGINATION (Dynamic 5-Dot Window on Mobile/Tablet, Full on Desktop) ── */}
-      <div className="mt-10 lg:mt-12 flex items-center justify-center gap-2.5">
-        <button
-          type="button"
-          onClick={triggerPrev}
-          aria-label="Previous theme"
-          className="flex h-8 w-8 items-center justify-center rounded-full bg-[#E8EEF2] text-[#57606A] transition-all hover:bg-[#159A99] hover:text-white active:scale-95 cursor-pointer shadow-xs mr-2"
+        {/* ── DESKTOP 3-WIDGET CONTINUOUS CAROUSEL (Left -> Center -> Right Real Movement) ── */}
+        <div
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          className="hidden lg:block relative w-full h-[470px] xl:h-[510px]"
         >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="h-4 w-4">
-            <path d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-
-        {/* Mobile & Tablet: Dynamic 5-Dot Window (< 1024px) */}
-        <div className="flex lg:hidden items-center gap-2 h-3">
-          {(() => {
-            const total = themes.length;
-            const maxVisible = 5;
-            const half = Math.floor(maxVisible / 2);
-            let start = activeIndex - half;
-            if (start < 0) start = 0;
-            if (start + maxVisible > total) start = Math.max(0, total - maxVisible);
-            const visibleIndices = Array.from({ length: Math.min(total, maxVisible) }, (_, i) => start + i);
-
-            return visibleIndices.map((idx) => {
-              const isActive = idx === activeIndex;
-              const isEdgeSmall =
-                (idx === start && start > 0) ||
-                (idx === start + maxVisible - 1 && start + maxVisible < total);
-
-              return (
-                <button
-                  key={`mobile-theme-dot-${themes[idx].id}`}
-                  type="button"
-                  onClick={() => handleSelectTheme(idx)}
-                  aria-label={`Jump to theme: ${themes[idx].title}`}
-                  title={themes[idx].title}
-                  className={`transition-all duration-300 ease-out cursor-pointer rounded-full ${
-                    isActive
-                      ? "w-7 h-2.5 bg-[#159A99] shadow-sm"
-                      : isEdgeSmall
-                      ? "w-1.5 h-1.5 bg-[#D5DCE2]"
-                      : "w-2.5 h-2.5 bg-[#D5DCE2] hover:bg-[#9EADB7]"
-                  }`}
-                />
-              );
-            });
-          })()}
-        </div>
-
-        {/* Desktop: Full 8 Dots (>= 1024px) */}
-        <div className="hidden lg:flex items-center gap-2.5">
           {themes.map((theme, idx) => {
-            const isActive = idx === activeIndex;
+            const diff = getCircularDiff(idx, activeIndex, totalThemes);
+            const isVisible = Math.abs(diff) <= 2;
+            if (!isVisible) return null;
+
+            const isActive = diff === 0;
+
             return (
-              <button
-                key={`desktop-theme-dot-${theme.id}`}
-                type="button"
-                onClick={() => handleSelectTheme(idx)}
-                aria-label={`Jump to theme: ${theme.title}`}
-                title={theme.title}
-                className={`transition-all duration-400 ease-out cursor-pointer rounded-full ${
-                  isActive
-                    ? "w-8 h-2.5 bg-[#159A99] shadow-sm"
-                    : "w-2.5 h-2.5 bg-[#D5DCE2] hover:bg-[#9EADB7] hover:scale-125"
-                }`}
-              />
+              <motion.article
+                key={`desktop-theme-card-${theme.id}`}
+                initial={false}
+                animate={{
+                  left: diff === 0 ? "50%" : diff === -1 ? "0%" : diff === 1 ? "72%" : diff < -1 ? "-32%" : "104%",
+                  x: diff === 0 ? "-50%" : "0%",
+                  width: diff === 0 ? "42%" : "28%",
+                  height: diff === 0 ? "440px" : "330px",
+                  zIndex: diff === 0 ? 30 : 20,
+                  opacity: Math.abs(diff) <= 1 ? 1 : 0,
+                  backgroundColor: diff === 0 ? "#159A99" : "#F5F7FA",
+                  borderColor: diff === 0 ? "transparent" : "#159A99",
+                  boxShadow:
+                    diff === 0
+                      ? "0 22px 56px rgba(21, 154, 153, 0.32)"
+                      : "0 4px 14px rgba(0, 0, 0, 0.04)",
+                  pointerEvents: Math.abs(diff) <= 1 ? "auto" : "none",
+                }}
+                transition={{
+                  duration: DESKTOP_BOX_DURATION_MS / 1000,
+                  ease: [0.25, 1, 0.5, 1],
+                }}
+                style={{
+                  backfaceVisibility: "hidden",
+                  WebkitFontSmoothing: "antialiased",
+                  transform: "translate3d(0,0,0)",
+                }}
+                onClick={() => {
+                  if (diff === -1) handlePrev();
+                  if (diff === 1) handleNext();
+                }}
+                className={`absolute top-1/2 -translate-y-1/2 flex flex-col items-center justify-center text-center rounded-[28px] xl:rounded-[34px] border-[1.5px] select-none px-7 xl:px-10 py-6 ${isActive
+                    ? "cursor-default"
+                    : "cursor-pointer hover:bg-white hover:shadow-md transition-colors"
+                  }`}
+              >
+                {/* Title + description fade as ONE unit, only once the box
+                  has (almost) finished resizing — this is what prevents
+                  the visible reflow/jump. No CSS transition on font-size
+                  or max-width; they just snap while invisible. */}
+                <div
+                  className={`flex flex-col items-center transition-opacity ease-out ${textHidden ? "opacity-0 duration-150" : "opacity-100 duration-200"
+                    }`}
+                >
+                  <h3
+                    className={`font-cal font-normal leading-[1.2] ${isActive
+                        ? "text-white text-[28px] sm:text-[32px] xl:text-[36px] max-w-[490px]"
+                        : "text-[#161616] text-[21px] sm:text-[23px] xl:text-[25px] max-w-[280px]"
+                      }`}
+                  >
+                    {theme.title}
+                  </h3>
+
+                  {isActive && (
+                    <p className="mt-5 max-w-[470px] font-geist text-[17px] sm:text-[19px] xl:text-[21px] font-light leading-[1.6] text-white/95">
+                      {theme.description}
+                    </p>
+                  )}
+                </div>
+              </motion.article>
             );
           })}
         </div>
 
-        <button
-          type="button"
-          onClick={triggerNext}
-          aria-label="Next theme"
-          className="flex h-8 w-8 items-center justify-center rounded-full bg-[#E8EEF2] text-[#57606A] transition-all hover:bg-[#159A99] hover:text-white active:scale-95 cursor-pointer shadow-xs ml-2"
+        {/* ── TABLET & MOBILE VIEW (Continuous Carousel: Prev glides left, Next glides to center) ── */}
+        <div
+          onTouchStart={handleContainerTouchStart}
+          onTouchEnd={handleContainerTouchEnd}
+          className="relative flex w-full items-center justify-center py-4 min-h-[380px] sm:min-h-[420px] md:min-h-[460px] lg:hidden select-none overflow-hidden"
+          style={{ touchAction: "pan-y" }}
         >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="h-4 w-4">
-            <path d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
+          {themes.map((theme, idx) => {
+            const diff = getCircularDiff(idx, activeIndex, totalThemes);
+            const isVisible = Math.abs(diff) <= 2;
+            if (!isVisible) return null;
+
+            const isActive = diff === 0;
+
+            return (
+              <motion.article
+                key={`mobile-theme-card-${theme.id}`}
+                initial={false}
+                animate={{
+                  left: "50%",
+                  x:
+                    diff === 0
+                      ? "-50%"
+                      : diff === -1
+                        ? "calc(-50% - 24px)"
+                        : diff === 1
+                          ? "calc(-50% + 24px)"
+                          : diff < -1
+                            ? "calc(-50% - 110%)"
+                            : "calc(-50% + 110%)",
+                  width: "84%",
+                  height: diff === 0 ? "350px" : "290px",
+                  zIndex: diff === 0 ? 20 : 10,
+                  opacity: diff === 0 ? 1 : Math.abs(diff) === 1 ? 0.95 : 0,
+                  backgroundColor: diff === 0 ? "#159A99" : "#F5F7FA",
+                  borderColor: diff === 0 ? "transparent" : "#159A99",
+                  boxShadow: "none",
+                  pointerEvents: Math.abs(diff) <= 1 ? "auto" : "none",
+                }}
+                transition={{
+                  duration: MOBILE_BOX_DURATION_MS / 1000,
+                  ease: [0.25, 1, 0.5, 1],
+                }}
+                style={{
+                  backfaceVisibility: "hidden",
+                  WebkitFontSmoothing: "antialiased",
+                  transform: "translate3d(0,0,0)",
+                }}
+                onClick={() => {
+                  if (diff === -1) triggerPrev();
+                  if (diff === 1) triggerNext();
+                }}
+                className="absolute top-1/2 -translate-y-1/2 w-full max-w-[310px] sm:max-w-[480px] md:max-w-[600px] flex flex-col justify-center items-center text-center rounded-[26px] sm:rounded-[34px] border-[1.5px] px-5 py-6 sm:px-9 sm:py-8 md:px-12 md:py-9 cursor-pointer overflow-hidden select-none"
+              >
+                {/* Content: only visible when active AND the box has
+                  finished moving into place. */}
+                <div
+                  className={`flex flex-col items-center justify-center gap-[18px] sm:gap-[24px] md:gap-[28px] transition-opacity ease-out ${isActive && !textHidden
+                      ? "opacity-100 duration-200"
+                      : "opacity-0 duration-150 pointer-events-none"
+                    }`}
+                >
+                  <h3 className="font-cal text-[21px] sm:text-[25px] md:text-[29px] font-normal leading-[1.2] text-white max-w-[255px] sm:max-w-[420px] md:max-w-[540px]">
+                    {theme.title}
+                  </h3>
+                  <p className="font-geist text-[13.5px] sm:text-[15px] md:text-[17px] font-light leading-[1.5] text-white/95 max-w-[255px] sm:max-w-[420px] md:max-w-[520px]">
+                    {theme.description}
+                  </p>
+                </div>
+              </motion.article>
+            );
+          })}
+        </div>
+
+        {/* ── DOWN DOT PAGINATION (Dynamic 5-Dot Window on Mobile/Tablet, Full on Desktop) ── */}
+        <div className="mt-10 lg:mt-12 flex items-center justify-center gap-2.5">
+          <button
+            type="button"
+            onClick={triggerPrev}
+            aria-label="Previous theme"
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-[#E8EEF2] text-[#57606A] transition-all hover:bg-[#159A99] hover:text-white active:scale-95 cursor-pointer shadow-xs mr-2"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="h-4 w-4">
+              <path d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+
+          {/* Mobile & Tablet: Dynamic 5-Dot Window (< 1024px) */}
+          <div className="flex lg:hidden items-center gap-2 h-3">
+            {(() => {
+              const total = themes.length;
+              const maxVisible = 5;
+              const half = Math.floor(maxVisible / 2);
+              let start = activeIndex - half;
+              if (start < 0) start = 0;
+              if (start + maxVisible > total) start = Math.max(0, total - maxVisible);
+              const visibleIndices = Array.from({ length: Math.min(total, maxVisible) }, (_, i) => start + i);
+
+              return visibleIndices.map((idx) => {
+                const isActive = idx === activeIndex;
+                const isEdgeSmall =
+                  (idx === start && start > 0) ||
+                  (idx === start + maxVisible - 1 && start + maxVisible < total);
+
+                return (
+                  <button
+                    key={`mobile-theme-dot-${themes[idx].id}`}
+                    type="button"
+                    onClick={() => handleSelectTheme(idx)}
+                    aria-label={`Jump to theme: ${themes[idx].title}`}
+                    title={themes[idx].title}
+                    className={`transition-all duration-300 ease-out cursor-pointer rounded-full ${isActive
+                        ? "w-7 h-2.5 bg-[#159A99] shadow-sm"
+                        : isEdgeSmall
+                          ? "w-1.5 h-1.5 bg-[#D5DCE2]"
+                          : "w-2.5 h-2.5 bg-[#D5DCE2] hover:bg-[#9EADB7]"
+                      }`}
+                  />
+                );
+              });
+            })()}
+          </div>
+
+          {/* Desktop: Full 8 Dots (>= 1024px) */}
+          <div className="hidden lg:flex items-center gap-2.5">
+            {themes.map((theme, idx) => {
+              const isActive = idx === activeIndex;
+              return (
+                <button
+                  key={`desktop-theme-dot-${theme.id}`}
+                  type="button"
+                  onClick={() => handleSelectTheme(idx)}
+                  aria-label={`Jump to theme: ${theme.title}`}
+                  title={theme.title}
+                  className={`transition-all duration-400 ease-out cursor-pointer rounded-full ${isActive
+                      ? "w-8 h-2.5 bg-[#159A99] shadow-sm"
+                      : "w-2.5 h-2.5 bg-[#D5DCE2] hover:bg-[#9EADB7] hover:scale-125"
+                    }`}
+                />
+              );
+            })}
+          </div>
+
+          <button
+            type="button"
+            onClick={triggerNext}
+            aria-label="Next theme"
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-[#E8EEF2] text-[#57606A] transition-all hover:bg-[#159A99] hover:text-white active:scale-95 cursor-pointer shadow-xs ml-2"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="h-4 w-4">
+              <path d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
   );
 }
