@@ -571,6 +571,10 @@ export default function FullReleasesSection() {
     const elapsed = Date.now() - touchStartTime.current;
     const speedX = Math.abs(diffX) / Math.max(elapsed, 1);
 
+    // Reset the swipe flag FIRST so the upcoming re-render is allowed
+    // to animate through the CSS transition instead of snapping instantly.
+    isSwipingTouch.current = false;
+
     if (Math.abs(diffX) > Math.abs(diffY) && (Math.abs(diffX) > 28 || (Math.abs(diffX) > 12 && speedX > 0.15))) {
       if (diffX < 0) {
         // Swiped Left -> Reel 2
@@ -584,10 +588,6 @@ export default function FullReleasesSection() {
     touchStartX.current = null;
     touchStartY.current = null;
     setTouchOffset(0);
-
-    setTimeout(() => {
-      isSwipingTouch.current = false;
-    }, 150);
   };
 
   const currentReels = selectedEpisode.reels && selectedEpisode.reels.length > 0
@@ -759,7 +759,7 @@ export default function FullReleasesSection() {
                 transform: `translate3d(calc(-${activeReelIndex * 100}% + ${touchOffset}px), 0, 0)`,
                 transition: isSwipingTouch.current
                   ? "none"
-                  : "transform 0.45s cubic-bezier(0.25, 1, 0.5, 1)",
+                  : "transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1)",
                 willChange: "transform",
               }}
             >
