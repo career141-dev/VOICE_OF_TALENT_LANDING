@@ -300,24 +300,25 @@ export default function VoicesSlider() {
     const endX = e.changedTouches[0]?.clientX ?? touchStartX.current;
     const diffX = endX - touchStartX.current;
 
+    // Reset swipe flag FIRST so the snap/slide plays through the CSS transition
+    // instead of jumping instantly to the new position.
+    isSwiping.current = false;
+    setIsTransitioning(true);
+
     if (Math.abs(diffX) > 40) {
       if (diffX < 0) {
         nextMobile();
       } else {
         prevMobile();
       }
-    } else {
-      // Snap back if threshold not met
-      setIsTransitioning(true);
     }
 
+    setTouchOffset(0);
     touchStartX.current = null;
     touchStartY.current = null;
-    setTouchOffset(0);
 
     setTimeout(() => {
       isDraggingMobile.current = false;
-      isSwiping.current = false;
       setIsPaused(false);
     }, 200);
   };
@@ -579,7 +580,7 @@ export default function VoicesSlider() {
                 transition: isSwiping.current
                   ? "none"
                   : isTransitioning
-                    ? "transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)"
+                    ? "transform 0.55s cubic-bezier(0.22, 0.61, 0.36, 1)"
                     : "none",
                 willChange: "transform",
               }}
