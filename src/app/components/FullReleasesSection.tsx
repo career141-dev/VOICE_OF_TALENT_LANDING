@@ -341,6 +341,7 @@ export default function FullReleasesSection() {
       webkitFullscreenElement?: Element;
       webkitCurrentFullScreenElement?: Element;
       webkitIsFullScreen?: boolean;
+      webkitIsFullscreen?: boolean;
       mozFullScreenElement?: Element;
       msFullscreenElement?: Element;
     };
@@ -353,6 +354,7 @@ export default function FullReleasesSection() {
       doc.webkitFullscreenElement ||
       doc.webkitCurrentFullScreenElement ||
       doc.webkitIsFullScreen ||
+      doc.webkitIsFullscreen ||
       doc.mozFullScreenElement ||
       doc.msFullscreenElement ||
       video?.webkitDisplayingFullscreen
@@ -424,37 +426,55 @@ export default function FullReleasesSection() {
 
     if (!container && !video) return;
 
-    const isCurrentlyFullscreen = checkIsFullscreen();
+    const isCurrentlyFullscreen = isFullscreen || checkIsFullscreen();
 
     if (!isCurrentlyFullscreen) {
       if (container && container.requestFullscreen) {
-        container.requestFullscreen().catch(() => {
-          if (video && typeof video.webkitEnterFullscreen === "function") {
-            video.webkitEnterFullscreen();
-          } else if (video && typeof video.webkitEnterFullScreen === "function") {
-            video.webkitEnterFullScreen();
-          }
-        });
+        container
+          .requestFullscreen()
+          .then(() => setIsFullscreen(true))
+          .catch(() => {
+            if (container.webkitRequestFullscreen) {
+              try {
+                container.webkitRequestFullscreen();
+                setIsFullscreen(true);
+              } catch {
+                if (video && typeof video.webkitEnterFullscreen === "function") {
+                  video.webkitEnterFullscreen();
+                  setIsFullscreen(true);
+                }
+              }
+            } else if (video && typeof video.webkitEnterFullscreen === "function") {
+              video.webkitEnterFullscreen();
+              setIsFullscreen(true);
+            }
+          });
       } else if (container && container.webkitRequestFullscreen) {
         try {
           container.webkitRequestFullscreen();
+          setIsFullscreen(true);
         } catch {
           if (video && typeof video.webkitEnterFullscreen === "function") {
             video.webkitEnterFullscreen();
+            setIsFullscreen(true);
           }
         }
       } else if (container && container.webkitRequestFullScreen) {
         try {
           container.webkitRequestFullScreen();
+          setIsFullscreen(true);
         } catch {
           if (video && typeof video.webkitEnterFullScreen === "function") {
             video.webkitEnterFullScreen();
+            setIsFullscreen(true);
           }
         }
       } else if (video && typeof video.webkitEnterFullscreen === "function") {
         video.webkitEnterFullscreen();
+        setIsFullscreen(true);
       } else if (video && typeof video.webkitEnterFullScreen === "function") {
         video.webkitEnterFullScreen();
+        setIsFullscreen(true);
       }
     } else {
       exitAllFullscreen();
@@ -467,7 +487,7 @@ export default function FullReleasesSection() {
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && checkIsFullscreen()) {
+      if (e.key === "Escape") {
         exitAllFullscreen();
       }
     };
@@ -479,12 +499,16 @@ export default function FullReleasesSection() {
     document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
     document.addEventListener("mozfullscreenchange", handleFullscreenChange);
     document.addEventListener("MSFullscreenChange", handleFullscreenChange);
+    window.addEventListener("fullscreenchange", handleFullscreenChange);
+    window.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+    window.addEventListener("resize", handleFullscreenChange);
     window.addEventListener("keydown", handleKeyDown);
 
     const videoEl = videoRef.current;
     if (videoEl) {
       videoEl.addEventListener("webkitbeginfullscreen", handleWebkitBegin);
       videoEl.addEventListener("webkitendfullscreen", handleWebkitEnd);
+      videoEl.addEventListener("webkitpresentationmodechanged", handleFullscreenChange);
     }
 
     return () => {
@@ -492,10 +516,14 @@ export default function FullReleasesSection() {
       document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
       document.removeEventListener("mozfullscreenchange", handleFullscreenChange);
       document.removeEventListener("MSFullscreenChange", handleFullscreenChange);
+      window.removeEventListener("fullscreenchange", handleFullscreenChange);
+      window.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
+      window.removeEventListener("resize", handleFullscreenChange);
       window.removeEventListener("keydown", handleKeyDown);
       if (videoEl) {
         videoEl.removeEventListener("webkitbeginfullscreen", handleWebkitBegin);
         videoEl.removeEventListener("webkitendfullscreen", handleWebkitEnd);
+        videoEl.removeEventListener("webkitpresentationmodechanged", handleFullscreenChange);
       }
     };
   }, [isPlaying, selectedEpisode, activeReelIndex]);
@@ -853,13 +881,14 @@ export default function FullReleasesSection() {
                                     exitAllFullscreen();
                                     resetControlsTimeout();
                                   }}
-                                  aria-label="Exit Fullscreen"
+                                  aria-label="Exit Fullscreen / Minimize"
+                                  title="Exit Fullscreen / Minimize"
                                   className="flex items-center gap-1.5 rounded-full bg-[#159A99] px-3.5 py-2 font-geist text-xs font-bold text-white shadow-lg backdrop-blur-md transition-all hover:bg-[#128281] active:scale-95 cursor-pointer"
                                 >
                                   <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M9 9L4 4m0 5h5V4m6 6l5-5m-5 5V4h5M9 15l-5 5m5-5H4v5m11-5l5 5m-5-5h5v5" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M4 14h6m0 0v6m0-6L3 21m17-7h-6m0 0v6m0-6l7 7M14 10h6m-6 0V4m0 6l7-7M10 10H4m6 0V4m0 6L3 3" />
                                   </svg>
-                                  Exit Fullscreen
+                                  <span>Exit Fullscreen</span>
                                 </button>
                               )}
 
@@ -997,7 +1026,7 @@ export default function FullReleasesSection() {
                                   +10s
                                 </button>
 
-                                {/* Fullscreen Button */}
+                                {/* Fullscreen / Minimize Toggle Button */}
                                 <button
                                   type="button"
                                   onClick={(e) => {
@@ -1006,14 +1035,14 @@ export default function FullReleasesSection() {
                                     resetControlsTimeout();
                                   }}
                                   className={`flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full ${
-                                    isFullscreen ? "bg-[#159A99] text-white" : "bg-white/10 text-white hover:bg-white/20"
+                                    isFullscreen ? "bg-[#159A99] text-white shadow-md" : "bg-white/10 text-white hover:bg-white/20"
                                   } transition-all active:scale-95 cursor-pointer ml-1`}
-                                  aria-label={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
-                                  title={isFullscreen ? "Exit Fullscreen" : "Full Screen"}
+                                  aria-label={isFullscreen ? "Exit Fullscreen / Minimize" : "Enter Fullscreen"}
+                                  title={isFullscreen ? "Exit Fullscreen / Minimize" : "Enter Fullscreen"}
                                 >
                                   {isFullscreen ? (
                                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M9 9L4 4m0 5h5V4m6 6l5-5m-5 5V4h5M9 15l-5 5m5-5H4v5m11-5l5 5m-5-5h5v5" />
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M4 14h6m0 0v6m0-6L3 21m17-7h-6m0 0v6m0-6l7 7M14 10h6m-6 0V4m0 6l7-7M10 10H4m6 0V4m0 6L3 3" />
                                     </svg>
                                   ) : (
                                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
