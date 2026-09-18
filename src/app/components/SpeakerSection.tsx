@@ -352,7 +352,6 @@ export default function VoicesSlider() {
     <div
       key={key}
       onClick={(e) => handleWatchConversation(e, item.id)}
-      style={{ transform: "translateZ(0)" }}
       className="
         group 
         relative
