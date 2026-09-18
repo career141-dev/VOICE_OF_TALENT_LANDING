@@ -1,9 +1,10 @@
 "use client";
 
 import React from "react";
+import { withVersion } from "../utils/imageLoader";
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
-const footerLogo = `${R2_MEDIA_URL}/images/footer.svg`;
+const footerLogo = withVersion(`${R2_MEDIA_URL}/images/footer.svg`);
 const artboardImage = "https://talentsuite-southernchapter.career141.com/IMAGES/Artboard%204%402x%205%201.svg";
 
 const seriesLinks = [

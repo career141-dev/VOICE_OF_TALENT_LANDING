@@ -2,10 +2,11 @@
 
 import { useState, useEffect, useRef } from "react";
 import AnimatedCounter from "./AnimatedCounter";
+import { withVersion } from "../utils/imageLoader";
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
-const votaLogo = `${R2_MEDIA_URL}/images/VOTA Background White.svg`;
-const reelBackground = `${R2_MEDIA_URL}/images/reelThumbnail/reelthumbnail.png`;
+const votaLogo = withVersion(`${R2_MEDIA_URL}/images/VOTA Background White.svg`);
+const reelBackground = withVersion(`${R2_MEDIA_URL}/images/reelThumbnail/reelthumbnail.png`);
 
 export interface SeriesEpisode {
   id: number;
@@ -29,7 +30,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     company: "Aitken Spence Hotels",
     duration: "04:46",
     videoUrl: "https://media.career141.com/new%20reels/Mr.%20Patrick/Mr.%20Patrick.mp4",
-    bannerImage: `${R2_MEDIA_URL}/images/speaker1.png`,
+    bannerImage: withVersion(`${R2_MEDIA_URL}/images/speaker1.png`),
     thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-01.webp`,
   },
   {
@@ -39,7 +40,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     company: "A. Baur & Co. (Pvt) Ltd",
     duration: "04:18",
     videoUrl: "https://media.career141.com/new%20reels/Mr.%20Ken/Mr.%20Ken.mp4",
-    bannerImage: `${R2_MEDIA_URL}/images/speaker2.png`,
+    bannerImage: withVersion(`${R2_MEDIA_URL}/images/speaker2.png`),
     thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-02.webp`,
   },
   {
@@ -49,7 +50,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     company: "HSBC Malaysia",
     duration: "03:57",
     videoUrl: "https://media.career141.com/new%20reels/Mr.%20Chamila%20C%20Perera/Mr.%20Chamila%20C%20Perera.mp4",
-    bannerImage: `${R2_MEDIA_URL}/images/speaker3.png`,
+    bannerImage: withVersion(`${R2_MEDIA_URL}/images/speaker3.png`),
     thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-03.webp`,
   },
   {
@@ -59,7 +60,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     company: "Ideal Group",
     duration: "04:13",
     videoUrl: "https://media.career141.com/new%20reels/Ms.Thrimuthi/Ms.Thrimuthi.mp4",
-    bannerImage: `${R2_MEDIA_URL}/images/speaker4.png`,
+    bannerImage: withVersion(`${R2_MEDIA_URL}/images/speaker4.png`),
     thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-04.webp`,
   },
   {
@@ -69,7 +70,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     company: "LSEG (London Stock Exchange Group)",
     duration: "03:10",
     videoUrl: "https://media.career141.com/new%20reels/Ms.%20Surani/Ms.%20Surani.mp4",
-    bannerImage: `${R2_MEDIA_URL}/images/speaker5.png`,
+    bannerImage: withVersion(`${R2_MEDIA_URL}/images/speaker5.png`),
     thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-05.webp`,
   },
   {
@@ -79,7 +80,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     company: "Daraz",
     duration: "05:13",
     videoUrl: "https://media.career141.com/new%20reels/Mr.%20Arshaq/Mr.%20ArshaqF.mp4",
-    bannerImage: `${R2_MEDIA_URL}/images/speaker6.png`,
+    bannerImage: withVersion(`${R2_MEDIA_URL}/images/speaker6.png`),
     thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-06.webp`,
   },
   {
@@ -89,7 +90,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     company: "Janashakthi Insurance PLC",
     duration: "03:47",
     videoUrl: "https://media.career141.com/new%20reels/Mr.%20Danushaka/Mr.%20Danushaka.mp4",
-    bannerImage: `${R2_MEDIA_URL}/images/speaker7.png`,
+    bannerImage: withVersion(`${R2_MEDIA_URL}/images/speaker7.png`),
     thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-07.webp`,
   },
   {
@@ -99,7 +100,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     company: "(Former Director HR - Asiri Health)",
     duration: "06:55",
     videoUrl: "https://media.career141.com/new%20reels/Ms.%20Hasanthi/Ms.%20Hasanthi%20Desaram.mp4",
-    bannerImage: `${R2_MEDIA_URL}/images/speaker8.png`,
+    bannerImage: withVersion(`${R2_MEDIA_URL}/images/speaker8.png`),
     thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-08.webp`,
   },
   {
@@ -109,7 +110,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     company: "Link Natural Products (Pvt.) Ltd",
     duration: "08:56",
     videoUrl: "https://media.career141.com/new%20reels/Mr%20Ashan/Mr%20Ashan.mp4",
-    bannerImage: `${R2_MEDIA_URL}/images/speaker9.png`,
+    bannerImage: withVersion(`${R2_MEDIA_URL}/images/speaker9.png`),
     thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-09.webp`,
   },
   {
@@ -119,7 +120,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     company: "Allied Commercial Fertilizers",
     duration: "06:03",
     videoUrl: "https://media.career141.com/new%20reels/Mr.%20Indika/Mr.%20Indika.mp4",
-    bannerImage: `${R2_MEDIA_URL}/images/speaker10.png`,
+    bannerImage: withVersion(`${R2_MEDIA_URL}/images/speaker10.png`),
     thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-10.webp`,
   },
   {
@@ -129,7 +130,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     company: "GRI Sri\u00A0Lanka",
     duration: "05:11",
     videoUrl: "https://media.career141.com/new%20reels/Ms.%20Chamindra/Ms.%20Chamindra.mp4",
-    bannerImage: `${R2_MEDIA_URL}/images/speaker11.png`,
+    bannerImage: withVersion(`${R2_MEDIA_URL}/images/speaker11.png`),
     thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-11.webp`,
   },
   {
@@ -139,7 +140,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     company: "Pyramid Wilmar Group",
     duration: "07:38",
     videoUrl: "https://media.career141.com/new%20reels/Ms.%20Chandima/Ms.%20Chandima.mp4",
-    bannerImage: `${R2_MEDIA_URL}/images/speaker12.png`,
+    bannerImage: withVersion(`${R2_MEDIA_URL}/images/speaker12.png`),
     thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-12.webp`,
   },
   {
@@ -149,7 +150,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     company: "MAS Holdings Silueta",
     duration: "03:44",
     videoUrl: "https://media.career141.com/new%20reels/Mr.%20Gehan/Mr.%20Gehan.mp4",
-    bannerImage: `${R2_MEDIA_URL}/images/speaker13.png`,
+    bannerImage: withVersion(`${R2_MEDIA_URL}/images/speaker13.png`),
     thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-13.webp`,
   },
   {
@@ -159,7 +160,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     company: "Port City BPO",
     duration: "07:23",
     videoUrl: "https://media.career141.com/new%20reels/Mr.%20Kanishka/Mr.%20Kanishka.mp4",
-    bannerImage: `${R2_MEDIA_URL}/images/speaker14.png`,
+    bannerImage: withVersion(`${R2_MEDIA_URL}/images/speaker14.png`),
     thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-14.webp`,
   },
 ];
@@ -185,6 +186,7 @@ export default function SeriesSection() {
   const [duration, setDuration] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isBuffering, setIsBuffering] = useState(false);
 
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -571,6 +573,7 @@ export default function SeriesSection() {
     setSelectedEpisode(episode);
     setIsPlaying(true);
     setIsPaused(false);
+    setIsBuffering(false);
     setShowControls(true);
     setCurrentTime(0);
     resetControlsTimeout();
@@ -582,6 +585,7 @@ export default function SeriesSection() {
     wasPlayingBeforeScrollOutRef.current = true;
     setIsPlaying(true);
     setIsPaused(false);
+    setIsBuffering(false);
     setShowControls(true);
     resetControlsTimeout();
   };
@@ -642,6 +646,14 @@ export default function SeriesSection() {
                   setShowControls(true);
                   resetControlsTimeout();
                 }}
+                onMouseEnter={() => {
+                  setShowControls(true);
+                  resetControlsTimeout();
+                }}
+                onMouseLeave={() => {
+                  if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
+                  setShowControls(false);
+                }}
                 className="relative h-full w-full max-lg:h-[500px] max-lg:sm:h-[520px] max-lg:min-h-[500px] max-lg:sm:min-h-[520px] lg:h-full lg:aspect-video flex items-center justify-center cursor-pointer select-none overflow-hidden bg-black border-none outline-none"
               >
                 {selectedEpisode.videoUrl ? (
@@ -650,6 +662,7 @@ export default function SeriesSection() {
                       ref={videoRef}
                       key={selectedEpisode.videoUrl}
                       src={selectedEpisode.videoUrl}
+                      poster={selectedEpisode.thumbnail}
                       autoPlay
                       muted={isMuted}
                       loop
@@ -668,14 +681,24 @@ export default function SeriesSection() {
                         setIsPaused(false);
                         resetControlsTimeout();
                       }}
+                      onPlaying={() => setIsBuffering(false)}
+                      onWaiting={() => setIsBuffering(true)}
                       onPause={() => {
                         if (isManuallyPausedRef.current) {
                           setIsPaused(true);
                           setShowControls(true);
                         }
                       }}
-                      className={`absolute inset-0 h-full w-full ${isFullscreen ? "object-contain bg-black" : "max-lg:object-contain max-lg:w-full lg:object-cover"} object-center pointer-events-none border-none outline-none`}
+                      className={`absolute inset-0 h-full w-full scale-[1.015] ${isFullscreen ? "object-contain bg-black" : "max-lg:object-contain lg:object-cover"} object-center pointer-events-none border-none outline-none`}
                     />
+
+                    {/* Buffering Spinner — only during genuine mid-playback rebuffering,
+                        never on first load (the poster already covers that gap) */}
+                    {isBuffering && !isPaused && (
+                      <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none" aria-hidden="true">
+                        <div className="h-10 w-10 sm:h-12 sm:w-12 animate-spin rounded-full border-[3px] border-white/25 border-t-white" />
+                      </div>
+                    )}
 
                     {/* Top Controls: Mute/Unmute & Close/Exit Fullscreen Video */}
                     <div
@@ -908,7 +931,7 @@ export default function SeriesSection() {
                   loading="eager"
                   decoding="async"
                   fetchPriority="high"
-                  className="absolute inset-0 h-full w-full object-cover max-[760px]:object-[92%_center] max-lg:object-[80%_center] lg:object-center pointer-events-none z-0 transition-transform duration-500 group-hover:scale-105"
+                  className="absolute inset-0 h-full w-full scale-[1.015] object-cover max-[760px]:object-[92%_center] max-lg:object-[80%_center] lg:object-center pointer-events-none z-0 transition-transform duration-500 group-hover:scale-105"
                 />
 
                 {/* Top-Left: VOTA Logo Badge */}

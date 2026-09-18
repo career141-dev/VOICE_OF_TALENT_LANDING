@@ -63,11 +63,16 @@ const themes: ThemeItem[] = [
 // Keep this in sync with the box `transition.duration` values below (in ms).
 const DESKTOP_BOX_DURATION_MS = 450;
 const MOBILE_BOX_DURATION_MS = 450;
-// Text only needs to stay hidden long enough to mask the one instant
-// reflow (font-size/max-width swap), not the whole box move — since
-// the text has a fixed max-width, it doesn't keep reflowing as the box
-// continues resizing. Keep this short so the reveal feels immediate.
-const REVEAL_DELAY_MS = 160;
+// Both cards are vertically centered (top-1/2 -translate-y-1/2) and their
+// height keeps animating for the full box duration while the description
+// paragraph mounts instantly the moment a card becomes active — so a longer
+// description (more wrapped lines) pushes the centered content further,
+// making the reveal visibly drift/"run" more the bigger the paragraph is.
+// Wait until the height animation has essentially settled before fading
+// text in, so the reveal no longer depends on how much text a theme has.
+const DESKTOP_REVEAL_DELAY_MS = 380;
+const MOBILE_REVEAL_DELAY_MS = 380;
+// Text fade-up duration once revealed: see the `duration-[280ms]` classes below.
 
 function getCircularDiff(index: number, active: number, total: number) {
   let diff = index - active;
@@ -86,6 +91,10 @@ export default function CoreConversationThemes() {
   // visible once the card has finished resizing/moving.
   const [textHidden, setTextHidden] = useState(false);
   const textTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Separate flag for the mobile carousel, revealed later than desktop —
+  // see MOBILE_REVEAL_DELAY_MS above.
+  const [mobileTextHidden, setMobileTextHidden] = useState(false);
+  const mobileTextTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const lastSwipeTime = useRef<number>(0);
   const totalThemes = themes.length;
@@ -127,9 +136,17 @@ export default function CoreConversationThemes() {
     if (textTimeoutRef.current) clearTimeout(textTimeoutRef.current);
     textTimeoutRef.current = setTimeout(() => {
       setTextHidden(false);
-    }, REVEAL_DELAY_MS);
+    }, DESKTOP_REVEAL_DELAY_MS);
+
+    setMobileTextHidden(true);
+    if (mobileTextTimeoutRef.current) clearTimeout(mobileTextTimeoutRef.current);
+    mobileTextTimeoutRef.current = setTimeout(() => {
+      setMobileTextHidden(false);
+    }, MOBILE_REVEAL_DELAY_MS);
+
     return () => {
       if (textTimeoutRef.current) clearTimeout(textTimeoutRef.current);
+      if (mobileTextTimeoutRef.current) clearTimeout(mobileTextTimeoutRef.current);
     };
   }, [activeIndex]);
 
@@ -241,12 +258,15 @@ export default function CoreConversationThemes() {
                     : "cursor-pointer hover:bg-white hover:shadow-md transition-colors"
                   }`}
               >
-                {/* Title + description fade as ONE unit, only once the box
-                  has (almost) finished resizing — this is what prevents
-                  the visible reflow/jump. No CSS transition on font-size
-                  or max-width; they just snap while invisible. */}
+                {/* Title + description reveal as ONE unit, only once the box
+                  has (almost) finished resizing — this is what prevents the
+                  visible reflow/jump regardless of how long a theme's
+                  description is. A gentle fade-up (not a flat opacity pop)
+                  reads as an intentional entrance rather than the text
+                  "running" into place. No CSS transition on font-size or
+                  max-width; they just snap while invisible. */}
                 <div
-                  className={`flex flex-col items-center transition-opacity ease-out ${textHidden ? "opacity-0 duration-150" : "opacity-100 duration-200"
+                  className={`flex flex-col items-center transition-[opacity,transform] ease-out ${textHidden ? "opacity-0 translate-y-2 duration-150" : "opacity-100 translate-y-0 duration-[280ms]"
                     }`}
                 >
                   <h3
@@ -324,11 +344,13 @@ export default function CoreConversationThemes() {
                 className="absolute top-1/2 -translate-y-1/2 w-full max-w-[310px] sm:max-w-[480px] md:max-w-[600px] flex flex-col justify-center items-center text-center rounded-[26px] sm:rounded-[34px] border-[1.5px] px-5 py-6 sm:px-9 sm:py-8 md:px-12 md:py-9 cursor-pointer overflow-hidden select-none"
               >
                 {/* Content: only visible when active AND the box has
-                  finished moving into place. */}
+                  finished moving into place. A gentle fade-up (not a flat
+                  opacity pop) reads as an intentional entrance rather than
+                  the text "running" into place. */}
                 <div
-                  className={`flex flex-col items-center justify-center gap-[18px] sm:gap-[24px] md:gap-[28px] transition-opacity ease-out ${isActive && !textHidden
-                      ? "opacity-100 duration-200"
-                      : "opacity-0 duration-150 pointer-events-none"
+                  className={`flex flex-col items-center justify-center gap-[18px] sm:gap-[24px] md:gap-[28px] transition-[opacity,transform] ease-out ${isActive && !mobileTextHidden
+                      ? "opacity-100 translate-y-0 duration-[280ms]"
+                      : "opacity-0 translate-y-2 duration-150 pointer-events-none"
                     }`}
                 >
                   <h3 className="font-cal text-[21px] sm:text-[25px] md:text-[29px] font-normal leading-[1.2] text-white max-w-[255px] sm:max-w-[420px] md:max-w-[540px]">

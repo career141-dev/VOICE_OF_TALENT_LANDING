@@ -1,11 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { withVersion } from "../utils/imageLoader";
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
 
-const arrowRight     = `${R2_MEDIA_URL}/icons/arrow-right.svg`;
-const arrowRightDark = `${R2_MEDIA_URL}/icons/arrow-right-dark.svg`;
+const arrowRight     = withVersion(`${R2_MEDIA_URL}/icons/arrow-right.svg`);
+const arrowRightDark = withVersion(`${R2_MEDIA_URL}/icons/arrow-right-dark.svg`);
 
 function Arrow({ source }: { source: string }) {
   return <img className="h-[10px] w-[10px] sm:h-[15px] sm:w-[15px] md:h-[17px] md:w-[17px] object-contain shrink-0" src={source} alt="" />;

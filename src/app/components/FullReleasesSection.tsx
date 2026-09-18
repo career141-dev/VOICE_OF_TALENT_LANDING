@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
+import { withVersion } from "../utils/imageLoader";
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
 const FULL_RELEASE_IMG_BASE = "https://talentsuite.career141.com/images/fullRelease";
-const reelBackground = `${R2_MEDIA_URL}/images/reelThumbnail/reelthumbnail.webp`;
+const reelBackground = withVersion(`${R2_MEDIA_URL}/images/reelThumbnail/reelthumbnail.webp`);
 
 type Episode = {
   id: number;
@@ -210,15 +211,20 @@ export default function FullReleasesSection() {
   const [activeReelIndex, setActiveReelIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
   const [showControls, setShowControls] = useState(true);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isBuffering, setIsBuffering] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [reelDurations, setReelDurations] = useState<Record<string, string>>({});
   const [touchOffset, setTouchOffset] = useState(0);
+  // Mirrors isSwipingTouch.current for render (e.g. the slide transition
+  // style below) — reading a ref directly during render isn't safe, since
+  // React doesn't guarantee a re-render when only the ref changes.
+  const [isSwiping, setIsSwiping] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerContainerRef = useRef<HTMLDivElement>(null);
@@ -238,39 +244,121 @@ export default function FullReleasesSection() {
     return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
 
-  // Preload actual video durations for all reel episodes
-  useEffect(() => {
-    const videoElements: HTMLVideoElement[] = [];
+  // Reliable cross-browser autoplay: browsers (Safari in particular) block
+  // unmuted autoplay outright, silently leaving the video paused with no
+  // error. Retry muted so playback always starts instead of appearing stuck.
+  const safePlay = () => {
+    if (!videoRef.current) return;
+    const playPromise = videoRef.current.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        if (videoRef.current) {
+          videoRef.current.muted = true;
+          setIsMuted(true);
+          videoRef.current.play().catch(() => {
+            setIsPaused(true);
+            setShowControls(true);
+          });
+        }
+      });
+    }
+  };
 
+  // Ensure the reel actually starts playing whenever it becomes the active,
+  // playing slide (covers the initial mount of a freshly swapped <video>).
+  useEffect(() => {
+    if (isPlaying) {
+      safePlay();
+    }
+  }, [isPlaying, selectedEpisode, activeReelIndex]);
+
+  // Preload actual video durations for all reel episodes.
+  //
+  // This is purely cosmetic (a fallback duration string is already shown),
+  // so it must never compete with a video the visitor actually pressed play
+  // on. Browsers cap concurrent connections per host (~6 on HTTP/1.1); firing
+  // all ~28 reel requests to media.career141.com at once could starve a
+  // just-clicked playback request of a connection slot, making it stall for
+  // however long the background batch takes to clear — exactly the kind of
+  // "this one took longer to start" symptom despite being a small file.
+  // Trickling requests out a few at a time, only once the browser is idle,
+  // keeps this from ever queuing ahead of real playback.
+  useEffect(() => {
+    const tasks: { episodeId: number; idx: number; reelUrl: string }[] = [];
     episodes.forEach((episode) => {
       const reels = episode.reels && episode.reels.length > 0
         ? episode.reels
         : [episode.videoUrl || "", episode.videoUrl || ""];
-
       reels.forEach((reelUrl, idx) => {
-        if (reelUrl) {
-          const vid = document.createElement("video");
-          vid.preload = "metadata";
-          vid.src = reelUrl;
-          vid.onloadedmetadata = () => {
-            if (vid.duration && !isNaN(vid.duration) && vid.duration > 0) {
-              setReelDurations((prev) => ({
-                ...prev,
-                [`${episode.id}-${idx}`]: formatTime(vid.duration),
-              }));
-            }
-          };
-          videoElements.push(vid);
-        }
+        if (reelUrl) tasks.push({ episodeId: episode.id, idx, reelUrl });
       });
     });
 
+    // Safari/WebKit is unreliable about firing `loadedmetadata` on <video>
+    // elements that were created but never attached to the document, so we
+    // mount them off-screen instead of leaving them fully detached.
+    const hiddenHost = document.createElement("div");
+    hiddenHost.style.position = "fixed";
+    hiddenHost.style.width = "0";
+    hiddenHost.style.height = "0";
+    hiddenHost.style.overflow = "hidden";
+    hiddenHost.style.opacity = "0";
+    hiddenHost.style.pointerEvents = "none";
+    document.body.appendChild(hiddenHost);
+
+    const videoElements: HTMLVideoElement[] = [];
+    const win = window as Window & {
+      requestIdleCallback?: (cb: () => void) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+    const BATCH_SIZE = 3;
+    const BATCH_DELAY_MS = 500;
+    let cancelled = false;
+    let idleId: number | null = null;
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+    const loadBatch = (startIndex: number) => {
+      if (cancelled) return;
+      const batch = tasks.slice(startIndex, startIndex + BATCH_SIZE);
+      batch.forEach(({ episodeId, idx, reelUrl }) => {
+        const vid = document.createElement("video");
+        vid.preload = "metadata";
+        vid.muted = true;
+        vid.src = reelUrl;
+        vid.onloadedmetadata = () => {
+          if (vid.duration && !isNaN(vid.duration) && vid.duration > 0) {
+            setReelDurations((prev) => ({
+              ...prev,
+              [`${episodeId}-${idx}`]: formatTime(vid.duration),
+            }));
+          }
+        };
+        hiddenHost.appendChild(vid);
+        videoElements.push(vid);
+      });
+
+      if (startIndex + BATCH_SIZE < tasks.length) {
+        timeoutId = setTimeout(() => loadBatch(startIndex + BATCH_SIZE), BATCH_DELAY_MS);
+      }
+    };
+
+    const start = () => loadBatch(0);
+    if (typeof win.requestIdleCallback === "function") {
+      idleId = win.requestIdleCallback(start);
+    } else {
+      timeoutId = setTimeout(start, 300);
+    }
+
     return () => {
+      cancelled = true;
+      if (idleId !== null && win.cancelIdleCallback) win.cancelIdleCallback(idleId);
+      if (timeoutId !== null) clearTimeout(timeoutId);
       videoElements.forEach((vid) => {
         vid.src = "";
         vid.removeAttribute("src");
         vid.load();
       });
+      hiddenHost.remove();
     };
   }, []);
 
@@ -286,7 +374,7 @@ export default function FullReleasesSection() {
   const togglePlayPause = () => {
     if (!videoRef.current) return;
     if (videoRef.current.paused) {
-      videoRef.current.play().catch(() => { });
+      safePlay();
       setIsPaused(false);
       resetControlsTimeout();
     } else {
@@ -548,6 +636,7 @@ export default function FullReleasesSection() {
     setCurrentTime(0);
     setIsPlaying(false);
     setIsPaused(false);
+    setIsBuffering(false);
     setShowControls(true);
   };
 
@@ -567,6 +656,7 @@ export default function FullReleasesSection() {
     touchStartY.current = e.touches[0].clientY;
     touchStartTime.current = Date.now();
     isSwipingTouch.current = false;
+    setIsSwiping(false);
     setTouchOffset(0);
   };
 
@@ -580,6 +670,7 @@ export default function FullReleasesSection() {
     // Detect horizontal swipe intent
     if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 6) {
       isSwipingTouch.current = true;
+      setIsSwiping(true);
       // Resistance at outer edges
       let boundedDiffX = diffX;
       if (activeReelIndex === 0 && diffX > 0) {
@@ -602,6 +693,7 @@ export default function FullReleasesSection() {
     // Reset the swipe flag FIRST so the upcoming re-render is allowed
     // to animate through the CSS transition instead of snapping instantly.
     isSwipingTouch.current = false;
+    setIsSwiping(false);
 
     if (Math.abs(diffX) > Math.abs(diffY) && (Math.abs(diffX) > 28 || (Math.abs(diffX) > 12 && speedX > 0.15))) {
       if (diffX < 0) {
@@ -785,7 +877,7 @@ export default function FullReleasesSection() {
               className="flex h-full w-full items-stretch"
               style={{
                 transform: `translate3d(calc(-${activeReelIndex * 100}% + ${touchOffset}px), 0, 0)`,
-                transition: isSwipingTouch.current
+                transition: isSwiping
                   ? "none"
                   : "transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1)",
                 willChange: "transform",
@@ -810,6 +902,14 @@ export default function FullReleasesSection() {
                         setShowControls(true);
                         resetControlsTimeout();
                       }}
+                      onMouseEnter={() => {
+                        setShowControls(true);
+                        resetControlsTimeout();
+                      }}
+                      onMouseLeave={() => {
+                        if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
+                        setShowControls(false);
+                      }}
                       className="relative h-full w-full bg-black flex items-center justify-center select-none cursor-pointer overflow-hidden"
                     >
                       {reelUrl ? (
@@ -818,23 +918,44 @@ export default function FullReleasesSection() {
                             ref={isCurrentSlideActive ? videoRef : null}
                             key={`${selectedEpisode.id}-${reelIdx}-${reelUrl}`}
                             src={reelUrl}
+                            poster={selectedEpisode.posterImage || `${FULL_RELEASE_IMG_BASE}/reelspeaker${selectedEpisode.id}.webp`}
                             autoPlay
                             muted={isMuted}
                             playsInline
+                            preload="auto"
                             onTimeUpdate={handleTimeUpdate}
                             onLoadedMetadata={handleLoadedMetadata}
                             onDurationChange={handleLoadedMetadata}
-                            onCanPlay={handleLoadedMetadata}
+                            onCanPlay={() => {
+                              handleLoadedMetadata();
+                              if (isCurrentSlidePlaying) {
+                                safePlay();
+                              }
+                            }}
                             onPlay={() => {
                               setIsPaused(false);
                               resetControlsTimeout();
                             }}
+                            onPlaying={() => setIsBuffering(false)}
+                            onWaiting={() => setIsBuffering(true)}
                             onPause={() => {
+                              // Don't force controls back on here: this fires for
+                              // ANY pause, including a blocked-autoplay retry or a
+                              // stall, and would otherwise immediately undo hovering
+                              // out of the player. A manual pause already shows
+                              // controls via togglePlayPause itself.
                               setIsPaused(true);
-                              setShowControls(true);
                             }}
                             className="absolute inset-0 h-full w-full object-contain bg-black pointer-events-none"
                           />
+
+                          {/* Buffering Spinner — only during genuine mid-playback rebuffering,
+                              never on first load (the poster already covers that gap) */}
+                          {isBuffering && !isPaused && (
+                            <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none" aria-hidden="true">
+                              <div className="h-10 w-10 sm:h-12 sm:w-12 animate-spin rounded-full border-[3px] border-white/25 border-t-white" />
+                            </div>
+                          )}
 
                           {/* Top Controls: Mute/Unmute & Close Video */}
                           <div

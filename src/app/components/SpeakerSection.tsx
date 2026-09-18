@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { withVersion } from "../utils/imageLoader";
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
 
-const arrowRightTeal = `${R2_MEDIA_URL}/icons/arrow-right-teal.svg`;
+const arrowRightTeal = withVersion(`${R2_MEDIA_URL}/icons/arrow-right-teal.svg`);
 
 interface VoiceItem {
   id: number;
@@ -205,7 +206,10 @@ export default function VoicesSlider() {
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
   const isDraggingMobile = useRef(false);
-  const isSwiping = useRef(false);
+  // State, not a ref: its value is read during render (the slide transition
+  // style below), and reading a ref there isn't safe — React doesn't
+  // guarantee a re-render when only a ref changes.
+  const [isSwiping, setIsSwiping] = useState(false);
   const listSet = [...voicesData, ...voicesData];
 
   const badgeClasses = "inline-flex h-[38px] md:h-[51.968px] items-center justify-center gap-[6px] md:gap-[8.338px] rounded-[25.558px] border-[1.042px] border-[#D6D6D6] bg-[#F2F2F2] px-[16px] md:px-[25.013px] py-[6px] md:py-[12.507px] text-[12px] md:text-[14.591px] font-semibold leading-normal text-black font-geist uppercase";
@@ -277,7 +281,7 @@ export default function VoicesSlider() {
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
     setTouchOffset(0);
-    isSwiping.current = false;
+    setIsSwiping(false);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
@@ -289,7 +293,7 @@ export default function VoicesSlider() {
 
     // Determine horizontal swipe
     if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 8) {
-      isSwiping.current = true;
+      setIsSwiping(true);
       isDraggingMobile.current = true;
       setTouchOffset(diffX);
     }
@@ -302,7 +306,7 @@ export default function VoicesSlider() {
 
     // Reset swipe flag FIRST so the snap/slide plays through the CSS transition
     // instead of jumping instantly to the new position.
-    isSwiping.current = false;
+    setIsSwiping(false);
     setIsTransitioning(true);
 
     if (Math.abs(diffX) > 40) {
@@ -577,7 +581,7 @@ export default function VoicesSlider() {
               className="flex w-full items-stretch"
               style={{
                 transform: `translate3d(calc(-${currentIndex * 100}% + ${touchOffset}px), 0, 0)`,
-                transition: isSwiping.current
+                transition: isSwiping
                   ? "none"
                   : isTransitioning
                     ? "transform 0.55s cubic-bezier(0.22, 0.61, 0.36, 1)"

@@ -1,4 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Cal+Sans&family=Geist:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+/* Google Fonts are already loaded via a <link rel="stylesheet"> in
+   src/app/layout.tsx <head> (which also covers Quicksand, missing from this
+   list). A CSS @import to the same font endpoint is redundant and, unlike a
+   <link> the preload scanner can discover early, blocks CSS parsing until it
+   round-trips — duplicating the request and delaying first paint. */
 @import "tailwindcss";
 
 :root {

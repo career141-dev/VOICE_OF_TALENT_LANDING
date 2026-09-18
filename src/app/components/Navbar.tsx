@@ -2,11 +2,12 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { withVersion } from "../utils/imageLoader";
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
 
 const votaLogo = "https://talentsuite.career141.com/images/HeaderLogo.svg";
-const arrowUpRight = `${R2_MEDIA_URL}/icons/arrow-up-right.svg`;
+const arrowUpRight = withVersion(`${R2_MEDIA_URL}/icons/arrow-up-right.svg`);
 
 const NAV_ITEMS = [
   { label: "Home", href: "/", section: "hero" },
@@ -43,14 +44,36 @@ export default function Navbar() {
     }
   }, [computePill]);
 
-  /* ── Close mobile menu on desktop resize ── */
+  /* ── Re-measure the pill once web fonts finish loading ──
+     The nav labels render in a fallback font first (fonts load via
+     `display=swap`), so the initial getBoundingClientRect() measurement can
+     be based on the wrong text width. Fallback-font metrics differ enough
+     between Windows and macOS that the pill visibly drifts from the label
+     on one platform but not the other until this recomputes. */
+  useEffect(() => {
+    if (typeof document === "undefined" || !("fonts" in document)) return;
+    let cancelled = false;
+    document.fonts.ready.then(() => {
+      if (!cancelled) {
+        const idx = NAV_ITEMS.findIndex((i) => i.label === active);
+        computePill(idx >= 0 ? idx : 0);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [computePill, active]);
+
+  /* ── Close mobile menu on desktop resize & keep pill aligned ── */
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 1024) setIsMobileMenuOpen(false);
+      const idx = NAV_ITEMS.findIndex((i) => i.label === active);
+      computePill(idx >= 0 ? idx : 0);
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [active, computePill]);
 
   /* ── Intersection Observer — only fires when NOT clicking ── */
   useEffect(() => {

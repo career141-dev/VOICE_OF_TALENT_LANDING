@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
+import { withVersion } from "../utils/imageLoader";
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
+const movementBannerImage = withVersion(`${R2_MEDIA_URL}/images/Movement-Banner.webp`);
 
 export function IndustryVoicesSection() {
   const items = [
@@ -125,7 +127,7 @@ export function IndustryVoicesSection() {
           lg:min-h-[505px]
         "
         style={{
-          backgroundImage: `url('${R2_MEDIA_URL}/images/Movement-Banner.webp')`,
+          backgroundImage: `url('${movementBannerImage}')`,
         }}
       >
         {/* Interactive swipeable/draggable headline row */}
@@ -137,12 +139,16 @@ export function IndustryVoicesSection() {
           className={`absolute left-0 top-[18%] sm:top-[19%] z-10 w-full overflow-hidden select-none touch-pan-y py-6 sm:py-8 -my-6 sm:-my-8 ${
             isDragging ? "cursor-grabbing" : "cursor-grab"
           }`}
+          style={{ transform: `translateX(${dragOffset}px)` }}
         >
           {/* Single Unified Marquee Track */}
+          {/* The CSS keyframe animation below owns `transform` on this element
+              directly, so the drag offset lives on the wrapper above instead —
+              a CSS animation always wins over an inline transform set on the
+              same element, which silently ate every drag gesture before. */}
           <div
             className="industry-marquee flex w-max whitespace-nowrap py-3 sm:py-4 items-center"
             style={{
-              transform: `translateX(${dragOffset}px)`,
               animationPlayState: isDragging ? "paused" : "running",
             }}
           >

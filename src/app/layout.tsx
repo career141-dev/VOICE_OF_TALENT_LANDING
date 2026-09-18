@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { getOptimizedImageUrl } from "./utils/imageLoader";
+import { getOptimizedImageUrl, withVersion } from "./utils/imageLoader";
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
-const iconUrl = R2_MEDIA_URL ? `${R2_MEDIA_URL}/images/icontop.png` : "/images/icontop.png";
+const iconUrl = R2_MEDIA_URL ? withVersion(`${R2_MEDIA_URL}/images/icontop.png`) : "/images/icontop.png";
 
 export const metadata: Metadata = {
   title: "Voices of Talent Acquisition",
@@ -42,13 +42,19 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://talentsuite.career141.com" />
         <link rel="preload" as="image" href="https://talentsuite.career141.com/images/herobottom.webp" fetchPriority="high" />
         <link rel="preload" as="image" href="https://talentsuite.career141.com/images/mobile.webp" fetchPriority="high" />
+        {/* media.career141.com hosts every episode/reel video. Without this,
+            the DNS lookup + TCP + TLS handshake for that host only starts the
+            moment someone clicks play, adding a few hundred ms of pure
+            connection setup before the video can even begin buffering. */}
+        <link rel="preconnect" href="https://media.career141.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://media.career141.com" />
         {R2_MEDIA_URL ? (
           <>
             <link rel="preconnect" href={R2_MEDIA_URL} crossOrigin="anonymous" />
             <link rel="dns-prefetch" href={R2_MEDIA_URL} />
             <link rel="preload" as="image" href={getOptimizedImageUrl(`${R2_MEDIA_URL}/images/hero-background.webp`, 1920)} />
-            <link rel="preload" as="image" href={`${R2_MEDIA_URL}/images/speaker1.webp`} />
-            <link rel="preload" as="image" href={`${R2_MEDIA_URL}/images/speaker2.webp`} />
+            <link rel="preload" as="image" href={withVersion(`${R2_MEDIA_URL}/images/speaker1.webp`)} />
+            <link rel="preload" as="image" href={withVersion(`${R2_MEDIA_URL}/images/speaker2.webp`)} />
           </>
         ) : null}
         <link

@@ -1,11 +1,12 @@
 "use client";
 
 import React from "react";
+import { withVersion } from "../utils/imageLoader";
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
-const footerMobImage = `${R2_MEDIA_URL}/images/footermob.png`;
-const containerImage = `${R2_MEDIA_URL}/images/Container.webp`;
-const artboardImage = `${R2_MEDIA_URL}/images/Artboard.svg`;
+const footerMobImage = withVersion(`${R2_MEDIA_URL}/images/footermob.png`);
+const containerImage = withVersion(`${R2_MEDIA_URL}/images/Container.webp`);
+const artboardImage = withVersion(`${R2_MEDIA_URL}/images/Artboard.svg`);
 
 export default function VotaBannerSection() {
   return (
