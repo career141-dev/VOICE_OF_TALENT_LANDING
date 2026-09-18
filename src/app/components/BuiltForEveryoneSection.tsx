@@ -60,8 +60,9 @@ export default function BuiltForEveryoneSection() {
             <div key={`desktop-${audience.number}`} className="group relative h-[390px] xl:h-[410px] w-full shrink-0">
               <article
                 className="
-                  absolute
-                  inset-0
+                  relative
+                  h-full
+                  w-full
                   cursor-pointer
                   overflow-hidden
                   rounded-[28px]
@@ -79,15 +80,18 @@ export default function BuiltForEveryoneSection() {
                   group-hover:shadow-[0_20px_40px_-10px_rgba(21,154,153,0.35)]
                 "
               >
-                {/* Number exits upward on hover */}
+                {/* ── Number at top-left: Glides smoothly upward & fades on hover ── */}
                 <span
                   className="
                     absolute
                     left-7
                     top-6
+                    xl:left-8
+                    xl:top-7
                     select-none
                     font-geist
                     text-[88px]
+                    xl:text-[96px]
                     font-bold
                     leading-none
                     tracking-[-0.08em]
@@ -95,17 +99,14 @@ export default function BuiltForEveryoneSection() {
                     transition-all
                     duration-500
                     ease-[cubic-bezier(0.22,1,0.36,1)]
-                    group-hover:-translate-y-10
+                    group-hover:-translate-y-6
                     group-hover:opacity-0
-                    xl:left-8
-                    xl:top-7
-                    xl:text-[96px]
                   "
                 >
                   {audience.number}
                 </span>
 
-                {/* Dynamic Content Container: moves directly and smoothly to top on hover without middle-jump */}
+                {/* ── Dynamic Content Container: Glides seamlessly from default bottom to exact vertical center on hover ── */}
                 <div
                   className="
                     absolute
@@ -120,53 +121,55 @@ export default function BuiltForEveryoneSection() {
                     transition-all
                     duration-500
                     ease-[cubic-bezier(0.22,1,0.36,1)]
-                    group-hover:top-7
-                    xl:group-hover:top-8
+                    group-hover:top-[95px]
+                    min-[1400px]:group-hover:top-[105px]
+                    xl:group-hover:top-[105px]
                     transform-gpu
                   "
                 >
-                  {/* Title */}
+                  {/* Title: Smooth color transition without blinking or re-rendering */}
                   <h3
                     className="
                       font-geist
                       text-[22px]
+                      xl:text-[26px]
+                      2xl:text-[28px]
                       font-semibold
                       leading-[118%]
                       tracking-normal
                       text-black
                       transition-colors
-                      duration-400
+                      duration-300
                       ease-out
                       group-hover:text-white
-                      xl:text-[26px]
-                      2xl:text-[28px]
                     "
                   >
                     {audience.title}
                   </h3>
 
-                  {/* Description: naturally flows under Title with smooth fade */}
+                  {/* Description: Naturally unfolds and fades in beneath Title with gentle staggered ease */}
                   <p
                     className="
-                      max-h-0
-                      opacity-0
-                      overflow-hidden
-                      pointer-events-none
+                      mt-3
+                      xl:mt-3.5
                       font-geist
                       font-light
-                      text-[16px]
-                      xl:text-[17.5px]
-                      2xl:text-[18.5px]
+                      text-[15px]
+                      xl:text-[16.5px]
+                      2xl:text-[17.5px]
                       leading-[150%]
                       tracking-normal
                       text-white/95
+                      opacity-0
+                      max-h-0
+                      overflow-hidden
+                      pointer-events-none
                       transition-all
-                      duration-400
+                      duration-500
                       ease-[cubic-bezier(0.22,1,0.36,1)]
-                      group-hover:max-h-60
                       group-hover:opacity-100
-                      group-hover:pt-3.5
-                      xl:group-hover:pt-4
+                      group-hover:max-h-60
+                      group-hover:pointer-events-auto
                     "
                   >
                     {audience.description}
