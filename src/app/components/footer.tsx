@@ -5,7 +5,7 @@ import { withVersion } from "../utils/imageLoader";
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
 const footerLogo = withVersion(`${R2_MEDIA_URL}/images/footer.svg`);
-const artboardImage = "https://talentsuite-southernchapter.career141.com/IMAGES/Artboard%204%402x%205%201.svg";
+const artboardImage = withVersion(`${R2_MEDIA_URL}/images/career141-artboard.webp`);
 
 const seriesLinks = [
   { label: "About", href: "#mission" },
@@ -83,6 +83,8 @@ export default function Footer() {
               <img
                 src={footerLogo}
                 alt="VOTA — Voices of Talent Acquisition"
+                loading="lazy"
+                decoding="async"
                 className="h-auto w-[240px] sm:w-[300px] md:w-[300px] lg:w-[400px] xl:w-[460px] max-w-full object-contain"
               />
             </div>

@@ -870,7 +870,7 @@ export default function FullReleasesSection() {
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
-            className="relative flex h-[380px] sm:h-[460px] md:h-[540px] min-[1100px]:h-auto min-[1100px]:flex-1 min-[1100px]:min-h-0 w-full max-w-full overflow-hidden rounded-[24px] sm:rounded-[30px] border-[1.62px] border-[#E0E0E0] bg-black shadow-lg opacity-100 select-none touch-pan-y"
+            className="relative flex h-[380px] sm:h-[460px] md:h-[540px] min-[1100px]:h-auto min-[1100px]:flex-1 min-[1100px]:min-h-0 w-full max-w-full overflow-hidden rounded-[24px] sm:rounded-[30px] border-none outline-none bg-black shadow-xl opacity-100 select-none touch-pan-y"
           >
             {/* Smooth 2-Reel Hardware-Accelerated Sliding Track */}
             <div
@@ -910,7 +910,7 @@ export default function FullReleasesSection() {
                         if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
                         setShowControls(false);
                       }}
-                      className="relative h-full w-full bg-black flex items-center justify-center select-none cursor-pointer overflow-hidden"
+                      className="relative h-full w-full bg-black flex items-center justify-center select-none cursor-pointer overflow-hidden border-none outline-none"
                     >
                       {reelUrl ? (
                         <>
@@ -918,7 +918,6 @@ export default function FullReleasesSection() {
                             ref={isCurrentSlideActive ? videoRef : null}
                             key={`${selectedEpisode.id}-${reelIdx}-${reelUrl}`}
                             src={reelUrl}
-                            poster={selectedEpisode.posterImage || `${FULL_RELEASE_IMG_BASE}/reelspeaker${selectedEpisode.id}.webp`}
                             autoPlay
                             muted={isMuted}
                             playsInline
@@ -946,7 +945,7 @@ export default function FullReleasesSection() {
                               // controls via togglePlayPause itself.
                               setIsPaused(true);
                             }}
-                            className="absolute inset-0 h-full w-full object-contain bg-black pointer-events-none"
+                            className="absolute inset-0 h-full w-full object-contain bg-black pointer-events-none border-none outline-none"
                           />
 
                           {/* Buffering Spinner — only during genuine mid-playback rebuffering,

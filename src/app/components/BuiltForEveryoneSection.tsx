@@ -105,7 +105,7 @@ export default function BuiltForEveryoneSection() {
                   {audience.number}
                 </span>
 
-                {/* Dynamic Content Container: moves smoothly to top on hover */}
+                {/* Dynamic Content Container: moves directly and smoothly to top on hover without middle-jump */}
                 <div
                   className="
                     absolute
@@ -120,8 +120,9 @@ export default function BuiltForEveryoneSection() {
                     transition-all
                     duration-500
                     ease-[cubic-bezier(0.22,1,0.36,1)]
-                    group-hover:top-1/2
-                    group-hover:-translate-y-1/2
+                    group-hover:top-7
+                    xl:group-hover:top-8
+                    transform-gpu
                   "
                 >
                   {/* Title */}

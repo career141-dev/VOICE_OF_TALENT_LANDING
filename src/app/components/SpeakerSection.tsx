@@ -552,8 +552,8 @@ export default function VoicesSlider() {
           </h2>
         </div>
 
-        {/* ── DESKTOP VIEW: Pure CSS Infinite Marquee Track (Only on Desktop 1367px+) ── */}
-        <div className="hidden min-[1367px]:block marquee-container pt-24 pb-8">
+        {/* ── DESKTOP VIEW: Pure CSS Infinite Marquee Track (Desktop 1025px+) ── */}
+        <div className="hidden min-[1025px]:block marquee-container pt-24 pb-8">
           <div className="marquee-track flex items-center">
             <div className="flex shrink-0 items-center gap-6 pr-6">
               {listSet.map((item, index) => renderDesktopCard(item, `set1-${item.id}-${index}`))}
@@ -564,9 +564,9 @@ export default function VoicesSlider() {
           </div>
         </div>
 
-        {/* ── MOBILE & TABLET / IPAD VIEW: Expanded Card Infinite Loop Carousel (< 1367px) ── */}
+        {/* ── MOBILE & TABLET / IPAD VIEW: Expanded Card Infinite Loop Carousel (< 1025px) ── */}
         <div
-          className="block min-[1367px]:hidden relative w-full pt-2 pb-6 select-none touch-pan-y"
+          className="block min-[1025px]:hidden relative w-full pt-2 pb-6 select-none touch-pan-y"
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}

@@ -90,29 +90,45 @@ h6 {
   }
 }
 
+@-webkit-keyframes marquee-scroll {
+  from {
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    -webkit-transform: translate3d(-50%, 0, 0);
+  }
+}
+
 .marquee-container {
   overflow: hidden;
   width: 100%;
   -webkit-mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
   mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 .marquee-track {
   display: flex;
   width: max-content;
   animation: marquee-scroll 100s linear infinite;
+  -webkit-animation: marquee-scroll 100s linear infinite;
   will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  perspective: 1000;
 }
 
 .marquee-track:hover {
   animation-play-state: paused;
+  -webkit-animation-play-state: paused;
 }
 
-/* ── Offscreen Rendering Performance Optimization ── */
+/* ── Offscreen Rendering Performance Optimization (Excluding animated marquees to prevent WebKit stall) ── */
 #mission,
-#speakers,
-#full-releases,
-#industry {
+#full-releases {
   content-visibility: auto;
   contain-intrinsic-size: 1px 800px;
 }

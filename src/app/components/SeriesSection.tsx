@@ -662,7 +662,6 @@ export default function SeriesSection() {
                       ref={videoRef}
                       key={selectedEpisode.videoUrl}
                       src={selectedEpisode.videoUrl}
-                      poster={selectedEpisode.thumbnail}
                       autoPlay
                       muted={isMuted}
                       loop
