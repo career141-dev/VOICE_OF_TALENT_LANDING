@@ -16,10 +16,13 @@ export default function SeriesSection() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerContainerRef = useRef<HTMLDivElement>(null);
   const isFirstMountRef = useRef(true);
+  const isManuallyClosedRef = useRef(false);
+  const isManuallyPausedRef = useRef(false);
 
+  // Default to Episode 1 (Mr. Patrick Pereira)
   const [selectedEpisode, setSelectedEpisode] = useState<SeriesEpisode>(seriesEpisodesData[0]);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true); // Default muted without sound for scroll autoplay
   const [isPaused, setIsPaused] = useState(false);
   const [showControls, setShowControls] = useState(true);
   const [currentTime, setCurrentTime] = useState(0);
@@ -74,6 +77,8 @@ export default function SeriesSection() {
   };
 
   const handlePlay = () => {
+    isManuallyClosedRef.current = false;
+    isManuallyPausedRef.current = false;
     setIsPlaying(true);
     setIsPaused(false);
     setShowControls(true);
@@ -83,6 +88,8 @@ export default function SeriesSection() {
   };
 
   const handleEpisodeSelect = (episode: SeriesEpisode) => {
+    isManuallyClosedRef.current = false;
+    isManuallyPausedRef.current = false;
     setSelectedEpisode(episode);
     setIsPlaying(true);
     setIsPaused(false);
@@ -96,6 +103,8 @@ export default function SeriesSection() {
   const handleCloseVideo = (e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
     exitAllFullscreen();
+    isManuallyClosedRef.current = true;
+    isManuallyPausedRef.current = true;
     if (videoRef.current) {
       videoRef.current.pause();
       videoRef.current.currentTime = 0;
@@ -108,13 +117,23 @@ export default function SeriesSection() {
   const togglePlayPause = () => {
     if (!videoRef.current) return;
     if (videoRef.current.paused) {
+      isManuallyPausedRef.current = false;
       safePlay();
       setIsPaused(false);
       resetControlsTimeout();
     } else {
+      isManuallyPausedRef.current = true;
       videoRef.current.pause();
       setIsPaused(true);
       setShowControls(true);
+    }
+  };
+
+  const toggleMute = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (videoRef.current) {
+      videoRef.current.muted = !videoRef.current.muted;
+      setIsMuted(videoRef.current.muted);
     }
   };
 
@@ -147,7 +166,7 @@ export default function SeriesSection() {
       const dur = videoRef.current.duration || 0;
       setDuration(dur);
       setCurrentTime(videoRef.current.currentTime || 0);
-      if (isPlaying) {
+      if (isPlaying && !isManuallyPausedRef.current) {
         safePlay();
       }
     }
@@ -203,6 +222,45 @@ export default function SeriesSection() {
     }
   };
 
+  // Scroll In/Out Observer: Autoplays default Patrick video muted when scrolled into view
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting) {
+          // If not manually closed or paused by user, automatically play muted
+          if (!isManuallyClosedRef.current && !isManuallyPausedRef.current) {
+            setIsPlaying(true);
+            setIsPaused(false);
+            if (videoRef.current) {
+              videoRef.current.muted = true;
+              setIsMuted(true);
+              const playPromise = videoRef.current.play();
+              if (playPromise !== undefined) {
+                playPromise.catch(() => {});
+              }
+            }
+          }
+        } else {
+          // Scrolled out of view: pause playback
+          if (videoRef.current && !videoRef.current.paused) {
+            videoRef.current.pause();
+            setIsPaused(true);
+          }
+        }
+      },
+      {
+        threshold: 0.2,
+      }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   // Listen for external episode select events
   useEffect(() => {
     const handleSelectEvent = (event: Event) => {
@@ -222,7 +280,7 @@ export default function SeriesSection() {
 
   // Ensure playback starts smoothly when selected episode changes while already playing
   useEffect(() => {
-    if (isPlaying) {
+    if (isPlaying && !isManuallyPausedRef.current) {
       safePlay();
     }
   }, [selectedEpisode.id, isPlaying]);
@@ -340,6 +398,7 @@ export default function SeriesSection() {
                   ref={videoRef}
                   key={selectedEpisode.videoUrl || DEFAULT_EPISODE_VIDEO_URL}
                   src={selectedEpisode.videoUrl || DEFAULT_EPISODE_VIDEO_URL}
+                  muted={isMuted}
                   controls={false}
                   playsInline
                   autoPlay
@@ -362,11 +421,7 @@ export default function SeriesSection() {
                   {/* Mute/Unmute toggle button */}
                   <button
                     type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIsMuted((prev) => !prev);
-                      resetControlsTimeout();
-                    }}
+                    onClick={toggleMute}
                     className="flex items-center gap-1.5 rounded-full bg-black/75 px-3.5 py-2 font-geist text-xs font-semibold text-white backdrop-blur-md transition-all hover:bg-black cursor-pointer shadow-md border border-white/10 hover:scale-105 active:scale-95"
                     aria-label={isMuted ? "Unmute video sound" : "Mute video sound"}
                   >
@@ -402,10 +457,7 @@ export default function SeriesSection() {
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleCloseVideo(e);
-                      }}
+                      onClick={handleCloseVideo}
                       aria-label="Close video player"
                       className="flex items-center gap-1.5 rounded-full bg-black/70 px-4 py-2 font-geist text-xs font-semibold text-white backdrop-blur-md transition-all hover:bg-black cursor-pointer shadow-md border border-white/10 hover:scale-105 active:scale-95"
                     >
