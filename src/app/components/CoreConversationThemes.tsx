@@ -20,49 +20,48 @@ const themes: ThemeItem[] = [
     id: 2,
     title: "Building a meaningful career in Talent Acquisition",
     description:
-      "Navigating the talent acquisition profession with purpose — developing key competencies, stakeholder trust, and sustainable career progression in competitive markets.",
+      "Navigating the talent acquisition profession with purpose to build key competencies, executive stakeholder trust, and sustainable long-term career growth.",
   },
   {
     id: 3,
     title: "Recognizing potential beyond a resume",
     description:
-      "Evaluating mindset, problem-solving ability, and culture-add to discover exceptional talent beyond conventional credentials and traditional job qualifications.",
+      "Evaluating mindset, problem-solving agility, and cultural contribution to discover exceptional talent beyond conventional credentials and standard resumes.",
   },
   {
     id: 4,
     title: "Creating better candidate experiences",
     description:
-      "Designing transparent, empathetic interview journeys that elevate employer brand prestige, respect applicant time, and build lasting professional relationships.",
+      "Designing transparent, empathetic interview journeys that elevate employer brand prestige, respect candidate time, and build enduring professional trust.",
   },
   {
     id: 5,
     title: "The relationship between talent and business growth",
     description:
-      "Understanding how visionary hiring directly drives bottom-line profitability, fuels market expansion, and establishes sustainable competitive differentiation.",
+      "Understanding how visionary hiring directly drives bottom-line profitability, fuels sustainable market expansion, and creates lasting industry advantage.",
   },
   {
     id: 6,
     title: "Technology, AI and the future of recruitment",
     description:
-      "Leveraging smart automation and AI-driven screening to optimize hiring velocity while fiercely safeguarding the vital human touch in decision-making.",
+      "Leveraging smart automation and AI-driven screening to accelerate hiring velocity while safeguarding the essential human intuition in talent decisions.",
   },
   {
     id: 7,
     title: "Leadership lessons from inside the industry",
     description:
-      "Unfiltered leadership insights on navigating disruption, building resilient team cultures, and guiding talent through dynamic economic shifts.",
+      "Unfiltered leadership insights on navigating industry disruption, cultivating high-performing team cultures, and guiding talent through economic shifts.",
   },
   {
     id: 8,
     title: "The future of Sri Lanka's workforce",
     description:
-      "Empowering the next generation of local professionals with globally competitive skills, adaptable mindsets, and cross-industry opportunities.",
+      "Empowering the next generation of emerging professionals with globally competitive skills, adaptable career mindsets, and high-impact opportunities.",
   },
 ];
 
 const DESKTOP_BOX_DURATION_MS = 450;
 const MOBILE_BOX_DURATION_MS = 450;
-const MOBILE_REVEAL_DELAY_MS = 380;
 
 function getCircularDiff(index: number, active: number, total: number) {
   let diff = index - active;
@@ -75,10 +74,6 @@ export default function CoreConversationThemes() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState<number>(0);
   const [isPaused, setIsPaused] = useState(false);
-
-  // Separate flag for the mobile carousel
-  const [mobileTextHidden, setMobileTextHidden] = useState(false);
-  const mobileTextTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const lastSwipeTime = useRef<number>(0);
   const totalThemes = themes.length;
@@ -112,18 +107,6 @@ export default function CoreConversationThemes() {
     setDirection(index > activeIndex ? 1 : -1);
     setActiveIndex(index);
   };
-
-  useEffect(() => {
-    setMobileTextHidden(true);
-    if (mobileTextTimeoutRef.current) clearTimeout(mobileTextTimeoutRef.current);
-    mobileTextTimeoutRef.current = setTimeout(() => {
-      setMobileTextHidden(false);
-    }, MOBILE_REVEAL_DELAY_MS);
-
-    return () => {
-      if (mobileTextTimeoutRef.current) clearTimeout(mobileTextTimeoutRef.current);
-    };
-  }, [activeIndex]);
 
   /* ── Auto-play Movement (Advances every 6.5s, pauses on hover / touch) ── */
   useEffect(() => {
@@ -208,6 +191,7 @@ export default function CoreConversationThemes() {
                   zIndex: diff === 0 ? 30 : 20,
                   opacity: Math.abs(diff) <= 1 ? 1 : 0,
                   backgroundColor: diff === 0 ? "#159A99" : "#F5F7FA",
+                  color: diff === 0 ? "#FFFFFF" : "#161616",
                   borderColor: diff === 0 ? "rgba(21, 154, 153, 0)" : "rgba(21, 154, 153, 1)",
                   boxShadow:
                     diff === 0
@@ -215,6 +199,14 @@ export default function CoreConversationThemes() {
                       : "0 4px 14px rgba(0, 0, 0, 0.04)",
                   pointerEvents: Math.abs(diff) <= 1 ? "auto" : "none",
                 }}
+                whileHover={
+                  diff !== 0
+                    ? {
+                        backgroundColor: "#FFFFFF",
+                        boxShadow: "0 6px 20px rgba(0, 0, 0, 0.06)",
+                      }
+                    : undefined
+                }
                 transition={{
                   duration: DESKTOP_BOX_DURATION_MS / 1000,
                   ease: [0.25, 1, 0.5, 1],
@@ -228,31 +220,45 @@ export default function CoreConversationThemes() {
                   if (diff === -1) handlePrev();
                   if (diff === 1) handleNext();
                 }}
-                className={`absolute top-1/2 -translate-y-1/2 flex flex-col items-center justify-center text-center rounded-[28px] xl:rounded-[34px] border-[1.5px] select-none px-7 xl:px-10 py-6 ${isActive
-                    ? "cursor-default"
-                    : "cursor-pointer hover:bg-white hover:shadow-md"
-                  }`}
+                className={`absolute top-1/2 -translate-y-1/2 flex flex-col items-center justify-center text-center rounded-[28px] xl:rounded-[34px] border-[1.5px] select-none px-6 xl:px-10 py-6 ${
+                  isActive ? "cursor-default" : "cursor-pointer"
+                }`}
               >
-                <div className="flex flex-col items-center">
-                  <h3
-                    className={`font-cal font-normal leading-[1.2] transition-colors duration-300 ${isActive
-                        ? "text-white text-[28px] sm:text-[32px] xl:text-[36px] max-w-[490px]"
-                        : "text-[#161616] text-[21px] sm:text-[23px] xl:text-[25px] max-w-[280px]"
-                      }`}
-                  >
-                    {theme.title}
-                  </h3>
-
-                  {isActive && (
-                    <motion.p
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.35, ease: "easeOut" }}
-                      className="mt-5 max-w-[470px] font-geist text-[17px] sm:text-[19px] xl:text-[21px] font-light leading-[1.6] text-white/95"
+                <div className="w-full flex flex-col items-center">
+                  {/* Title Slot: Fixed height so vertical positioning never shifts */}
+                  <div className="w-full h-[76px] xl:h-[84px] flex items-center justify-center">
+                    <motion.h3
+                      animate={{
+                        scale: diff === 0 ? 1 : 0.88,
+                      }}
+                      transition={{
+                        duration: DESKTOP_BOX_DURATION_MS / 1000,
+                        ease: [0.25, 1, 0.5, 1],
+                      }}
+                      style={{ color: "inherit", transformOrigin: "center center" }}
+                      className="font-cal font-normal leading-[1.22] text-[25px] sm:text-[28px] xl:text-[31px] max-w-[460px] text-center"
                     >
+                      {theme.title}
+                    </motion.h3>
+                  </div>
+
+                  {/* Paragraph Slot: Fixed container height and position across all cards */}
+                  <motion.div
+                    animate={{
+                      height: diff === 0 ? 84 : 0,
+                      opacity: diff === 0 ? 1 : 0,
+                      marginTop: diff === 0 ? 18 : 0,
+                    }}
+                    transition={{
+                      duration: DESKTOP_BOX_DURATION_MS / 1000,
+                      ease: [0.25, 1, 0.5, 1],
+                    }}
+                    className="w-full h-[84px] flex items-center justify-center overflow-hidden"
+                  >
+                    <p className="max-w-[470px] font-geist text-[15.5px] sm:text-[16.5px] xl:text-[17.5px] font-light leading-[1.55] text-white/95 text-center">
                       {theme.description}
-                    </motion.p>
-                  )}
+                    </p>
+                  </motion.div>
                 </div>
               </motion.article>
             );
@@ -294,6 +300,7 @@ export default function CoreConversationThemes() {
                   zIndex: diff === 0 ? 20 : 10,
                   opacity: diff === 0 ? 1 : Math.abs(diff) === 1 ? 0.95 : 0,
                   backgroundColor: diff === 0 ? "#159A99" : "#F5F7FA",
+                  color: diff === 0 ? "#FFFFFF" : "#161616",
                   borderColor: diff === 0 ? "rgba(21, 154, 153, 0)" : "rgba(21, 154, 153, 1)",
                   boxShadow: "none",
                   pointerEvents: Math.abs(diff) <= 1 ? "auto" : "none",
@@ -313,22 +320,41 @@ export default function CoreConversationThemes() {
                 }}
                 className="absolute top-1/2 -translate-y-1/2 w-full max-w-[310px] sm:max-w-[480px] md:max-w-[600px] flex flex-col justify-center items-center text-center rounded-[26px] sm:rounded-[34px] border-[1.5px] px-5 py-6 sm:px-9 sm:py-8 md:px-12 md:py-9 cursor-pointer overflow-hidden select-none"
               >
-                {/* Content: only visible when active AND the box has
-                  finished moving into place. A gentle fade-up (not a flat
-                  opacity pop) reads as an intentional entrance rather than
-                  the text "running" into place. */}
-                <div
-                  className={`flex flex-col items-center justify-center gap-[18px] sm:gap-[24px] md:gap-[28px] transition-[opacity,transform] ease-out ${isActive && !mobileTextHidden
-                      ? "opacity-100 translate-y-0 duration-[280ms]"
-                      : "opacity-0 translate-y-2 duration-150 pointer-events-none"
-                    }`}
-                >
-                  <h3 className="font-cal text-[21px] sm:text-[25px] md:text-[29px] font-normal leading-[1.2] text-white max-w-[255px] sm:max-w-[420px] md:max-w-[540px]">
-                    {theme.title}
-                  </h3>
-                  <p className="font-geist text-[13.5px] sm:text-[15px] md:text-[17px] font-light leading-[1.5] text-white/95 max-w-[255px] sm:max-w-[420px] md:max-w-[520px]">
-                    {theme.description}
-                  </p>
+                <div className="w-full flex flex-col items-center justify-center">
+                  {/* Title Slot with fixed minimum height */}
+                  <div className="w-full min-h-[58px] sm:min-h-[66px] flex items-center justify-center">
+                    <motion.h3
+                      animate={{
+                        scale: diff === 0 ? 1 : 0.92,
+                      }}
+                      transition={{
+                        duration: MOBILE_BOX_DURATION_MS / 1000,
+                        ease: [0.25, 1, 0.5, 1],
+                      }}
+                      style={{ color: "inherit", transformOrigin: "center center" }}
+                      className="font-cal text-[20px] sm:text-[24px] md:text-[28px] font-normal leading-[1.25] max-w-[265px] sm:max-w-[420px] md:max-w-[520px] text-center"
+                    >
+                      {theme.title}
+                    </motion.h3>
+                  </div>
+
+                  {/* Paragraph Slot: Fixed container height & position */}
+                  <motion.div
+                    animate={{
+                      height: diff === 0 ? "auto" : 0,
+                      opacity: diff === 0 ? 1 : 0,
+                      marginTop: diff === 0 ? 14 : 0,
+                    }}
+                    transition={{
+                      duration: MOBILE_BOX_DURATION_MS / 1000,
+                      ease: [0.25, 1, 0.5, 1],
+                    }}
+                    className="w-full overflow-hidden flex items-center justify-center"
+                  >
+                    <p className="font-geist text-[13.5px] sm:text-[15px] md:text-[16.5px] font-light leading-[1.5] text-white/95 max-w-[265px] sm:max-w-[420px] md:max-w-[500px] text-center">
+                      {theme.description}
+                    </p>
+                  </motion.div>
                 </div>
               </motion.article>
             );
