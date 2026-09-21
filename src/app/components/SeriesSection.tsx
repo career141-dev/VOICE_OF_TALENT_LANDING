@@ -534,7 +534,7 @@ export default function SeriesSection() {
           {/* Main Featured Video / Episode Widget */}
           <article
             onContextMenu={(e) => handleItemContextMenu(e, selectedEpisode)}
-            className="group relative w-full aspect-[4/5] min-[480px]:aspect-[3/4] sm:aspect-[16/9.5] md:aspect-[16/9] overflow-hidden rounded-[28px] md:rounded-[32px] max-[760px]:shadow-none max-[760px]:border-0 max-[760px]:ring-0 shadow-xl border-none outline-none bg-black sm:bg-transparent isolate select-none"
+            className="group relative w-full aspect-[4/5] min-[480px]:aspect-[3/4] sm:aspect-[16/9.5] md:aspect-[16/9] overflow-hidden rounded-[28px] md:rounded-[32px] max-[760px]:shadow-none max-[760px]:border-0 max-[760px]:ring-0 shadow-xl border-none outline-none bg-black sm:bg-transparent isolate select-none [transform:translateZ(0)] [-webkit-mask-image:-webkit-radial-gradient(white,black)]"
           >
             {isPlaying ? (
               <div

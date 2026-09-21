@@ -788,10 +788,12 @@ export default function FullReleasesSection() {
                         hover:-translate-y-1
                         active:scale-[0.985]
                         opacity-100
+                        border-none
+                        outline-none
                       `,
                       isSelected
-                        ? "border-[1.62px] border-[#159A99]/50 shadow-[0_12px_28px_rgba(21,154,153,0.08),0_4px_12px_rgba(0,0,0,0.04)]"
-                        : "border-[1.62px] border-[#EAECEE] hover:border-[#159A99]/40 hover:shadow-[0_12px_24px_-4px_rgba(0,0,0,0.06)]",
+                        ? "shadow-[0_12px_28px_rgba(21,154,153,0.12),0_4px_12px_rgba(0,0,0,0.04)] ring-0"
+                        : "shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_24px_-4px_rgba(0,0,0,0.08)]",
                     ].join(" ")}
                   >
                     {/* Episode Badge (Top-Left) */}
@@ -870,11 +872,11 @@ export default function FullReleasesSection() {
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
-            className="relative flex h-[380px] sm:h-[460px] md:h-[540px] min-[1100px]:h-auto min-[1100px]:flex-1 min-[1100px]:min-h-0 w-full max-w-full overflow-hidden rounded-[24px] sm:rounded-[30px] border-none outline-none bg-black shadow-xl opacity-100 select-none touch-pan-y"
+            className="relative flex h-[380px] sm:h-[460px] md:h-[540px] min-[1100px]:h-auto min-[1100px]:flex-1 min-[1100px]:min-h-0 w-full max-w-full overflow-hidden rounded-[24px] sm:rounded-[30px] border-none outline-none bg-black shadow-xl opacity-100 select-none touch-pan-y isolate [transform:translateZ(0)] [-webkit-mask-image:-webkit-radial-gradient(white,black)]"
           >
             {/* Smooth 2-Reel Hardware-Accelerated Sliding Track */}
             <div
-              className="flex h-full w-full items-stretch"
+              className="flex h-full w-full items-stretch isolate [transform:translateZ(0)]"
               style={{
                 transform: `translate3d(calc(-${activeReelIndex * 100}% + ${touchOffset}px), 0, 0)`,
                 transition: isSwiping
@@ -892,7 +894,7 @@ export default function FullReleasesSection() {
                 return (
                   <article
                     key={reelIdx}
-                    className="relative h-full w-full min-w-full shrink-0 overflow-hidden bg-black select-none cursor-pointer"
+                    className="relative h-full w-full min-w-full shrink-0 overflow-hidden bg-black select-none cursor-pointer isolate"
                   >
                   {isCurrentSlidePlaying ? (
                     <div
@@ -1195,14 +1197,14 @@ export default function FullReleasesSection() {
                       }}
                     >
                       {/* Full Cover Thumbnail Image (Unified for Mobile & Desktop) */}
-                      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                      <div className="pointer-events-none absolute -inset-[2px] overflow-hidden">
                         <img
                           src={
                             selectedEpisode.posterImage || `${FULL_RELEASE_IMG_BASE}/reelspeaker${selectedEpisode.id}.webp`
                           }
                           alt={selectedEpisode.guest}
                           draggable={false}
-                          className="h-full w-full object-cover object-[center_top] select-none pointer-events-none transition-transform duration-500 group-hover:scale-105"
+                          className="h-full w-full object-cover object-[center_top] select-none pointer-events-none transition-transform duration-500 group-hover:scale-105 scale-[1.015]"
                         />
                       </div>
 
