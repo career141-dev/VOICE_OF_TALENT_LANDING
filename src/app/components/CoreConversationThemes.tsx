@@ -228,14 +228,27 @@ export default function CoreConversationThemes() {
                   if (diff === -1) handlePrev();
                   if (diff === 1) handleNext();
                 }}
-                className={`absolute top-1/2 -translate-y-1/2 flex flex-col items-center justify-center text-center rounded-[28px] xl:rounded-[34px] border-[1.5px] select-none px-4 sm:px-6 xl:px-8 py-6 ${
+                className={`absolute top-1/2 -translate-y-1/2 flex flex-col items-center justify-center text-center rounded-[28px] xl:rounded-[34px] border-[1.5px] select-none px-4 xl:px-8 py-6 overflow-hidden ${
                   isActive ? "cursor-default" : "cursor-pointer"
                 }`}
               >
-                {/* Fixed-width Content Container: Stable width with breathing room so lines never truncate */}
-                <div className="w-[420px] max-w-[90%] flex flex-col items-center justify-center mx-auto shrink-0">
-                  {/* Title Slot: Fixed width & increased font size */}
-                  <div className="w-full h-[74px] xl:h-[82px] flex items-center justify-center text-center shrink-0 px-1">
+                {/* Strictly Fixed-Width Content Container: Identical width on every card so text never reflows */}
+                <div
+                  style={{ width: "340px", minWidth: "340px", maxWidth: "340px" }}
+                  className="flex flex-col items-center justify-center mx-auto shrink-0"
+                >
+                  {/* Title Slot: Fixed width; translates vertically on side cards to stay perfectly centered */}
+                  <motion.div
+                    animate={{
+                      y: diff === 0 ? 0 : 52,
+                    }}
+                    transition={{
+                      duration: DESKTOP_BOX_DURATION_MS / 1000,
+                      ease: [0.25, 1, 0.5, 1],
+                    }}
+                    style={{ width: "340px", minWidth: "340px", maxWidth: "340px", height: "70px" }}
+                    className="flex items-center justify-center text-center shrink-0 px-1"
+                  >
                     <motion.h3
                       animate={{
                         color: diff === 0 ? "#FFFFFF" : "#161616",
@@ -245,44 +258,54 @@ export default function CoreConversationThemes() {
                         ease: [0.25, 1, 0.5, 1],
                       }}
                       style={{
+                        width: "340px",
+                        minWidth: "340px",
+                        maxWidth: "340px",
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                      }}
+                      className="font-cal font-normal leading-[1.22] text-[22px] sm:text-[24px] xl:text-[26px] text-center shrink-0"
+                    >
+                      {theme.title}
+                    </motion.h3>
+                  </motion.div>
+
+                  {/* Paragraph Slot: Strictly fixed width (340px) & height (84px). NO height animation so text never resizes */}
+                  <div
+                    style={{
+                      width: "340px",
+                      minWidth: "340px",
+                      maxWidth: "340px",
+                      height: "84px",
+                      marginTop: "16px",
+                    }}
+                    className="flex items-center justify-center text-center overflow-hidden shrink-0 px-1"
+                  >
+                    <motion.p
+                      animate={{
+                        opacity: diff === 0 ? 1 : 0,
+                      }}
+                      transition={{
+                        duration: DESKTOP_BOX_DURATION_MS / 1000,
+                        ease: [0.25, 1, 0.5, 1],
+                      }}
+                      style={{
+                        width: "340px",
+                        minWidth: "340px",
+                        maxWidth: "340px",
                         display: "-webkit-box",
                         WebkitLineClamp: 3,
                         WebkitBoxOrient: "vertical",
                         overflow: "hidden",
-                      }}
-                      className="w-full font-cal font-normal leading-[1.22] text-[22px] sm:text-[24px] xl:text-[27px] text-center shrink-0"
-                    >
-                      {theme.title}
-                    </motion.h3>
-                  </div>
-
-                  {/* Paragraph Slot: Only occupies space when active (diff === 0), so side cards center text completely */}
-                  <motion.div
-                    initial={false}
-                    animate={{
-                      height: diff === 0 ? 104 : 0,
-                      marginTop: diff === 0 ? 16 : 0,
-                      opacity: diff === 0 ? 1 : 0,
-                    }}
-                    transition={{
-                      duration: DESKTOP_BOX_DURATION_MS / 1000,
-                      ease: [0.25, 1, 0.5, 1],
-                    }}
-                    className="w-full flex items-center justify-center text-center overflow-hidden shrink-0 px-1"
-                  >
-                    <p
-                      style={{
-                        display: "-webkit-box",
-                        WebkitLineClamp: 4,
-                        WebkitBoxOrient: "vertical",
-                        overflow: "hidden",
                         textOverflow: "ellipsis",
                       }}
-                      className="w-full font-geist text-[15px] sm:text-[16px] xl:text-[17px] font-light leading-[25px] xl:leading-[27px] text-white/95 text-center shrink-0"
+                      className="font-geist text-[15px] xl:text-[15.5px] font-light leading-[24px] xl:leading-[25px] text-white/95 text-center shrink-0"
                     >
                       {theme.description}
-                    </p>
-                  </motion.div>
+                    </motion.p>
+                  </div>
                 </div>
               </motion.article>
             );
@@ -343,9 +366,18 @@ export default function CoreConversationThemes() {
                 }}
                 className="absolute top-1/2 -translate-y-1/2 w-full max-w-[320px] sm:max-w-[490px] md:max-w-[610px] flex flex-col justify-center items-center text-center rounded-[26px] sm:rounded-[34px] border-[1.5px] px-5 py-6 sm:px-9 sm:py-8 md:px-12 md:py-9 cursor-pointer overflow-hidden select-none"
               >
-                <div className="w-[280px] sm:w-[400px] md:w-[460px] max-w-[92%] flex flex-col items-center justify-center mx-auto shrink-0">
-                  {/* Title Slot with increased text size */}
-                  <div className="w-full h-[64px] sm:h-[72px] flex items-center justify-center px-1">
+                <div className="w-[270px] sm:w-[380px] md:w-[440px] max-w-[92%] flex flex-col items-center justify-center mx-auto shrink-0">
+                  {/* Title Slot: Smoothly translates vertically on side cards */}
+                  <motion.div
+                    animate={{
+                      y: diff === 0 ? 0 : 42,
+                    }}
+                    transition={{
+                      duration: MOBILE_BOX_DURATION_MS / 1000,
+                      ease: [0.25, 1, 0.5, 1],
+                    }}
+                    className="w-full h-[62px] sm:h-[68px] flex items-center justify-center px-1 shrink-0"
+                  >
                     <motion.h3
                       animate={{
                         color: diff === 0 ? "#FFFFFF" : "#161616",
@@ -360,27 +392,22 @@ export default function CoreConversationThemes() {
                         WebkitBoxOrient: "vertical",
                         overflow: "hidden",
                       }}
-                      className="w-full font-cal text-[21px] sm:text-[25px] md:text-[28px] font-normal leading-[1.25] text-center"
+                      className="w-full font-cal text-[20px] sm:text-[23px] md:text-[26px] font-normal leading-[1.25] text-center shrink-0"
                     >
                       {theme.title}
                     </motion.h3>
-                  </div>
+                  </motion.div>
 
-                  {/* Paragraph Slot: Only occupies space when active */}
-                  <motion.div
-                    initial={false}
-                    animate={{
-                      height: diff === 0 ? 82 : 0,
-                      marginTop: diff === 0 ? 16 : 0,
-                      opacity: diff === 0 ? 1 : 0,
-                    }}
-                    transition={{
-                      duration: MOBILE_BOX_DURATION_MS / 1000,
-                      ease: [0.25, 1, 0.5, 1],
-                    }}
-                    className="w-full flex items-center justify-center overflow-hidden px-1"
-                  >
-                    <p
+                  {/* Paragraph Slot: Fixed height, NO height animation */}
+                  <div className="w-full h-[72px] sm:h-[80px] mt-3 sm:mt-4 flex items-center justify-center overflow-hidden px-1 shrink-0">
+                    <motion.p
+                      animate={{
+                        opacity: diff === 0 ? 1 : 0,
+                      }}
+                      transition={{
+                        duration: MOBILE_BOX_DURATION_MS / 1000,
+                        ease: [0.25, 1, 0.5, 1],
+                      }}
                       style={{
                         display: "-webkit-box",
                         WebkitLineClamp: 3,
@@ -388,11 +415,11 @@ export default function CoreConversationThemes() {
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                       }}
-                      className="w-full font-geist text-[14.5px] sm:text-[16px] md:text-[17px] font-light leading-[22px] sm:leading-[25px] text-white/95 text-center"
+                      className="w-full font-geist text-[14px] sm:text-[15.5px] font-light leading-[22px] sm:leading-[24px] text-white/95 text-center shrink-0"
                     >
                       {theme.description}
-                    </p>
-                  </motion.div>
+                    </motion.p>
+                  </div>
                 </div>
               </motion.article>
             );
