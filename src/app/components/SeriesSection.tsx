@@ -379,24 +379,29 @@ export default function SeriesSection() {
       }
 
       if (matchedEpisode) {
-        isManuallyClosedRef.current = false;
-        isManuallyPausedRef.current = false;
-        setSelectedEpisode(matchedEpisode);
-        setIsPlaying(true);
-        setIsMuted(false);
-        setIsPaused(false);
-        setShowControls(true);
-        setCurrentTime(0);
+        if (!isInitial) {
+          isManuallyClosedRef.current = false;
+          isManuallyPausedRef.current = false;
+          setSelectedEpisode(matchedEpisode);
+          setIsPlaying(true);
+          setIsMuted(false);
+          setIsPaused(false);
+          setShowControls(true);
+          setCurrentTime(0);
 
-        // Scroll to document.querySelector("#episodes > div")
-        const delay = isInitial ? 350 : 50;
-        setTimeout(() => {
-          scrollToEpisodesContainer(true);
-        }, delay);
+          setTimeout(() => {
+            scrollToEpisodesContainer(true);
+          }, 50);
+        } else {
+          // On initial page load / refresh: select episode state without scrolling away from hero
+          setSelectedEpisode(matchedEpisode);
+        }
       } else if (window.location.hash === "#episodes") {
-        setTimeout(() => {
-          scrollToEpisodesContainer(true);
-        }, isInitial ? 350 : 50);
+        if (!isInitial) {
+          setTimeout(() => {
+            scrollToEpisodesContainer(true);
+          }, 50);
+        }
       }
     };
 

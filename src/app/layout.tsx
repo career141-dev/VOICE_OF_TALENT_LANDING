@@ -38,6 +38,18 @@ export default function RootLayout({
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('scrollRestoration' in history) {
+                history.scrollRestoration = 'manual';
+              }
+              window.addEventListener('beforeunload', function() {
+                window.scrollTo(0, 0);
+              });
+            `,
+          }}
+        />
         <link rel="preconnect" href="https://talentsuite.career141.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://talentsuite.career141.com" />
         <link rel="preload" as="image" href="https://talentsuite.career141.com/images/herobottom.webp" fetchPriority="high" />

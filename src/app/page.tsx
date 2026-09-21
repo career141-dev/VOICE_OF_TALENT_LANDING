@@ -40,12 +40,19 @@ export default function Home() {
       if ("scrollRestoration" in window.history) {
         window.history.scrollRestoration = "manual";
       }
-      if (!window.location.hash || window.location.hash === "#top" || window.location.hash === "#hero") {
-        window.scrollTo(0, 0);
-        if (window.location.hash) {
-          window.history.replaceState(null, "", window.location.pathname + window.location.search);
-        }
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+
+      if (window.location.hash) {
+        window.history.replaceState(null, "", window.location.pathname + window.location.search);
       }
+
+      const handlePageShow = () => {
+        window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+      };
+      window.addEventListener("pageshow", handlePageShow);
+      return () => {
+        window.removeEventListener("pageshow", handlePageShow);
+      };
     }
   }, []);
 
