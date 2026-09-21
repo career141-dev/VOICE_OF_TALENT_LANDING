@@ -60,19 +60,9 @@ const themes: ThemeItem[] = [
   },
 ];
 
-// Keep this in sync with the box `transition.duration` values below (in ms).
 const DESKTOP_BOX_DURATION_MS = 450;
 const MOBILE_BOX_DURATION_MS = 450;
-// Both cards are vertically centered (top-1/2 -translate-y-1/2) and their
-// height keeps animating for the full box duration while the description
-// paragraph mounts instantly the moment a card becomes active — so a longer
-// description (more wrapped lines) pushes the centered content further,
-// making the reveal visibly drift/"run" more the bigger the paragraph is.
-// Wait until the height animation has essentially settled before fading
-// text in, so the reveal no longer depends on how much text a theme has.
-const DESKTOP_REVEAL_DELAY_MS = 380;
 const MOBILE_REVEAL_DELAY_MS = 380;
-// Text fade-up duration once revealed: see the `duration-[280ms]` classes below.
 
 function getCircularDiff(index: number, active: number, total: number) {
   let diff = index - active;
@@ -86,13 +76,7 @@ export default function CoreConversationThemes() {
   const [direction, setDirection] = useState<number>(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  // NEW: while true, all title/description text is opacity-0.
-  // This is what actually kills the shake — text only ever becomes
-  // visible once the card has finished resizing/moving.
-  const [textHidden, setTextHidden] = useState(false);
-  const textTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // Separate flag for the mobile carousel, revealed later than desktop —
-  // see MOBILE_REVEAL_DELAY_MS above.
+  // Separate flag for the mobile carousel
   const [mobileTextHidden, setMobileTextHidden] = useState(false);
   const mobileTextTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -129,15 +113,7 @@ export default function CoreConversationThemes() {
     setActiveIndex(index);
   };
 
-  // NEW: every time the active card changes, hide text immediately,
-  // then reveal it once the box animation has essentially finished.
   useEffect(() => {
-    setTextHidden(true);
-    if (textTimeoutRef.current) clearTimeout(textTimeoutRef.current);
-    textTimeoutRef.current = setTimeout(() => {
-      setTextHidden(false);
-    }, DESKTOP_REVEAL_DELAY_MS);
-
     setMobileTextHidden(true);
     if (mobileTextTimeoutRef.current) clearTimeout(mobileTextTimeoutRef.current);
     mobileTextTimeoutRef.current = setTimeout(() => {
@@ -145,7 +121,6 @@ export default function CoreConversationThemes() {
     }, MOBILE_REVEAL_DELAY_MS);
 
     return () => {
-      if (textTimeoutRef.current) clearTimeout(textTimeoutRef.current);
       if (mobileTextTimeoutRef.current) clearTimeout(mobileTextTimeoutRef.current);
     };
   }, [activeIndex]);
@@ -255,22 +230,12 @@ export default function CoreConversationThemes() {
                 }}
                 className={`absolute top-1/2 -translate-y-1/2 flex flex-col items-center justify-center text-center rounded-[28px] xl:rounded-[34px] border-[1.5px] select-none px-7 xl:px-10 py-6 ${isActive
                     ? "cursor-default"
-                    : "cursor-pointer hover:bg-white hover:shadow-md transition-colors"
+                    : "cursor-pointer hover:bg-white hover:shadow-md"
                   }`}
               >
-                {/* Title + description reveal as ONE unit, only once the box
-                  has (almost) finished resizing — this is what prevents the
-                  visible reflow/jump regardless of how long a theme's
-                  description is. A gentle fade-up (not a flat opacity pop)
-                  reads as an intentional entrance rather than the text
-                  "running" into place. No CSS transition on font-size or
-                  max-width; they just snap while invisible. */}
-                <div
-                  className={`flex flex-col items-center transition-[opacity,transform] ease-out ${textHidden ? "opacity-0 translate-y-2 duration-150" : "opacity-100 translate-y-0 duration-[280ms]"
-                    }`}
-                >
+                <div className="flex flex-col items-center">
                   <h3
-                    className={`font-cal font-normal leading-[1.2] ${isActive
+                    className={`font-cal font-normal leading-[1.2] transition-colors duration-300 ${isActive
                         ? "text-white text-[28px] sm:text-[32px] xl:text-[36px] max-w-[490px]"
                         : "text-[#161616] text-[21px] sm:text-[23px] xl:text-[25px] max-w-[280px]"
                       }`}
@@ -279,9 +244,14 @@ export default function CoreConversationThemes() {
                   </h3>
 
                   {isActive && (
-                    <p className="mt-5 max-w-[470px] font-geist text-[17px] sm:text-[19px] xl:text-[21px] font-light leading-[1.6] text-white/95">
+                    <motion.p
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.35, ease: "easeOut" }}
+                      className="mt-5 max-w-[470px] font-geist text-[17px] sm:text-[19px] xl:text-[21px] font-light leading-[1.6] text-white/95"
+                    >
                       {theme.description}
-                    </p>
+                    </motion.p>
                   )}
                 </div>
               </motion.article>
