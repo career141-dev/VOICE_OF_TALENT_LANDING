@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 type ThemeItem = {
   id: number;
@@ -187,7 +187,7 @@ export default function CoreConversationThemes() {
         <div
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
-          className="hidden lg:block relative w-full h-[470px] xl:h-[510px]"
+          className="hidden lg:block relative w-full h-[470px] xl:h-[510px] isolate [transform:translateZ(0)]"
         >
           {themes.map((theme, idx) => {
             const diff = getCircularDiff(idx, activeIndex, totalThemes);
@@ -201,14 +201,15 @@ export default function CoreConversationThemes() {
                 key={`desktop-theme-card-${theme.id}`}
                 initial={false}
                 animate={{
-                  left: diff === 0 ? "50%" : diff === -1 ? "0%" : diff === 1 ? "72%" : diff < -1 ? "-32%" : "104%",
-                  x: diff === 0 ? "-50%" : "0%",
+                  left: diff === 0 ? "29%" : diff === -1 ? "0%" : diff === 1 ? "72%" : diff < -1 ? "-32%" : "104%",
+                  y: "-50%",
+                  z: 0,
                   width: diff === 0 ? "42%" : "28%",
                   height: diff === 0 ? "440px" : "330px",
                   zIndex: diff === 0 ? 30 : 20,
                   opacity: Math.abs(diff) <= 1 ? 1 : 0,
                   backgroundColor: diff === 0 ? "#159A99" : "#F5F7FA",
-                  borderColor: diff === 0 ? "rgba(21, 154, 153, 0)" : "rgba(21, 154, 153, 1)",
+                  borderColor: "#159A99",
                   boxShadow:
                     diff === 0
                       ? "0 22px 56px rgba(21, 154, 153, 0.32)"
@@ -220,15 +221,14 @@ export default function CoreConversationThemes() {
                   ease: [0.25, 1, 0.5, 1],
                 }}
                 style={{
+                  WebkitBackfaceVisibility: "hidden",
                   backfaceVisibility: "hidden",
-                  WebkitFontSmoothing: "antialiased",
-                  transform: "translate3d(0,0,0)",
                 }}
                 onClick={() => {
                   if (diff === -1) handlePrev();
                   if (diff === 1) handleNext();
                 }}
-                className={`absolute top-1/2 -translate-y-1/2 flex flex-col items-center justify-center text-center rounded-[28px] xl:rounded-[34px] border-[1.5px] select-none px-7 xl:px-10 py-6 ${isActive
+                className={`absolute top-1/2 flex flex-col items-center justify-center text-center rounded-[28px] xl:rounded-[34px] border-[1.5px] select-none px-7 xl:px-10 py-6 ${isActive
                     ? "cursor-default"
                     : "cursor-pointer hover:bg-white hover:shadow-md"
                   }`}
@@ -243,16 +243,22 @@ export default function CoreConversationThemes() {
                     {theme.title}
                   </h3>
 
-                  {isActive && (
-                    <motion.p
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.35, ease: "easeOut" }}
-                      className="mt-5 max-w-[470px] font-geist text-[17px] sm:text-[19px] xl:text-[21px] font-light leading-[1.6] text-white/95"
-                    >
-                      {theme.description}
-                    </motion.p>
-                  )}
+                  <AnimatePresence>
+                    {isActive && (
+                      <motion.div
+                        key={`desc-${theme.id}`}
+                        initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                        animate={{ opacity: 1, height: "auto", marginTop: 20 }}
+                        exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                        transition={{ duration: 0.28, ease: "easeInOut" }}
+                        className="max-w-[470px] overflow-hidden"
+                      >
+                        <p className="font-geist text-[17px] sm:text-[19px] xl:text-[21px] font-light leading-[1.6] text-white/95">
+                          {theme.description}
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </motion.article>
             );
