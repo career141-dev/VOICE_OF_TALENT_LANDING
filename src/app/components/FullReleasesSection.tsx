@@ -1156,9 +1156,11 @@ export default function FullReleasesSection() {
                                     toggleFullscreen();
                                     resetControlsTimeout();
                                   }}
-                                  className={`flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full ${
-                                    isFullscreen ? "bg-[#159A99] text-white shadow-md" : "bg-white/10 text-white hover:bg-white/20"
-                                  } transition-all active:scale-95 cursor-pointer ml-1`}
+                                  className={`flex h-8 w-8 sm:h-8 sm:w-8 items-center justify-center rounded-full ${
+                                    isFullscreen
+                                      ? "bg-[#159A99] text-white shadow-md shadow-[#159A99]/30"
+                                      : "bg-white/10 text-white hover:bg-white/20"
+                                  } transition-all active:scale-95 cursor-pointer ml-1 touch-manipulation`}
                                   aria-label={isFullscreen ? "Exit Fullscreen / Minimize" : "Enter Fullscreen"}
                                   title={isFullscreen ? "Exit Fullscreen / Minimize" : "Enter Fullscreen"}
                                 >
