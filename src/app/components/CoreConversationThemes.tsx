@@ -14,49 +14,49 @@ const themes: ThemeItem[] = [
     id: 1,
     title: "The changing role of Talent Acquisition",
     description:
-      "How modern talent teams are evolving from operational recruiters into strategic advisors who shape workforce strategy and long-term organizational success.",
+      "How modern talent teams evolve from operational recruiters into strategic advisors shaping workforce strategy and organizational success.",
   },
   {
     id: 2,
     title: "Building a meaningful career in Talent Acquisition",
     description:
-      "Navigating the talent acquisition profession with purpose to build key competencies, executive stakeholder trust, and sustainable long-term career growth.",
+      "Navigating the talent acquisition profession with purpose to build core competencies, executive trust, and long-term career growth.",
   },
   {
     id: 3,
     title: "Recognizing potential beyond a resume",
     description:
-      "Evaluating mindset, problem-solving agility, and cultural contribution to discover exceptional talent beyond conventional credentials and standard resumes.",
+      "Evaluating mindset, problem-solving agility, and cultural contribution to discover exceptional talent beyond conventional credentials.",
   },
   {
     id: 4,
     title: "Creating better candidate experiences",
     description:
-      "Designing transparent, empathetic interview journeys that elevate employer brand prestige, respect candidate time, and build enduring professional trust.",
+      "Designing transparent, empathetic interview journeys that elevate employer brand prestige, respect time, and build professional trust.",
   },
   {
     id: 5,
     title: "The relationship between talent and business growth",
     description:
-      "Understanding how visionary hiring directly drives bottom-line profitability, fuels sustainable market expansion, and creates lasting industry advantage.",
+      "Understanding how visionary hiring directly drives profitability, fuels market expansion, and creates lasting industry advantage.",
   },
   {
     id: 6,
     title: "Technology, AI and the future of recruitment",
     description:
-      "Leveraging smart automation and AI-driven screening to accelerate hiring velocity while safeguarding the essential human intuition in talent decisions.",
+      "Leveraging smart automation and AI-driven screening to accelerate hiring velocity while safeguarding essential human intuition.",
   },
   {
     id: 7,
     title: "Leadership lessons from inside the industry",
     description:
-      "Unfiltered leadership insights on navigating industry disruption, cultivating high-performing team cultures, and guiding talent through economic shifts.",
+      "Unfiltered leadership insights on navigating disruption, cultivating resilient team cultures, and guiding talent through shifts.",
   },
   {
     id: 8,
     title: "The future of Sri Lanka's workforce",
     description:
-      "Empowering the next generation of emerging professionals with globally competitive skills, adaptable career mindsets, and high-impact opportunities.",
+      "Empowering the next generation of emerging professionals with globally competitive skills, adaptable mindsets, and opportunities.",
   },
 ];
 
@@ -184,9 +184,9 @@ export default function CoreConversationThemes() {
                 key={`desktop-theme-card-${theme.id}`}
                 initial={false}
                 animate={{
-                  left: diff === 0 ? "50%" : diff === -1 ? "0%" : diff === 1 ? "72%" : diff < -1 ? "-32%" : "104%",
+                  left: diff === 0 ? "50%" : diff === -1 ? "0%" : diff === 1 ? "70.5%" : diff < -1 ? "-32%" : "104%",
                   x: diff === 0 ? "-50%" : "0%",
-                  width: diff === 0 ? "42%" : "28%",
+                  width: diff === 0 ? "41%" : "29.5%",
                   height: diff === 0 ? "440px" : "330px",
                   zIndex: diff === 0 ? 30 : 20,
                   opacity: Math.abs(diff) <= 1 ? 1 : 0,
@@ -214,51 +214,60 @@ export default function CoreConversationThemes() {
                 style={{
                   backfaceVisibility: "hidden",
                   WebkitFontSmoothing: "antialiased",
-                  transform: "translate3d(0,0,0)",
                 }}
                 onClick={() => {
                   if (diff === -1) handlePrev();
                   if (diff === 1) handleNext();
                 }}
-                className={`absolute top-1/2 -translate-y-1/2 flex flex-col items-center justify-center text-center rounded-[28px] xl:rounded-[34px] border-[1.5px] select-none px-6 xl:px-10 py-6 ${
+                className={`absolute top-1/2 -translate-y-1/2 flex flex-col items-center justify-center text-center rounded-[28px] xl:rounded-[34px] border-[1.5px] select-none px-4 sm:px-6 xl:px-8 py-6 ${
                   isActive ? "cursor-default" : "cursor-pointer"
                 }`}
               >
-                <div className="w-full flex flex-col items-center">
-                  {/* Title Slot: Fixed height so vertical positioning never shifts */}
-                  <div className="w-full h-[76px] xl:h-[84px] flex items-center justify-center">
+                <div className="w-full flex flex-col items-center justify-center">
+                  {/* Title Slot: Fixed height & up to 3 lines so titles never truncate awkwardly */}
+                  <div className="w-full h-[68px] xl:h-[76px] flex items-center justify-center px-2">
                     <motion.h3
                       animate={{
-                        scale: diff === 0 ? 1 : 0.88,
+                        color: diff === 0 ? "#FFFFFF" : "#161616",
                       }}
                       transition={{
                         duration: DESKTOP_BOX_DURATION_MS / 1000,
                         ease: [0.25, 1, 0.5, 1],
                       }}
-                      style={{ color: "inherit", transformOrigin: "center center" }}
-                      className="font-cal font-normal leading-[1.22] text-[25px] sm:text-[28px] xl:text-[31px] max-w-[460px] text-center"
+                      style={{
+                        display: "-webkit-box",
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                      }}
+                      className="font-cal font-normal leading-[1.22] text-[20px] sm:text-[22px] xl:text-[24px] max-w-[340px] xl:max-w-[400px] text-center"
                     >
                       {theme.title}
                     </motion.h3>
                   </div>
 
-                  {/* Paragraph Slot: Fixed container height and position across all cards */}
-                  <motion.div
-                    animate={{
-                      height: diff === 0 ? 84 : 0,
-                      opacity: diff === 0 ? 1 : 0,
-                      marginTop: diff === 0 ? 18 : 0,
-                    }}
-                    transition={{
-                      duration: DESKTOP_BOX_DURATION_MS / 1000,
-                      ease: [0.25, 1, 0.5, 1],
-                    }}
-                    className="w-full h-[84px] flex items-center justify-center overflow-hidden"
-                  >
-                    <p className="max-w-[470px] font-geist text-[15.5px] sm:text-[16.5px] xl:text-[17.5px] font-light leading-[1.55] text-white/95 text-center">
+                  {/* Paragraph Slot: Fixed container height & position with line-clamp-3 ellipsis truncation */}
+                  <div className="w-full h-[76px] xl:h-[82px] mt-4 flex items-center justify-center overflow-hidden px-2">
+                    <motion.p
+                      animate={{
+                        opacity: diff === 0 ? 1 : 0,
+                      }}
+                      transition={{
+                        duration: DESKTOP_BOX_DURATION_MS / 1000,
+                        ease: [0.25, 1, 0.5, 1],
+                      }}
+                      style={{
+                        display: "-webkit-box",
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                      className="max-w-[360px] xl:max-w-[420px] font-geist text-[14.5px] xl:text-[15.5px] font-light leading-[23px] xl:leading-[25px] text-white/95 text-center"
+                    >
                       {theme.description}
-                    </p>
-                  </motion.div>
+                    </motion.p>
+                  </div>
                 </div>
               </motion.article>
             );
@@ -312,7 +321,6 @@ export default function CoreConversationThemes() {
                 style={{
                   backfaceVisibility: "hidden",
                   WebkitFontSmoothing: "antialiased",
-                  transform: "translate3d(0,0,0)",
                 }}
                 onClick={() => {
                   if (diff === -1) triggerPrev();
@@ -321,40 +329,51 @@ export default function CoreConversationThemes() {
                 className="absolute top-1/2 -translate-y-1/2 w-full max-w-[310px] sm:max-w-[480px] md:max-w-[600px] flex flex-col justify-center items-center text-center rounded-[26px] sm:rounded-[34px] border-[1.5px] px-5 py-6 sm:px-9 sm:py-8 md:px-12 md:py-9 cursor-pointer overflow-hidden select-none"
               >
                 <div className="w-full flex flex-col items-center justify-center">
-                  {/* Title Slot with fixed minimum height */}
-                  <div className="w-full min-h-[58px] sm:min-h-[66px] flex items-center justify-center">
+                  {/* Title Slot with fixed height & 2-line clamp */}
+                  <div className="w-full h-[58px] sm:h-[66px] flex items-center justify-center px-2">
                     <motion.h3
                       animate={{
-                        scale: diff === 0 ? 1 : 0.92,
+                        color: diff === 0 ? "#FFFFFF" : "#161616",
                       }}
                       transition={{
                         duration: MOBILE_BOX_DURATION_MS / 1000,
                         ease: [0.25, 1, 0.5, 1],
                       }}
-                      style={{ color: "inherit", transformOrigin: "center center" }}
-                      className="font-cal text-[20px] sm:text-[24px] md:text-[28px] font-normal leading-[1.25] max-w-[265px] sm:max-w-[420px] md:max-w-[520px] text-center"
+                      style={{
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                      className="font-cal text-[19px] sm:text-[23px] md:text-[26px] font-normal leading-[1.25] max-w-[260px] sm:max-w-[400px] md:max-w-[480px] text-center"
                     >
                       {theme.title}
                     </motion.h3>
                   </div>
 
-                  {/* Paragraph Slot: Fixed container height & position */}
-                  <motion.div
-                    animate={{
-                      height: diff === 0 ? "auto" : 0,
-                      opacity: diff === 0 ? 1 : 0,
-                      marginTop: diff === 0 ? 14 : 0,
-                    }}
-                    transition={{
-                      duration: MOBILE_BOX_DURATION_MS / 1000,
-                      ease: [0.25, 1, 0.5, 1],
-                    }}
-                    className="w-full overflow-hidden flex items-center justify-center"
-                  >
-                    <p className="font-geist text-[13.5px] sm:text-[15px] md:text-[16.5px] font-light leading-[1.5] text-white/95 max-w-[265px] sm:max-w-[420px] md:max-w-[500px] text-center">
+                  {/* Paragraph Slot: Fixed container height, fixed position with 3-line clamp */}
+                  <div className="w-full h-[68px] sm:h-[76px] mt-3 sm:mt-4 flex items-center justify-center overflow-hidden px-2">
+                    <motion.p
+                      animate={{
+                        opacity: diff === 0 ? 1 : 0,
+                      }}
+                      transition={{
+                        duration: MOBILE_BOX_DURATION_MS / 1000,
+                        ease: [0.25, 1, 0.5, 1],
+                      }}
+                      style={{
+                        display: "-webkit-box",
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                      className="font-geist text-[13px] sm:text-[14.5px] md:text-[15.5px] font-light leading-[20px] sm:leading-[23px] text-white/95 max-w-[260px] sm:max-w-[400px] md:max-w-[480px] text-center"
+                    >
                       {theme.description}
-                    </p>
-                  </motion.div>
+                    </motion.p>
+                  </div>
                 </div>
               </motion.article>
             );
