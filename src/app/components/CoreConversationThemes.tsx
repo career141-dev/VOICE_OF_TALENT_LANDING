@@ -166,11 +166,11 @@ export default function CoreConversationThemes() {
           </h2>
         </div>
 
-        {/* ── DESKTOP 3-WIDGET CONTINUOUS CAROUSEL (Left -> Center -> Right Real Movement) ── */}
+        {/* ── DESKTOP 3-WIDGET CONTINUOUS CAROUSEL (Left -> Center -> Right Real Movement with Gaps) ── */}
         <div
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
-          className="hidden lg:block relative w-full h-[470px] xl:h-[510px]"
+          className="hidden lg:block relative w-full h-[480px] xl:h-[520px]"
         >
           {themes.map((theme, idx) => {
             const diff = getCircularDiff(idx, activeIndex, totalThemes);
@@ -184,11 +184,19 @@ export default function CoreConversationThemes() {
                 key={`desktop-theme-card-${theme.id}`}
                 initial={false}
                 animate={{
-                  left: diff === 0 ? "50%" : diff === -1 ? "0%" : diff === 1 ? "70.5%" : diff < -1 ? "-32%" : "104%",
-                  x: diff === 0 ? "-50%" : "0%",
-                  width: diff === 0 ? "42%" : "29.5%",
-                  minWidth: diff === 0 ? "420px" : "290px",
-                  height: diff === 0 ? "440px" : "330px",
+                  left:
+                    diff === 0
+                      ? "50%"
+                      : diff === -1
+                        ? "calc(30% - 28px)"
+                        : diff === 1
+                          ? "calc(70% + 28px)"
+                          : diff < -1
+                            ? "-40%"
+                            : "140%",
+                  x: diff === 0 ? "-50%" : diff === -1 ? "-100%" : "0%",
+                  width: diff === 0 ? "40%" : "28%",
+                  height: diff === 0 ? "450px" : "330px",
                   zIndex: diff === 0 ? 30 : 20,
                   opacity: Math.abs(diff) <= 1 ? 1 : 0,
                   backgroundColor: diff === 0 ? "#159A99" : "#F5F7FA",
@@ -224,10 +232,10 @@ export default function CoreConversationThemes() {
                   isActive ? "cursor-default" : "cursor-pointer"
                 }`}
               >
-                {/* Fixed-width Content Container: 360px fixed width so line length is 100% constant across cards */}
-                <div className="w-[360px] max-w-[360px] flex flex-col items-center justify-center mx-auto shrink-0">
-                  {/* Title Slot: Fixed 360px width & fixed 68px height */}
-                  <div className="w-[360px] max-w-[360px] h-[68px] flex items-center justify-center text-center shrink-0 px-1">
+                {/* Fixed-width Content Container: Stable width with breathing room so lines never truncate */}
+                <div className="w-[420px] max-w-[90%] flex flex-col items-center justify-center mx-auto shrink-0">
+                  {/* Title Slot: Fixed width & increased font size */}
+                  <div className="w-full h-[74px] xl:h-[82px] flex items-center justify-center text-center shrink-0 px-1">
                     <motion.h3
                       animate={{
                         color: diff === 0 ? "#FFFFFF" : "#161616",
@@ -237,21 +245,19 @@ export default function CoreConversationThemes() {
                         ease: [0.25, 1, 0.5, 1],
                       }}
                       style={{
-                        width: "360px",
-                        maxWidth: "360px",
                         display: "-webkit-box",
-                        WebkitLineClamp: 2,
+                        WebkitLineClamp: 3,
                         WebkitBoxOrient: "vertical",
                         overflow: "hidden",
                       }}
-                      className="w-[360px] max-w-[360px] font-cal font-normal leading-[1.22] text-[21px] xl:text-[23px] text-center shrink-0"
+                      className="w-full font-cal font-normal leading-[1.22] text-[22px] sm:text-[24px] xl:text-[27px] text-center shrink-0"
                     >
                       {theme.title}
                     </motion.h3>
                   </div>
 
-                  {/* Paragraph Slot: Strictly fixed 360px width & fixed 76px height across every card */}
-                  <div className="w-[360px] max-w-[360px] h-[76px] mt-4 flex items-center justify-center text-center overflow-hidden shrink-0 px-1">
+                  {/* Paragraph Slot: Strictly fixed width & height with increased font size */}
+                  <div className="w-full h-[96px] xl:h-[104px] mt-3 xl:mt-4 flex items-center justify-center text-center overflow-hidden shrink-0 px-1">
                     <motion.p
                       animate={{
                         opacity: diff === 0 ? 1 : 0,
@@ -261,15 +267,13 @@ export default function CoreConversationThemes() {
                         ease: [0.25, 1, 0.5, 1],
                       }}
                       style={{
-                        width: "360px",
-                        maxWidth: "360px",
                         display: "-webkit-box",
-                        WebkitLineClamp: 3,
+                        WebkitLineClamp: 4,
                         WebkitBoxOrient: "vertical",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                       }}
-                      className="w-[360px] max-w-[360px] font-geist text-[14.5px] xl:text-[15px] font-light leading-[24px] text-white/95 text-center shrink-0"
+                      className="w-full font-geist text-[15px] sm:text-[16px] xl:text-[17px] font-light leading-[25px] xl:leading-[27px] text-white/95 text-center shrink-0"
                     >
                       {theme.description}
                     </motion.p>
@@ -284,7 +288,7 @@ export default function CoreConversationThemes() {
         <div
           onTouchStart={handleContainerTouchStart}
           onTouchEnd={handleContainerTouchEnd}
-          className="relative flex w-full items-center justify-center py-4 min-h-[380px] sm:min-h-[420px] md:min-h-[460px] lg:hidden select-none overflow-hidden"
+          className="relative flex w-full items-center justify-center py-4 min-h-[390px] sm:min-h-[430px] md:min-h-[470px] lg:hidden select-none overflow-hidden"
           style={{ touchAction: "pan-y" }}
         >
           {themes.map((theme, idx) => {
@@ -304,14 +308,14 @@ export default function CoreConversationThemes() {
                     diff === 0
                       ? "-50%"
                       : diff === -1
-                        ? "calc(-50% - 24px)"
+                        ? "calc(-50% - 36px)"
                         : diff === 1
-                          ? "calc(-50% + 24px)"
+                          ? "calc(-50% + 36px)"
                           : diff < -1
-                            ? "calc(-50% - 110%)"
-                            : "calc(-50% + 110%)",
-                  width: "84%",
-                  height: diff === 0 ? "350px" : "290px",
+                            ? "calc(-50% - 115%)"
+                            : "calc(-50% + 115%)",
+                  width: "80%",
+                  height: diff === 0 ? "360px" : "290px",
                   zIndex: diff === 0 ? 20 : 10,
                   opacity: diff === 0 ? 1 : Math.abs(diff) === 1 ? 0.95 : 0,
                   backgroundColor: diff === 0 ? "#159A99" : "#F5F7FA",
@@ -332,11 +336,11 @@ export default function CoreConversationThemes() {
                   if (diff === -1) triggerPrev();
                   if (diff === 1) triggerNext();
                 }}
-                className="absolute top-1/2 -translate-y-1/2 w-full max-w-[310px] sm:max-w-[480px] md:max-w-[600px] flex flex-col justify-center items-center text-center rounded-[26px] sm:rounded-[34px] border-[1.5px] px-5 py-6 sm:px-9 sm:py-8 md:px-12 md:py-9 cursor-pointer overflow-hidden select-none"
+                className="absolute top-1/2 -translate-y-1/2 w-full max-w-[320px] sm:max-w-[490px] md:max-w-[610px] flex flex-col justify-center items-center text-center rounded-[26px] sm:rounded-[34px] border-[1.5px] px-5 py-6 sm:px-9 sm:py-8 md:px-12 md:py-9 cursor-pointer overflow-hidden select-none"
               >
-                <div className="w-[270px] sm:w-[380px] md:w-[440px] max-w-[92%] flex flex-col items-center justify-center mx-auto shrink-0">
-                  {/* Title Slot with fixed height & 2-line clamp */}
-                  <div className="w-full h-[58px] sm:h-[66px] flex items-center justify-center px-1">
+                <div className="w-[280px] sm:w-[400px] md:w-[460px] max-w-[92%] flex flex-col items-center justify-center mx-auto shrink-0">
+                  {/* Title Slot with increased text size */}
+                  <div className="w-full h-[64px] sm:h-[72px] flex items-center justify-center px-1">
                     <motion.h3
                       animate={{
                         color: diff === 0 ? "#FFFFFF" : "#161616",
@@ -351,14 +355,14 @@ export default function CoreConversationThemes() {
                         WebkitBoxOrient: "vertical",
                         overflow: "hidden",
                       }}
-                      className="w-full font-cal text-[19px] sm:text-[23px] md:text-[26px] font-normal leading-[1.25] text-center"
+                      className="w-full font-cal text-[21px] sm:text-[25px] md:text-[28px] font-normal leading-[1.25] text-center"
                     >
                       {theme.title}
                     </motion.h3>
                   </div>
 
-                  {/* Paragraph Slot: Fixed container height, fixed position with 3-line clamp */}
-                  <div className="w-full h-[68px] sm:h-[76px] mt-3 sm:mt-4 flex items-center justify-center overflow-hidden px-1">
+                  {/* Paragraph Slot: Increased text size & line height */}
+                  <div className="w-full h-[74px] sm:h-[82px] mt-3 sm:mt-4 flex items-center justify-center overflow-hidden px-1">
                     <motion.p
                       animate={{
                         opacity: diff === 0 ? 1 : 0,
@@ -374,7 +378,7 @@ export default function CoreConversationThemes() {
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                       }}
-                      className="w-full font-geist text-[13px] sm:text-[14.5px] md:text-[15.5px] font-light leading-[20px] sm:leading-[23px] text-white/95 text-center"
+                      className="w-full font-geist text-[14.5px] sm:text-[16px] md:text-[17px] font-light leading-[22px] sm:leading-[25px] text-white/95 text-center"
                     >
                       {theme.description}
                     </motion.p>
