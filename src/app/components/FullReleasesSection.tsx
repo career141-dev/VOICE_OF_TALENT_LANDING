@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
+import { withVersion } from "../utils/imageLoader";
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
-const SPEAKER_SECTION_IMG_BASE = "https://talentsuite.career141.com/images/speakerSection";
 const FULL_RELEASE_IMG_BASE = "https://talentsuite.career141.com/images/fullRelease";
-const reelBackground = `${R2_MEDIA_URL}/images/reelThumbnail/reelthumbnail.png`;
+const reelBackground = withVersion(`${R2_MEDIA_URL}/images/reelThumbnail/reelthumbnail.webp`);
 
 type Episode = {
   id: number;
@@ -16,6 +16,7 @@ type Episode = {
   reels: string[];
   reelDurations?: string[];
   videoUrl?: string;
+  posterImage?: string;
 };
 
 const episodes: Episode[] = [
@@ -26,6 +27,7 @@ const episodes: Episode[] = [
     role: "Vice President Learning & Development",
     company: "Aitken Spence Hotels",
     videoUrl: "https://media.career141.com/new%20reels/Mr.%20Patrick/Mr.%20Patrick.mp4",
+    posterImage: `${FULL_RELEASE_IMG_BASE}/patrickreel.webp`,
     reels: [
       "https://media.career141.com/new%20reels/Mr.%20Patrick/01%20Reel%20Mr.%20Patrick.mp4",
       "https://media.career141.com/new%20reels/Mr.%20Patrick/02%20Reel%20Mr.%20Patrick.mp4",
@@ -75,7 +77,7 @@ const episodes: Episode[] = [
     id: 5,
     number: "05",
     guest: "MS. SURANI AMARASINGHE",
-    role: "Director, Country People Partnering, Sri Lanka",
+    role: "Director, Country People Partnering, Sri\u00A0Lanka",
     company: "LSEG (London Stock Exchange Group)",
     videoUrl: "https://media.career141.com/new%20reels/Ms.%20Surani/Ms.%20Surani.mp4",
     reels: [
@@ -88,7 +90,7 @@ const episodes: Episode[] = [
     id: 6,
     number: "06",
     guest: "MR. ARSHAQ FARALLY",
-    role: "Chief People Officer, Sri Lanka",
+    role: "Chief People Officer, Sri\u00A0Lanka",
     company: "Daraz",
     videoUrl: "https://media.career141.com/new%20reels/Mr.%20Arshaq/Mr.%20Arshaq.mp4",
     reels: [
@@ -117,6 +119,7 @@ const episodes: Episode[] = [
     role: "Director / Senior HR Consultant",
     company: "(Former Director HR - Asiri Health)",
     videoUrl: "https://media.career141.com/new%20reels/Ms.%20Hasanthi/Ms.%20Hasanthi.mp4",
+    posterImage: `${FULL_RELEASE_IMG_BASE}/hasanthireel.webp`,
     reels: [
       "https://media.career141.com/new%20reels/Ms.%20Hasanthi/01%20Reel%20Ms.%20Hasanthi.mp4",
       "https://media.career141.com/new%20reels/Ms.%20Hasanthi/02%20Reel%20Ms.%20Hasanthi.mp4",
@@ -154,7 +157,7 @@ const episodes: Episode[] = [
     number: "11",
     guest: "MS. CHAMINDRA PERERA",
     role: "Human Resources Director",
-    company: "GRI Sri Lanka",
+    company: "GRI Sri\u00A0Lanka",
     videoUrl: "https://media.career141.com/new%20reels/Ms.%20Chamindra/Ms.%20Chamindra.mp4",
     reels: [
       "https://media.career141.com/new%20reels/Ms.%20Chamindra/1%20Reel%20Ms.%20Chamindra.mp4",
@@ -208,27 +211,416 @@ export default function FullReleasesSection() {
   const [activeReelIndex, setActiveReelIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+  const [showControls, setShowControls] = useState(true);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isBuffering, setIsBuffering] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [reelDurations, setReelDurations] = useState<Record<string, string>>({});
+  const [touchOffset, setTouchOffset] = useState(0);
+  // Mirrors isSwipingTouch.current for render (e.g. the slide transition
+  // style below) — reading a ref directly during render isn't safe, since
+  // React doesn't guarantee a re-render when only the ref changes.
+  const [isSwiping, setIsSwiping] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
-  const reelSliderRef = useRef<HTMLDivElement>(null);
+  const playerContainerRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const touchStartX = useRef<number>(0);
-  const touchStartY = useRef<number>(0);
+  /* Touch Swiping Refs */
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
   const touchStartTime = useRef<number>(0);
-  const isSwiping = useRef<boolean>(false);
+  const isSwipingTouch = useRef<boolean>(false);
+
+  const formatTime = (seconds: number) => {
+    if (isNaN(seconds) || seconds <= 0) return "00:00";
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  // Reliable cross-browser autoplay: browsers (Safari in particular) block
+  // unmuted autoplay outright, silently leaving the video paused with no
+  // error. Retry muted so playback always starts instead of appearing stuck.
+  const safePlay = () => {
+    if (!videoRef.current) return;
+    const playPromise = videoRef.current.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        if (videoRef.current) {
+          videoRef.current.muted = true;
+          setIsMuted(true);
+          videoRef.current.play().catch(() => {
+            setIsPaused(true);
+            setShowControls(true);
+          });
+        }
+      });
+    }
+  };
+
+  // Ensure the reel actually starts playing whenever it becomes the active,
+  // playing slide (covers the initial mount of a freshly swapped <video>).
+  useEffect(() => {
+    if (isPlaying) {
+      safePlay();
+    }
+  }, [isPlaying, selectedEpisode, activeReelIndex]);
+
+  // Preload actual video durations for all reel episodes.
+  //
+  // This is purely cosmetic (a fallback duration string is already shown),
+  // so it must never compete with a video the visitor actually pressed play
+  // on. Browsers cap concurrent connections per host (~6 on HTTP/1.1); firing
+  // all ~28 reel requests to media.career141.com at once could starve a
+  // just-clicked playback request of a connection slot, making it stall for
+  // however long the background batch takes to clear — exactly the kind of
+  // "this one took longer to start" symptom despite being a small file.
+  // Trickling requests out a few at a time, only once the browser is idle,
+  // keeps this from ever queuing ahead of real playback.
+  useEffect(() => {
+    const tasks: { episodeId: number; idx: number; reelUrl: string }[] = [];
+    episodes.forEach((episode) => {
+      const reels = episode.reels && episode.reels.length > 0
+        ? episode.reels
+        : [episode.videoUrl || "", episode.videoUrl || ""];
+      reels.forEach((reelUrl, idx) => {
+        if (reelUrl) tasks.push({ episodeId: episode.id, idx, reelUrl });
+      });
+    });
+
+    // Safari/WebKit is unreliable about firing `loadedmetadata` on <video>
+    // elements that were created but never attached to the document, so we
+    // mount them off-screen instead of leaving them fully detached.
+    const hiddenHost = document.createElement("div");
+    hiddenHost.style.position = "fixed";
+    hiddenHost.style.width = "0";
+    hiddenHost.style.height = "0";
+    hiddenHost.style.overflow = "hidden";
+    hiddenHost.style.opacity = "0";
+    hiddenHost.style.pointerEvents = "none";
+    document.body.appendChild(hiddenHost);
+
+    const videoElements: HTMLVideoElement[] = [];
+    const win = window as Window & {
+      requestIdleCallback?: (cb: () => void) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+    const BATCH_SIZE = 3;
+    const BATCH_DELAY_MS = 500;
+    let cancelled = false;
+    let idleId: number | null = null;
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+    const loadBatch = (startIndex: number) => {
+      if (cancelled) return;
+      const batch = tasks.slice(startIndex, startIndex + BATCH_SIZE);
+      batch.forEach(({ episodeId, idx, reelUrl }) => {
+        const vid = document.createElement("video");
+        vid.preload = "metadata";
+        vid.muted = true;
+        vid.src = reelUrl;
+        vid.onloadedmetadata = () => {
+          if (vid.duration && !isNaN(vid.duration) && vid.duration > 0) {
+            setReelDurations((prev) => ({
+              ...prev,
+              [`${episodeId}-${idx}`]: formatTime(vid.duration),
+            }));
+          }
+        };
+        hiddenHost.appendChild(vid);
+        videoElements.push(vid);
+      });
+
+      if (startIndex + BATCH_SIZE < tasks.length) {
+        timeoutId = setTimeout(() => loadBatch(startIndex + BATCH_SIZE), BATCH_DELAY_MS);
+      }
+    };
+
+    const start = () => loadBatch(0);
+    if (typeof win.requestIdleCallback === "function") {
+      idleId = win.requestIdleCallback(start);
+    } else {
+      timeoutId = setTimeout(start, 300);
+    }
+
+    return () => {
+      cancelled = true;
+      if (idleId !== null && win.cancelIdleCallback) win.cancelIdleCallback(idleId);
+      if (timeoutId !== null) clearTimeout(timeoutId);
+      videoElements.forEach((vid) => {
+        vid.src = "";
+        vid.removeAttribute("src");
+        vid.load();
+      });
+      hiddenHost.remove();
+    };
+  }, []);
+
+  const resetControlsTimeout = () => {
+    if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
+    controlsTimeoutRef.current = setTimeout(() => {
+      if (videoRef.current && !videoRef.current.paused) {
+        setShowControls(false);
+      }
+    }, 3500);
+  };
 
   const togglePlayPause = () => {
     if (!videoRef.current) return;
     if (videoRef.current.paused) {
-      videoRef.current.play();
+      safePlay();
       setIsPaused(false);
+      resetControlsTimeout();
     } else {
       videoRef.current.pause();
       setIsPaused(true);
+      setShowControls(true);
     }
   };
+
+  const handleContainerClick = () => {
+    if (!showControls) {
+      setShowControls(true);
+      resetControlsTimeout();
+    } else {
+      togglePlayPause();
+    }
+  };
+
+  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newTime = parseFloat(e.target.value);
+    setCurrentTime(newTime);
+    if (videoRef.current) {
+      videoRef.current.currentTime = newTime;
+    }
+    resetControlsTimeout();
+  };
+
+  const handleTimeUpdate = () => {
+    if (videoRef.current && !isDragging) {
+      setCurrentTime(videoRef.current.currentTime);
+    }
+  };
+
+  const handleLoadedMetadata = () => {
+    if (videoRef.current) {
+      const dur = videoRef.current.duration || 0;
+      setDuration(dur);
+      setCurrentTime(videoRef.current.currentTime || 0);
+      if (dur > 0) {
+        setReelDurations((prev) => ({
+          ...prev,
+          [`${selectedEpisode.id}-${activeReelIndex}`]: formatTime(dur),
+        }));
+      }
+    }
+  };
+
+  const checkIsFullscreen = () => {
+    if (typeof document === "undefined") return false;
+    const doc = document as unknown as {
+      fullscreenElement?: Element;
+      webkitFullscreenElement?: Element;
+      webkitCurrentFullScreenElement?: Element;
+      webkitIsFullScreen?: boolean;
+      webkitIsFullscreen?: boolean;
+      mozFullScreenElement?: Element;
+      msFullscreenElement?: Element;
+    };
+    const video = videoRef.current as (HTMLVideoElement & {
+      webkitDisplayingFullscreen?: boolean;
+    }) | null;
+
+    return Boolean(
+      doc.fullscreenElement ||
+      doc.webkitFullscreenElement ||
+      doc.webkitCurrentFullScreenElement ||
+      doc.webkitIsFullScreen ||
+      doc.webkitIsFullscreen ||
+      doc.mozFullScreenElement ||
+      doc.msFullscreenElement ||
+      video?.webkitDisplayingFullscreen
+    );
+  };
+
+  const exitAllFullscreen = () => {
+    if (typeof document === "undefined") return;
+    const doc = document as unknown as {
+      exitFullscreen?: () => Promise<void>;
+      webkitExitFullscreen?: () => void;
+      webkitCancelFullScreen?: () => void;
+      mozCancelFullScreen?: () => void;
+      msExitFullscreen?: () => void;
+    };
+    const video = videoRef.current as (HTMLVideoElement & {
+      webkitExitFullscreen?: () => void;
+      webkitExitFullScreen?: () => void;
+      webkitDisplayingFullscreen?: boolean;
+    }) | null;
+
+    try {
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      } else if (doc.webkitExitFullscreen) {
+        doc.webkitExitFullscreen();
+      } else if (doc.webkitCancelFullScreen) {
+        doc.webkitCancelFullScreen();
+      } else if (doc.mozCancelFullScreen) {
+        doc.mozCancelFullScreen();
+      } else if (doc.msExitFullscreen) {
+        doc.msExitFullscreen();
+      }
+    } catch {
+      // ignore
+    }
+
+    if (video) {
+      try {
+        if (typeof video.webkitExitFullscreen === "function") {
+          video.webkitExitFullscreen();
+        } else if (typeof video.webkitExitFullScreen === "function") {
+          video.webkitExitFullScreen();
+        }
+      } catch {
+        // ignore
+      }
+    }
+    setIsFullscreen(false);
+  };
+
+  const toggleFullscreen = () => {
+    const container = playerContainerRef.current as (HTMLDivElement & {
+      requestFullscreen?: () => Promise<void>;
+      webkitRequestFullscreen?: () => void;
+      webkitRequestFullScreen?: () => void;
+      mozRequestFullScreen?: () => void;
+      msRequestFullscreen?: () => void;
+    }) | null;
+
+    const video = videoRef.current as (HTMLVideoElement & {
+      webkitSupportsFullscreen?: boolean;
+      webkitDisplayingFullscreen?: boolean;
+      webkitEnterFullscreen?: () => void;
+      webkitEnterFullScreen?: () => void;
+      webkitExitFullscreen?: () => void;
+      webkitExitFullScreen?: () => void;
+    }) | null;
+
+    if (!container && !video) return;
+
+    const isCurrentlyFullscreen = isFullscreen || checkIsFullscreen();
+
+    if (!isCurrentlyFullscreen) {
+      if (container && container.requestFullscreen) {
+        container
+          .requestFullscreen()
+          .then(() => setIsFullscreen(true))
+          .catch(() => {
+            if (container.webkitRequestFullscreen) {
+              try {
+                container.webkitRequestFullscreen();
+                setIsFullscreen(true);
+              } catch {
+                if (video && typeof video.webkitEnterFullscreen === "function") {
+                  video.webkitEnterFullscreen();
+                  setIsFullscreen(true);
+                }
+              }
+            } else if (video && typeof video.webkitEnterFullscreen === "function") {
+              video.webkitEnterFullscreen();
+              setIsFullscreen(true);
+            }
+          });
+      } else if (container && container.webkitRequestFullscreen) {
+        try {
+          container.webkitRequestFullscreen();
+          setIsFullscreen(true);
+        } catch {
+          if (video && typeof video.webkitEnterFullscreen === "function") {
+            video.webkitEnterFullscreen();
+            setIsFullscreen(true);
+          }
+        }
+      } else if (container && container.webkitRequestFullScreen) {
+        try {
+          container.webkitRequestFullScreen();
+          setIsFullscreen(true);
+        } catch {
+          if (video && typeof video.webkitEnterFullScreen === "function") {
+            video.webkitEnterFullScreen();
+            setIsFullscreen(true);
+          }
+        }
+      } else if (video && typeof video.webkitEnterFullscreen === "function") {
+        video.webkitEnterFullscreen();
+        setIsFullscreen(true);
+      } else if (video && typeof video.webkitEnterFullScreen === "function") {
+        video.webkitEnterFullScreen();
+        setIsFullscreen(true);
+      }
+    } else {
+      exitAllFullscreen();
+    }
+  };
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(checkIsFullscreen());
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        exitAllFullscreen();
+      }
+    };
+
+    const handleWebkitBegin = () => setIsFullscreen(true);
+    const handleWebkitEnd = () => setIsFullscreen(false);
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+    document.addEventListener("mozfullscreenchange", handleFullscreenChange);
+    document.addEventListener("MSFullscreenChange", handleFullscreenChange);
+    window.addEventListener("fullscreenchange", handleFullscreenChange);
+    window.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+    window.addEventListener("resize", handleFullscreenChange);
+    window.addEventListener("keydown", handleKeyDown);
+
+    const videoEl = videoRef.current;
+    if (videoEl) {
+      videoEl.addEventListener("webkitbeginfullscreen", handleWebkitBegin);
+      videoEl.addEventListener("webkitendfullscreen", handleWebkitEnd);
+      videoEl.addEventListener("webkitpresentationmodechanged", handleFullscreenChange);
+    }
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
+      document.removeEventListener("mozfullscreenchange", handleFullscreenChange);
+      document.removeEventListener("MSFullscreenChange", handleFullscreenChange);
+      window.removeEventListener("fullscreenchange", handleFullscreenChange);
+      window.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
+      window.removeEventListener("resize", handleFullscreenChange);
+      window.removeEventListener("keydown", handleKeyDown);
+      if (videoEl) {
+        videoEl.removeEventListener("webkitbeginfullscreen", handleWebkitBegin);
+        videoEl.removeEventListener("webkitendfullscreen", handleWebkitEnd);
+        videoEl.removeEventListener("webkitpresentationmodechanged", handleFullscreenChange);
+      }
+    };
+  }, [isPlaying, selectedEpisode, activeReelIndex]);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = isMuted;
+    }
+  }, [isMuted]);
 
   const handleScroll = () => {
     if (!scrollContainerRef.current) return;
@@ -239,66 +631,83 @@ export default function FullReleasesSection() {
     }
   };
 
+  const scrollToReel = (index: number) => {
+    setActiveReelIndex(index);
+    setCurrentTime(0);
+    setIsPlaying(false);
+    setIsPaused(false);
+    setIsBuffering(false);
+    setShowControls(true);
+  };
+
+  const selectEpisode = (episode: Episode) => {
+    setSelectedEpisode(episode);
+    setActiveReelIndex(0);
+    setIsPlaying(false);
+    setIsPaused(false);
+    setCurrentTime(0);
+    setShowControls(true);
+  };
+
+  /* ── Mobile & Touch Swiping Handlers ── */
   const handleTouchStart = (e: React.TouchEvent) => {
+    if (isPlaying) return;
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
     touchStartTime.current = Date.now();
-    isSwiping.current = false;
+    isSwipingTouch.current = false;
+    setIsSwiping(false);
+    setTouchOffset(0);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    const diffX = Math.abs(e.touches[0].clientX - touchStartX.current);
-    const diffY = Math.abs(e.touches[0].clientY - touchStartY.current);
-    if (diffX > 10 && diffX > diffY) {
-      isSwiping.current = true;
+    if (isPlaying || touchStartX.current === null || touchStartY.current === null) return;
+    const currentX = e.touches[0].clientX;
+    const currentY = e.touches[0].clientY;
+    const diffX = currentX - touchStartX.current;
+    const diffY = currentY - touchStartY.current;
+
+    // Detect horizontal swipe intent
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 6) {
+      isSwipingTouch.current = true;
+      setIsSwiping(true);
+      // Resistance at outer edges
+      let boundedDiffX = diffX;
+      if (activeReelIndex === 0 && diffX > 0) {
+        boundedDiffX = diffX * 0.25;
+      } else if (activeReelIndex === 1 && diffX < 0) {
+        boundedDiffX = diffX * 0.25;
+      }
+      setTouchOffset(boundedDiffX);
     }
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
-    const deltaX = e.changedTouches[0].clientX - touchStartX.current;
-    const deltaY = e.changedTouches[0].clientY - touchStartY.current;
-    const deltaTime = Date.now() - touchStartTime.current;
+    if (isPlaying || touchStartX.current === null || touchStartY.current === null) return;
+    const endX = e.changedTouches[0]?.clientX ?? touchStartX.current;
+    const diffX = endX - touchStartX.current;
+    const diffY = (e.changedTouches[0]?.clientY ?? touchStartY.current) - touchStartY.current;
+    const elapsed = Date.now() - touchStartTime.current;
+    const speedX = Math.abs(diffX) / Math.max(elapsed, 1);
 
-    const isHorizontalSwipe =
-      Math.abs(deltaX) > Math.abs(deltaY) &&
-      (Math.abs(deltaX) > 35 || (Math.abs(deltaX) > 20 && deltaTime < 300));
+    // Reset the swipe flag FIRST so the upcoming re-render is allowed
+    // to animate through the CSS transition instead of snapping instantly.
+    isSwipingTouch.current = false;
+    setIsSwiping(false);
 
-    if (isHorizontalSwipe) {
-      if (deltaX < 0 && activeReelIndex === 0) {
+    if (Math.abs(diffX) > Math.abs(diffY) && (Math.abs(diffX) > 28 || (Math.abs(diffX) > 12 && speedX > 0.15))) {
+      if (diffX < 0) {
+        // Swiped Left -> Reel 2
         scrollToReel(1);
-      } else if (deltaX > 0 && activeReelIndex === 1) {
+      } else {
+        // Swiped Right -> Reel 1
         scrollToReel(0);
       }
     }
-  };
 
-  const handleReelScroll = () => {
-    if (!reelSliderRef.current) return;
-    const { scrollLeft, clientWidth } = reelSliderRef.current;
-    if (clientWidth === 0) return;
-    const newIndex = Math.round(scrollLeft / clientWidth);
-    if (newIndex !== activeReelIndex && (newIndex === 0 || newIndex === 1)) {
-      setActiveReelIndex(newIndex);
-    }
-  };
-
-  const scrollToReel = (index: number) => {
-    setActiveReelIndex(index);
-    if (reelSliderRef.current) {
-      const width = reelSliderRef.current.clientWidth;
-      reelSliderRef.current.scrollTo({
-        left: index * width,
-        behavior: "smooth",
-      });
-    }
-  };
-
-
-  const selectEpisode = (episode: Episode) => {
-    setSelectedEpisode(episode);
-    scrollToReel(0);
-    setIsPlaying(false);
-    setIsPaused(false);
+    touchStartX.current = null;
+    touchStartY.current = null;
+    setTouchOffset(0);
   };
 
   const currentReels = selectedEpisode.reels && selectedEpisode.reels.length > 0
@@ -406,25 +815,46 @@ export default function FullReleasesSection() {
                     </p>
 
                     {/* Guest & Role Info (Right-Aligned with plenty of room) */}
-                    <div className="relative z-10 ml-auto flex min-w-0 max-w-[66%] sm:max-w-[68%] min-[1100px]:max-w-[72%] flex-col justify-center text-right">
+                    <div className="relative z-10 ml-auto flex min-w-0 max-w-[82%] sm:max-w-[85%] min-[1100px]:max-w-[86%] xl:max-w-[88%] flex-col justify-center text-right">
                       <p
                         className={[
-                          "font-geist text-[13px] sm:text-[15px] md:text-[16.5px] lg:text-[17.5px] font-bold uppercase tracking-tight sm:tracking-wide leading-tight sm:leading-snug transition-colors duration-300 line-clamp-2 sm:line-clamp-1",
+                          "font-geist text-[13px] sm:text-[14.5px] md:text-[15.5px] lg:text-[16px] xl:text-[16.5px] font-bold uppercase tracking-tight sm:tracking-wide leading-tight sm:leading-snug transition-colors duration-300 truncate",
                           isSelected ? "text-[#159A99]" : "text-[#202020] group-hover:text-[#159A99]",
                         ].join(" ")}
+                        title={episode.guest}
                       >
                         {episode.guest}
                       </p>
 
+                      <div
+                        className={[
+                          "mt-0.5 sm:mt-1 font-geist text-[10px] sm:text-[11px] md:text-[11.5px] lg:text-[12px] xl:text-[12.5px] font-medium leading-[1.25] sm:leading-[1.3] transition-colors duration-300",
+                          isSelected
+                            ? "text-[#202020]"
+                            : "text-[#555555] group-hover:text-[#202020]",
+                        ].join(" ")}
+                        title={episode.role}
+                      >
+                        {episode.role.includes(",") ? (
+                          <>
+                            <span className="block truncate">{episode.role.split(",")[0].trim()},</span>
+                            <span className="block truncate">{episode.role.split(",").slice(1).join(",").trim()}</span>
+                          </>
+                        ) : (
+                          <span className="block truncate">{episode.role}</span>
+                        )}
+                      </div>
+
                       <p
                         className={[
-                          "mt-1 sm:mt-1.5 font-geist text-[11px] sm:text-[13px] md:text-[13.5px] lg:text-[14.5px] leading-[1.35] sm:leading-[1.4] transition-colors duration-300 line-clamp-3 sm:line-clamp-2",
+                          "mt-0.5 font-geist text-[9.5px] sm:text-[10px] md:text-[10.5px] lg:text-[11px] xl:text-[11.5px] font-normal leading-tight transition-colors duration-300 truncate",
                           isSelected
-                            ? "font-medium text-[#202020]"
-                            : "font-normal text-[#71767B] group-hover:text-[#333333]",
+                            ? "text-[#666666]"
+                            : "text-[#7A828A] group-hover:text-[#444444]",
                         ].join(" ")}
+                        title={episode.company}
                       >
-                        {episode.role} · {episode.company}
+                        {episode.company}
                       </p>
                     </div>
                   </button>
@@ -437,28 +867,50 @@ export default function FullReleasesSection() {
         {/* Video Player Section with Reel Thumbnail Poster & Swipeable 2-Reel Slider */}
         <div className="flex w-full min-[1100px]:h-[660px] max-w-full flex-col items-center min-[1100px]:justify-between">
           <div
-            ref={reelSliderRef}
-            onScroll={handleReelScroll}
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
-            className="relative flex h-[380px] sm:h-[460px] md:h-[540px] min-[1100px]:h-auto min-[1100px]:flex-1 min-[1100px]:min-h-0 w-full max-w-full overflow-x-auto overflow-y-hidden rounded-[24px] sm:rounded-[30px] border-[1.62px] border-[#E0E0E0] bg-black shadow-lg opacity-100 snap-x snap-mandatory snap-always overscroll-x-contain touch-pan-y [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="relative flex h-[380px] sm:h-[460px] md:h-[540px] min-[1100px]:h-auto min-[1100px]:flex-1 min-[1100px]:min-h-0 w-full max-w-full overflow-hidden rounded-[24px] sm:rounded-[30px] border-none outline-none bg-black shadow-xl opacity-100 select-none touch-pan-y"
           >
-            {/* Render 2 Reel Slides (Reel 1 & Reel 2) */}
-            {[0, 1].map((reelIdx) => {
-              const reelUrl = currentReels[reelIdx];
-              const isCurrentSlideActive = activeReelIndex === reelIdx;
-              const isCurrentSlidePlaying = isPlaying && isCurrentSlideActive;
+            {/* Smooth 2-Reel Hardware-Accelerated Sliding Track */}
+            <div
+              className="flex h-full w-full items-stretch"
+              style={{
+                transform: `translate3d(calc(-${activeReelIndex * 100}% + ${touchOffset}px), 0, 0)`,
+                transition: isSwiping
+                  ? "none"
+                  : "transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1)",
+                willChange: "transform",
+              }}
+            >
+              {/* Render 2 Reel Slides (Reel 1 & Reel 2) */}
+              {[0, 1].map((reelIdx) => {
+                const reelUrl = currentReels[reelIdx];
+                const isCurrentSlideActive = activeReelIndex === reelIdx;
+                const isCurrentSlidePlaying = isPlaying && isCurrentSlideActive;
 
-              return (
-                <article
-                  key={reelIdx}
-                  className="relative h-full w-full shrink-0 snap-start overflow-hidden bg-black select-none cursor-pointer"
-                >
+                return (
+                  <article
+                    key={reelIdx}
+                    className="relative h-full w-full min-w-full shrink-0 overflow-hidden bg-black select-none cursor-pointer"
+                  >
                   {isCurrentSlidePlaying ? (
                     <div
-                      onClick={togglePlayPause}
-                      className="relative h-full w-full bg-black flex items-center justify-center select-none cursor-pointer"
+                      ref={isCurrentSlideActive ? playerContainerRef : null}
+                      onClick={handleContainerClick}
+                      onMouseMove={() => {
+                        setShowControls(true);
+                        resetControlsTimeout();
+                      }}
+                      onMouseEnter={() => {
+                        setShowControls(true);
+                        resetControlsTimeout();
+                      }}
+                      onMouseLeave={() => {
+                        if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
+                        setShowControls(false);
+                      }}
+                      className="relative h-full w-full bg-black flex items-center justify-center select-none cursor-pointer overflow-hidden border-none outline-none"
                     >
                       {reelUrl ? (
                         <>
@@ -467,22 +919,260 @@ export default function FullReleasesSection() {
                             key={`${selectedEpisode.id}-${reelIdx}-${reelUrl}`}
                             src={reelUrl}
                             autoPlay
+                            muted={isMuted}
                             playsInline
-                            onPlay={() => setIsPaused(false)}
-                            onPause={() => setIsPaused(true)}
-                            className="absolute inset-0 h-full w-full object-contain bg-black pointer-events-none"
+                            preload="auto"
+                            onTimeUpdate={handleTimeUpdate}
+                            onLoadedMetadata={handleLoadedMetadata}
+                            onDurationChange={handleLoadedMetadata}
+                            onCanPlay={() => {
+                              handleLoadedMetadata();
+                              if (isCurrentSlidePlaying) {
+                                safePlay();
+                              }
+                            }}
+                            onPlay={() => {
+                              setIsPaused(false);
+                              resetControlsTimeout();
+                            }}
+                            onPlaying={() => setIsBuffering(false)}
+                            onWaiting={() => setIsBuffering(true)}
+                            onPause={() => {
+                              // Don't force controls back on here: this fires for
+                              // ANY pause, including a blocked-autoplay retry or a
+                              // stall, and would otherwise immediately undo hovering
+                              // out of the player. A manual pause already shows
+                              // controls via togglePlayPause itself.
+                              setIsPaused(true);
+                            }}
+                            className="absolute inset-0 h-full w-full object-contain bg-black pointer-events-none border-none outline-none"
                           />
 
+                          {/* Buffering Spinner — only during genuine mid-playback rebuffering,
+                              never on first load (the poster already covers that gap) */}
+                          {isBuffering && !isPaused && (
+                            <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none" aria-hidden="true">
+                              <div className="h-10 w-10 sm:h-12 sm:w-12 animate-spin rounded-full border-[3px] border-white/25 border-t-white" />
+                            </div>
+                          )}
+
+                          {/* Top Controls: Mute/Unmute & Close Video */}
+                          <div
+                            className={`absolute top-4 inset-x-4 z-20 flex items-center justify-between transition-opacity duration-300 ${
+                              showControls ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                            }`}
+                          >
+                            {/* Mute/Unmute toggle button */}
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setIsMuted((prev) => !prev);
+                                resetControlsTimeout();
+                              }}
+                              className="flex items-center gap-1.5 rounded-full bg-black/75 px-3.5 py-2 font-geist text-xs font-semibold text-white backdrop-blur-md transition-all hover:bg-black cursor-pointer shadow-md"
+                              aria-label={isMuted ? "Unmute reel sound" : "Mute reel sound"}
+                            >
+                              {isMuted ? (
+                                <>
+                                  <svg className="h-4 w-4 text-[#159A99]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                                  </svg>
+                                  <span>Unmute</span>
+                                </>
+                              ) : (
+                                <>
+                                  <svg className="h-4 w-4 text-[#159A99]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                                  </svg>
+                                  <span>Mute</span>
+                                </>
+                              )}
+                            </button>
+
+                            {/* Top Right Action Buttons: Exit Fullscreen + Close Video */}
+                            <div className="flex items-center gap-2">
+                              {isFullscreen && (
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    exitAllFullscreen();
+                                    resetControlsTimeout();
+                                  }}
+                                  aria-label="Exit Fullscreen / Minimize"
+                                  title="Exit Fullscreen / Minimize"
+                                  className="flex items-center gap-1.5 rounded-full bg-[#159A99] px-3.5 py-2 font-geist text-xs font-bold text-white shadow-lg backdrop-blur-md transition-all hover:bg-[#128281] active:scale-95 cursor-pointer"
+                                >
+                                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M4 14h6m0 0v6m0-6L3 21m17-7h-6m0 0v6m0-6l7 7M14 10h6m-6 0V4m0 6l7-7M10 10H4m6 0V4m0 6L3 3" />
+                                  </svg>
+                                  <span>Exit Fullscreen</span>
+                                </button>
+                              )}
+
+                              {/* Close Video button */}
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  exitAllFullscreen();
+                                  setIsPlaying(false);
+                                  setIsPaused(false);
+                                }}
+                                aria-label="Close video player"
+                                className="flex items-center gap-1.5 rounded-full bg-black/70 px-4 py-2 font-geist text-xs font-semibold text-white backdrop-blur-md transition-all hover:bg-black cursor-pointer"
+                              >
+                                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                                Close Video
+                              </button>
+                            </div>
+                          </div>
+
                           {/* Center Pause/Play Indicator Overlay */}
-                          {isPaused && (
-                            <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/35 backdrop-blur-[1px] transition-all pointer-events-none">
-                              <div className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full bg-[#159A99] text-white shadow-2xl transition-transform hover:scale-110">
+                          <div
+                            className={`absolute inset-0 z-10 flex items-center justify-center transition-all duration-300 pointer-events-none ${
+                              showControls ? "opacity-100" : "opacity-0"
+                            }`}
+                          >
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                togglePlayPause();
+                              }}
+                              className="pointer-events-auto flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full bg-[#159A99]/90 text-white shadow-2xl backdrop-blur-md transition-transform duration-200 hover:scale-110 active:scale-95 cursor-pointer"
+                              aria-label={isPaused ? "Play reel" : "Pause reel"}
+                            >
+                              {isPaused ? (
                                 <svg className="ml-1 h-8 w-8 sm:h-10 sm:w-10 text-white" fill="currentColor" viewBox="0 0 24 24">
                                   <path d="M8 5v14l11-7z" />
                                 </svg>
+                              ) : (
+                                <svg className="h-8 w-8 sm:h-10 sm:w-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
+                                </svg>
+                              )}
+                            </button>
+                          </div>
+
+                          {/* Bottom Scrubber & Duration Control Bar */}
+                          <div
+                            className={`absolute inset-x-0 bottom-0 z-20 flex flex-col justify-end bg-gradient-to-t from-black/90 via-black/50 to-transparent p-4 sm:p-6 transition-opacity duration-300 ${
+                              showControls ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                            }`}
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            {/* Interactive Scrubber Bar */}
+                            <div className="relative flex w-full items-center py-2 cursor-pointer">
+                              <input
+                                type="range"
+                                min={0}
+                                max={duration || 100}
+                                step={0.1}
+                                value={currentTime}
+                                onChange={handleSeek}
+                                onMouseDown={() => setIsDragging(true)}
+                                onMouseUp={() => setIsDragging(false)}
+                                onTouchStart={() => setIsDragging(true)}
+                                onTouchEnd={() => setIsDragging(false)}
+                                className="w-full h-1.5 sm:h-2 rounded-full appearance-none bg-white/30 accent-[#159A99] cursor-pointer focus:outline-none"
+                                style={{
+                                  background: `linear-gradient(to right, #159A99 ${duration > 0 ? (currentTime / duration) * 100 : 0}%, rgba(255, 255, 255, 0.3) ${duration > 0 ? (currentTime / duration) * 100 : 0}%)`,
+                                }}
+                                aria-label="Reel timeline scrubber"
+                              />
+                            </div>
+
+                            {/* Bottom Row: Play/Pause Icon + Timestamps + Quick 10s Skip Buttons + Fullscreen */}
+                            <div className="mt-1 flex items-center justify-between font-geist text-xs sm:text-sm font-medium text-white">
+                              <div className="flex items-center gap-3">
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    togglePlayPause();
+                                  }}
+                                  className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/30 transition-all active:scale-95 cursor-pointer"
+                                  aria-label={isPaused ? "Play reel" : "Pause reel"}
+                                >
+                                  {isPaused ? (
+                                    <svg className="ml-0.5 h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                                      <path d="M8 5v14l11-7z" />
+                                    </svg>
+                                  ) : (
+                                    <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                                      <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
+                                    </svg>
+                                  )}
+                                </button>
+
+                                <span className="tabular-nums tracking-wide text-white/90">
+                                  {formatTime(currentTime)} <span className="text-white/40">/</span> {formatTime(duration)}
+                                </span>
+                              </div>
+
+                              {/* Quick -10s / +10s Skip & Fullscreen Button */}
+                              <div className="flex items-center gap-2 text-white/80">
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (videoRef.current) {
+                                      videoRef.current.currentTime = Math.max(0, videoRef.current.currentTime - 10);
+                                    }
+                                    resetControlsTimeout();
+                                  }}
+                                  className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] sm:text-xs font-semibold hover:bg-white/20 transition-all cursor-pointer"
+                                  aria-label="Rewind 10 seconds"
+                                >
+                                  -10s
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (videoRef.current) {
+                                      videoRef.current.currentTime = Math.min(duration, videoRef.current.currentTime + 10);
+                                    }
+                                    resetControlsTimeout();
+                                  }}
+                                  className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] sm:text-xs font-semibold hover:bg-white/20 transition-all cursor-pointer"
+                                  aria-label="Forward 10 seconds"
+                                >
+                                  +10s
+                                </button>
+
+                                {/* Fullscreen / Minimize Toggle Button */}
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleFullscreen();
+                                    resetControlsTimeout();
+                                  }}
+                                  className={`flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full ${
+                                    isFullscreen ? "bg-[#159A99] text-white shadow-md" : "bg-white/10 text-white hover:bg-white/20"
+                                  } transition-all active:scale-95 cursor-pointer ml-1`}
+                                  aria-label={isFullscreen ? "Exit Fullscreen / Minimize" : "Enter Fullscreen"}
+                                  title={isFullscreen ? "Exit Fullscreen / Minimize" : "Enter Fullscreen"}
+                                >
+                                  {isFullscreen ? (
+                                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M4 14h6m0 0v6m0-6L3 21m17-7h-6m0 0v6m0-6l7 7M14 10h6m-6 0V4m0 6l7-7M10 10H4m6 0V4m0 6L3 3" />
+                                    </svg>
+                                  ) : (
+                                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                                    </svg>
+                                  )}
+                                </button>
                               </div>
                             </div>
-                          )}
+                          </div>
                         </>
                       ) : (
                         <div className="relative flex flex-col items-center justify-center p-8 text-center text-white pointer-events-none">
@@ -490,28 +1180,11 @@ export default function FullReleasesSection() {
                           <p className="mt-2 font-geist text-sm text-white/70">Reel release coming soon</p>
                         </div>
                       )}
-
-                      {/* Close Video button */}
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setIsPlaying(false);
-                          setIsPaused(false);
-                        }}
-                        aria-label="Close video player"
-                        className="absolute top-4 right-4 z-20 flex items-center gap-1.5 rounded-full bg-black/70 px-4 py-2 font-geist text-xs font-semibold text-white backdrop-blur-md transition-all hover:bg-black cursor-pointer"
-                      >
-                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                        Close Video
-                      </button>
                     </div>
                   ) : (
                     <div
                       onClick={() => {
-                        if (isSwiping.current) return;
+                        if (isSwipingTouch.current) return;
                         scrollToReel(reelIdx);
                         setIsPlaying(true);
                         setIsPaused(false);
@@ -521,25 +1194,15 @@ export default function FullReleasesSection() {
                         backgroundImage: `url('${reelBackground}')`,
                       }}
                     >
-                      {/* 1. Mobile Front Photo over reel background */}
-                      <div className="pointer-events-none absolute inset-0 overflow-hidden min-[1100px]:hidden">
+                      {/* Full Cover Thumbnail Image (Unified for Mobile & Desktop) */}
+                      <div className="pointer-events-none absolute inset-0 overflow-hidden">
                         <img
-                          src={`${SPEAKER_SECTION_IMG_BASE}/r${selectedEpisode.id}png.png?v=3`}
+                          src={
+                            selectedEpisode.posterImage || `${FULL_RELEASE_IMG_BASE}/reelspeaker${selectedEpisode.id}.webp`
+                          }
                           alt={selectedEpisode.guest}
-                          className={`absolute left-1/2 -translate-x-1/2 right-auto w-auto max-w-none object-contain object-bottom select-none drop-shadow-[0_20px_40px_rgba(0,0,0,0.85)] transition-transform duration-500 group-hover:scale-105 ${
-                            selectedEpisode.id === 10
-                              ? "h-[88%] sm:h-[90%] -bottom-[6%] sm:-bottom-[6%]"
-                              : "h-[85%] sm:h-[88%] bottom-0"
-                          }`}
-                        />
-                      </div>
-
-                      {/* 2. Desktop Full Cover Thumbnail Image */}
-                      <div className="pointer-events-none absolute inset-0 overflow-hidden hidden min-[1100px]:block">
-                        <img
-                          src={`${FULL_RELEASE_IMG_BASE}/reelspeaker${selectedEpisode.id}.png`}
-                          alt={selectedEpisode.guest}
-                          className="h-full w-full object-cover object-[center_top] select-none transition-transform duration-500 group-hover:scale-105"
+                          draggable={false}
+                          className="h-full w-full object-cover object-[center_top] select-none pointer-events-none transition-transform duration-500 group-hover:scale-105"
                         />
                       </div>
 
@@ -550,7 +1213,7 @@ export default function FullReleasesSection() {
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
-                            if (isSwiping.current) return;
+                            if (isSwipingTouch.current) return;
                             scrollToReel(reelIdx);
                             setIsPlaying(true);
                             setIsPaused(false);
@@ -569,8 +1232,8 @@ export default function FullReleasesSection() {
                         </button>
 
                         {/* Teal Duration Pill (Bottom-Right) */}
-                        <span className="inline-block rounded-full bg-[#159A99] px-5 py-2 font-geist text-[13px] sm:text-[14px] font-bold tracking-wide text-white shadow-md">
-                          REEL 0{reelIdx + 1} · {selectedEpisode.reelDurations?.[reelIdx] || "1 MIN"}
+                        <span className="inline-block rounded-full bg-[#159A99] px-5 py-2 font-geist text-[13px] sm:text-[14px] font-bold tracking-wide text-white shadow-md tabular-nums">
+                          REEL 0{reelIdx + 1} · {reelDurations[`${selectedEpisode.id}-${reelIdx}`] || selectedEpisode.reelDurations?.[reelIdx] || "00:00"}
                         </span>
                       </div>
                     </div>
@@ -578,6 +1241,7 @@ export default function FullReleasesSection() {
                 </article>
               );
             })}
+            </div>
           </div>
 
           {/* Navigation Controls: < (1) (2) > */}

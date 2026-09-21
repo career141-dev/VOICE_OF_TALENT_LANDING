@@ -1,10 +1,11 @@
 "use client";
 
 import React from "react";
+import { withVersion } from "../utils/imageLoader";
 
 const R2_MEDIA_URL = (process.env.NEXT_PUBLIC_R2_MEDIA_URL || "").replace(/\/+$/, "");
-const footerLogo = `${R2_MEDIA_URL}/images/footer.svg`;
-const artboardImage = "https://talentsuite-southernchapter.career141.com/IMAGES/Artboard%204%402x%205%201.svg";
+const footerLogo = withVersion(`${R2_MEDIA_URL}/images/footer.svg`);
+const artboardImage = withVersion(`${R2_MEDIA_URL}/images/career141-artboard.webp`);
 
 const seriesLinks = [
   { label: "About", href: "#mission" },
@@ -82,6 +83,8 @@ export default function Footer() {
               <img
                 src={footerLogo}
                 alt="VOTA — Voices of Talent Acquisition"
+                loading="lazy"
+                decoding="async"
                 className="h-auto w-[240px] sm:w-[300px] md:w-[300px] lg:w-[400px] xl:w-[460px] max-w-full object-contain"
               />
             </div>
@@ -152,13 +155,21 @@ export default function Footer() {
 
               {/* Career141 / VOTA Logo */}
               <div className="mt-6 md:mt-7 flex justify-center md:justify-end">
-                <img
-                  src={artboardImage}
-                  alt="Career141 and VOTA"
-                  loading="lazy"
-                  decoding="async"
-                  className="h-auto w-[160px] sm:w-[190px] md:w-[200px] lg:w-[240px] xl:w-[270px] max-w-full object-contain"
-                />
+                <a
+                  href="https://career141.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Visit Career141 (opens in a new tab)"
+                  className="inline-block transition-transform duration-300 hover:scale-105 active:scale-95 cursor-pointer"
+                >
+                  <img
+                    src={artboardImage}
+                    alt="Career141 and VOTA"
+                    loading="lazy"
+                    decoding="async"
+                    className="h-auto w-[160px] sm:w-[190px] md:w-[200px] lg:w-[240px] xl:w-[270px] max-w-full object-contain"
+                  />
+                </a>
               </div>
             </div>
           </div>

@@ -1,4 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Cal+Sans&family=Geist:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+/* Google Fonts are already loaded via a <link rel="stylesheet"> in
+   src/app/layout.tsx <head> (which also covers Quicksand, missing from this
+   list). A CSS @import to the same font endpoint is redundant and, unlike a
+   <link> the preload scanner can discover early, blocks CSS parsing until it
+   round-trips — duplicating the request and delaying first paint. */
 @import "tailwindcss";
 
 :root {
@@ -78,11 +82,21 @@ h6 {
 
 @keyframes marquee-scroll {
   from {
-    transform: translateX(0%);
+    transform: translate3d(0, 0, 0);
   }
 
   to {
-    transform: translateX(-50%);
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@-webkit-keyframes marquee-scroll {
+  from {
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    -webkit-transform: translate3d(-50%, 0, 0);
   }
 }
 
@@ -91,25 +105,29 @@ h6 {
   width: 100%;
   -webkit-mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
   mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 .marquee-track {
   display: flex;
   width: max-content;
   animation: marquee-scroll 100s linear infinite;
+  -webkit-animation: marquee-scroll 100s linear infinite;
   will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
+.marquee-container:hover .marquee-track,
 .marquee-track:hover {
   animation-play-state: paused;
+  -webkit-animation-play-state: paused;
 }
 
-/* ── Offscreen Rendering Performance Optimization ── */
+/* ── Offscreen Rendering Performance Optimization (Excluding animated marquees to prevent WebKit stall) ── */
 #mission,
-#speakers,
-#episodes,
-#full-releases,
-#industry {
+#full-releases {
   content-visibility: auto;
   contain-intrinsic-size: 1px 800px;
 }

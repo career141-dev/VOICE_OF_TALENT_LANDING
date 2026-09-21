@@ -57,128 +57,126 @@ export default function BuiltForEveryoneSection() {
         {/* ── DESKTOP GRID (>= xl): 4-Column Interactive Hover View ── */}
         <div className="hidden grid w-full grid-cols-4 gap-5 xl:gap-6 xl:grid">
           {audiences.map((audience) => (
-            <article
-              key={`desktop-${audience.number}`}
-              className="
-                group
-                relative
-                h-[390px]
-                xl:h-[410px]
-                w-full
-                shrink-0
-                cursor-pointer
-                overflow-hidden
-                rounded-[28px]
-                border-[1.62px]
-                border-[#E0E0E0]
-                bg-[#F5F7FA]
-                p-7
-                xl:p-8
-                transition-all
-                duration-500
-                ease-out
-                hover:-translate-y-1.5
-                hover:border-[#159A99]
-                hover:bg-[#159A99]
-                hover:shadow-[0_20px_40px_-10px_rgba(21,154,153,0.35)]
-              "
-            >
-              {/* Number exits upward on hover */}
-              <span
+            <div key={`desktop-${audience.number}`} className="group relative h-[390px] xl:h-[410px] w-full shrink-0">
+              <article
                 className="
-                  absolute
-                  left-7
-                  top-6
-                  select-none
-                  font-geist
-                  text-[88px]
-                  font-bold
-                  leading-none
-                  tracking-[-0.08em]
-                  text-[#D9D9D9]
+                  relative
+                  h-full
+                  w-full
+                  cursor-pointer
+                  overflow-hidden
+                  rounded-[28px]
+                  border-[1.62px]
+                  border-[#E0E0E0]
+                  bg-[#F5F7FA]
+                  p-7
+                  xl:p-8
                   transition-all
                   duration-500
-                  ease-[cubic-bezier(0.22,1,0.36,1)]
-                  group-hover:-translate-y-10
-                  group-hover:opacity-0
-                  xl:left-8
-                  xl:top-7
-                  xl:text-[96px]
+                  ease-out
+                  group-hover:-translate-y-1.5
+                  group-hover:border-[#159A99]
+                  group-hover:bg-[#159A99]
+                  group-hover:shadow-[0_20px_40px_-10px_rgba(21,154,153,0.35)]
                 "
               >
-                {audience.number}
-              </span>
-
-              {/* Dynamic Content Container: moves smoothly to top on hover */}
-              <div
-                className="
-                  absolute
-                  left-7
-                  right-7
-                  top-[225px]
-                  xl:left-8
-                  xl:right-8
-                  xl:top-[235px]
-                  flex
-                  flex-col
-                  transition-all
-                  duration-600
-                  ease-[cubic-bezier(0.22,1,0.36,1)]
-                  group-hover:top-7
-                  xl:group-hover:top-8
-                "
-              >
-                {/* Title */}
-                <h3
+                {/* ── Number at top-left: Glides smoothly upward & fades on hover ── */}
+                <span
                   className="
+                    absolute
+                    left-7
+                    top-6
+                    xl:left-8
+                    xl:top-7
+                    select-none
                     font-geist
-                    text-[22px]
-                    font-normal
-                    leading-[118%]
-                    tracking-normal
-                    text-black
-                    transition-colors
-                    duration-500
-                    ease-out
-                    group-hover:text-white
-                    xl:text-[26px]
-                    2xl:text-[28px]
-                  "
-                >
-                  {audience.title}
-                </h3>
-
-                {/* Description: naturally flows under Title with guaranteed space at any scale */}
-                <p
-                  className="
-                    max-h-0
-                    opacity-0
-                    overflow-hidden
-                    pointer-events-none
-                    -translate-y-2
-                    font-geist
-                    font-light
-                    text-[18px]
-                    leading-[150%]
-                    tracking-normal
-                    text-white/95
+                    text-[88px]
+                    xl:text-[96px]
+                    font-bold
+                    leading-none
+                    tracking-[-0.08em]
+                    text-[#D9D9D9]
                     transition-all
                     duration-500
-                    delay-75
                     ease-[cubic-bezier(0.22,1,0.36,1)]
-                    group-hover:max-h-60
-                    group-hover:opacity-100
-                    group-hover:translate-y-0
-                    group-hover:mt-4
-                    xl:group-hover:mt-5
-                    xl:text-[19.5px]
-                    min-[1560px]:text-[20.5px]
+                    group-hover:-translate-y-6
+                    group-hover:opacity-0
                   "
                 >
-                  {audience.description}
-                </p>
-              </div>
-            </article>
+                  {audience.number}
+                </span>
+
+                {/* ── Dynamic Content Container: Glides seamlessly from default bottom to exact vertical center on hover ── */}
+                <div
+                  className="
+                    absolute
+                    left-7
+                    right-7
+                    top-[225px]
+                    xl:left-8
+                    xl:right-8
+                    xl:top-[235px]
+                    flex
+                    flex-col
+                    transition-all
+                    duration-500
+                    ease-[cubic-bezier(0.22,1,0.36,1)]
+                    group-hover:top-[95px]
+                    min-[1400px]:group-hover:top-[105px]
+                    xl:group-hover:top-[105px]
+                    transform-gpu
+                  "
+                >
+                  {/* Title: Smooth color transition without blinking or re-rendering */}
+                  <h3
+                    className="
+                      font-geist
+                      text-[22px]
+                      xl:text-[26px]
+                      2xl:text-[28px]
+                      font-semibold
+                      leading-[118%]
+                      tracking-normal
+                      text-black
+                      transition-colors
+                      duration-300
+                      ease-out
+                      group-hover:text-white
+                    "
+                  >
+                    {audience.title}
+                  </h3>
+
+                  {/* Description: Naturally unfolds and fades in beneath Title with gentle staggered ease */}
+                  <p
+                    className="
+                      mt-3
+                      xl:mt-3.5
+                      font-geist
+                      font-light
+                      text-[15px]
+                      xl:text-[16.5px]
+                      2xl:text-[17.5px]
+                      leading-[150%]
+                      tracking-normal
+                      text-white/95
+                      opacity-0
+                      max-h-0
+                      overflow-hidden
+                      pointer-events-none
+                      transition-all
+                      duration-500
+                      ease-[cubic-bezier(0.22,1,0.36,1)]
+                      group-hover:opacity-100
+                      group-hover:max-h-60
+                      group-hover:pointer-events-auto
+                    "
+                  >
+                    {audience.description}
+                  </p>
+                </div>
+              </article>
+            </div>
           ))}
         </div>
 
@@ -235,8 +233,8 @@ export default function BuiltForEveryoneSection() {
                 <div className="relative z-10 flex flex-col flex-1">
                   <h3
                     className={[
-                      "font-geist text-[20px] sm:text-[22px] font-normal leading-[1.22] tracking-normal transition-colors duration-500",
-                      isActive ? "text-white" : "text-black",
+                      "font-geist text-[20px] sm:text-[22px] font-semibold leading-[1.22] tracking-normal transition-colors duration-500",
+                      isActive ? "text-white" : "text-[#262626]",
                     ].join(" ")}
                   >
                     {audience.title}
