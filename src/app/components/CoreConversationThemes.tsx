@@ -188,14 +188,14 @@ export default function CoreConversationThemes() {
                     diff === 0
                       ? "50%"
                       : diff === -1
-                        ? "calc(30% - 28px)"
+                        ? "calc(30% - 24px)"
                         : diff === 1
-                          ? "calc(70% + 28px)"
+                          ? "calc(70% + 24px)"
                           : diff < -1
                             ? "-40%"
                             : "140%",
                   x: diff === 0 ? "-50%" : diff === -1 ? "-100%" : "0%",
-                  width: diff === 0 ? "40%" : "28%",
+                  width: diff === 0 ? "40%" : "29%",
                   height: diff === 0 ? "450px" : "330px",
                   zIndex: diff === 0 ? 30 : 20,
                   opacity: Math.abs(diff) <= 1 ? 1 : 0,
@@ -228,26 +228,22 @@ export default function CoreConversationThemes() {
                   if (diff === -1) handlePrev();
                   if (diff === 1) handleNext();
                 }}
-                className={`absolute top-1/2 -translate-y-1/2 flex flex-col items-center justify-center text-center rounded-[28px] xl:rounded-[34px] border-[1.5px] select-none px-4 xl:px-8 py-6 overflow-hidden ${
+                className={`absolute top-1/2 -translate-y-1/2 flex flex-col items-center justify-center text-center rounded-[28px] xl:rounded-[34px] border-[1.5px] select-none px-3 sm:px-4 xl:px-6 py-6 overflow-hidden ${
                   isActive ? "cursor-default" : "cursor-pointer"
                 }`}
               >
-                {/* Strictly Fixed-Width Content Container: Identical width on every card so text never reflows */}
-                <div
-                  style={{ width: "340px", minWidth: "340px", maxWidth: "340px" }}
-                  className="flex flex-col items-center justify-center mx-auto shrink-0"
-                >
-                  {/* Title Slot: Fixed width; translates vertically on side cards to stay perfectly centered */}
+                {/* Content Container: Centered flexbox */}
+                <div className="w-full max-w-[340px] flex flex-col items-center justify-center mx-auto shrink-0">
+                  {/* Title Slot: Flexible width (adapts to side cards so text never cuts off on zoom). Translates vertically on side cards to stay perfectly centered */}
                   <motion.div
                     animate={{
-                      y: diff === 0 ? 0 : 52,
+                      y: diff === 0 ? 0 : 50,
                     }}
                     transition={{
                       duration: DESKTOP_BOX_DURATION_MS / 1000,
                       ease: [0.25, 1, 0.5, 1],
                     }}
-                    style={{ width: "340px", minWidth: "340px", maxWidth: "340px", height: "70px" }}
-                    className="flex items-center justify-center text-center shrink-0 px-1"
+                    className="w-full flex items-center justify-center text-center shrink-0 px-2 min-h-[64px]"
                   >
                     <motion.h3
                       animate={{
@@ -258,15 +254,12 @@ export default function CoreConversationThemes() {
                         ease: [0.25, 1, 0.5, 1],
                       }}
                       style={{
-                        width: "340px",
-                        minWidth: "340px",
-                        maxWidth: "340px",
                         display: "-webkit-box",
-                        WebkitLineClamp: 2,
+                        WebkitLineClamp: 3,
                         WebkitBoxOrient: "vertical",
                         overflow: "hidden",
                       }}
-                      className="font-cal font-normal leading-[1.22] text-[22px] sm:text-[24px] xl:text-[26px] text-center shrink-0"
+                      className="w-full font-cal font-normal leading-[1.22] text-[18.5px] sm:text-[21px] xl:text-[25px] text-center"
                     >
                       {theme.title}
                     </motion.h3>
@@ -388,11 +381,11 @@ export default function CoreConversationThemes() {
                       }}
                       style={{
                         display: "-webkit-box",
-                        WebkitLineClamp: 2,
+                        WebkitLineClamp: 3,
                         WebkitBoxOrient: "vertical",
                         overflow: "hidden",
                       }}
-                      className="w-full font-cal text-[20px] sm:text-[23px] md:text-[26px] font-normal leading-[1.25] text-center shrink-0"
+                      className="w-full font-cal text-[19px] sm:text-[22px] md:text-[25px] font-normal leading-[1.25] text-center shrink-0"
                     >
                       {theme.title}
                     </motion.h3>
