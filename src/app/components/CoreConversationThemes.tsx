@@ -256,16 +256,21 @@ export default function CoreConversationThemes() {
                     </motion.h3>
                   </div>
 
-                  {/* Paragraph Slot: Strictly fixed width & height with increased font size */}
-                  <div className="w-full h-[96px] xl:h-[104px] mt-3 xl:mt-4 flex items-center justify-center text-center overflow-hidden shrink-0 px-1">
-                    <motion.p
-                      animate={{
-                        opacity: diff === 0 ? 1 : 0,
-                      }}
-                      transition={{
-                        duration: DESKTOP_BOX_DURATION_MS / 1000,
-                        ease: [0.25, 1, 0.5, 1],
-                      }}
+                  {/* Paragraph Slot: Only occupies space when active (diff === 0), so side cards center text completely */}
+                  <motion.div
+                    initial={false}
+                    animate={{
+                      height: diff === 0 ? 104 : 0,
+                      marginTop: diff === 0 ? 16 : 0,
+                      opacity: diff === 0 ? 1 : 0,
+                    }}
+                    transition={{
+                      duration: DESKTOP_BOX_DURATION_MS / 1000,
+                      ease: [0.25, 1, 0.5, 1],
+                    }}
+                    className="w-full flex items-center justify-center text-center overflow-hidden shrink-0 px-1"
+                  >
+                    <p
                       style={{
                         display: "-webkit-box",
                         WebkitLineClamp: 4,
@@ -276,8 +281,8 @@ export default function CoreConversationThemes() {
                       className="w-full font-geist text-[15px] sm:text-[16px] xl:text-[17px] font-light leading-[25px] xl:leading-[27px] text-white/95 text-center shrink-0"
                     >
                       {theme.description}
-                    </motion.p>
-                  </div>
+                    </p>
+                  </motion.div>
                 </div>
               </motion.article>
             );
@@ -361,16 +366,21 @@ export default function CoreConversationThemes() {
                     </motion.h3>
                   </div>
 
-                  {/* Paragraph Slot: Increased text size & line height */}
-                  <div className="w-full h-[74px] sm:h-[82px] mt-3 sm:mt-4 flex items-center justify-center overflow-hidden px-1">
-                    <motion.p
-                      animate={{
-                        opacity: diff === 0 ? 1 : 0,
-                      }}
-                      transition={{
-                        duration: MOBILE_BOX_DURATION_MS / 1000,
-                        ease: [0.25, 1, 0.5, 1],
-                      }}
+                  {/* Paragraph Slot: Only occupies space when active */}
+                  <motion.div
+                    initial={false}
+                    animate={{
+                      height: diff === 0 ? 82 : 0,
+                      marginTop: diff === 0 ? 16 : 0,
+                      opacity: diff === 0 ? 1 : 0,
+                    }}
+                    transition={{
+                      duration: MOBILE_BOX_DURATION_MS / 1000,
+                      ease: [0.25, 1, 0.5, 1],
+                    }}
+                    className="w-full flex items-center justify-center overflow-hidden px-1"
+                  >
+                    <p
                       style={{
                         display: "-webkit-box",
                         WebkitLineClamp: 3,
@@ -381,8 +391,8 @@ export default function CoreConversationThemes() {
                       className="w-full font-geist text-[14.5px] sm:text-[16px] md:text-[17px] font-light leading-[22px] sm:leading-[25px] text-white/95 text-center"
                     >
                       {theme.description}
-                    </motion.p>
-                  </div>
+                    </p>
+                  </motion.div>
                 </div>
               </motion.article>
             );
