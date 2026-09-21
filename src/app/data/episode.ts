@@ -15,6 +15,7 @@ export interface SeriesEpisode {
   duration: string;
   videoId?: string;
   videoUrl?: string;
+  reels?: string[];
   bannerImage: string;
   thumbnail: string;
 }
@@ -29,6 +30,10 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     company: "Aitken Spence Hotels",
     duration: "04:46",
     videoUrl: "https://media.career141.com/new%20reels/Mr.%20Patrick/Mr.%20Patrick.mp4",
+    reels: [
+      "https://media.career141.com/new%20reels/Mr.%20Patrick/01%20Reel%20Mr.%20Patrick.mp4",
+      "https://media.career141.com/new%20reels/Mr.%20Patrick/02%20Reel%20Mr.%20Patrick.mp4",
+    ],
     bannerImage: withVersion(`${R2_MEDIA_URL}/images/speaker1.png`),
     thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-01.webp`,
   },
@@ -69,6 +74,10 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     company: "LSEG (London Stock Exchange Group)",
     duration: "03:10",
     videoUrl: "https://media.career141.com/new%20reels/Ms.%20Surani/Ms.%20Surani.mp4",
+    reels: [
+      "https://media.career141.com/new%20reels/Ms.%20Surani/01%20Reel%20Ms.%20Surani.mp4",
+      "https://media.career141.com/new%20reels/Ms.%20Surani/02%20Reel%20Ms.%20Surani.mp4",
+    ],
     bannerImage: withVersion(`${R2_MEDIA_URL}/images/speaker5.png`),
     thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-05.webp`,
   },
@@ -98,7 +107,7 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     role: "Director / Senior HR Consultant",
     company: "(Former Director HR - Asiri Health)",
     duration: "06:55",
-    videoUrl: "https://media.career141.com/new%20reels/Ms.%20Hasanthi/Ms.%20Hasanthi%20Desaram.mp4",
+    videoUrl: "https://media.career141.com/new%20reels/Ms.%20Hasanthi/Ms.%20Hasanthi.mp4",
     bannerImage: withVersion(`${R2_MEDIA_URL}/images/speaker8.png`),
     thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-08.webp`,
   },
@@ -119,6 +128,10 @@ export const seriesEpisodesData: SeriesEpisode[] = [
     company: "Allied Commercial Fertilizers",
     duration: "06:03",
     videoUrl: "https://media.career141.com/new%20reels/Mr.%20Indika/Mr.%20Indika.mp4",
+    reels: [
+      "https://media.career141.com/new%20reels/Mr.%20Indika/Reel%201%20Mr.%20Indika.mp4",
+      "https://media.career141.com/new%20reels/Mr.%20Indika/Reel%202%20Mr.%20Indika.mp4",
+    ],
     bannerImage: withVersion(`${R2_MEDIA_URL}/images/speaker10.png`),
     thumbnail: `${SERIES_THUMBNAIL_BASE}/Pillar-10.webp`,
   },
