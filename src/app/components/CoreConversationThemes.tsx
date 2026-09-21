@@ -60,8 +60,8 @@ const themes: ThemeItem[] = [
   },
 ];
 
-const DESKTOP_BOX_DURATION_MS = 450;
-const MOBILE_BOX_DURATION_MS = 450;
+const DESKTOP_BOX_DURATION_MS = 600;
+const MOBILE_BOX_DURATION_MS = 550;
 
 function getCircularDiff(index: number, active: number, total: number) {
   let diff = index - active;
@@ -90,14 +90,14 @@ export default function CoreConversationThemes() {
 
   const triggerPrev = useCallback(() => {
     const now = Date.now();
-    if (now - lastSwipeTime.current < 400) return;
+    if (now - lastSwipeTime.current < 500) return;
     lastSwipeTime.current = now;
     handlePrev();
   }, [handlePrev]);
 
   const triggerNext = useCallback(() => {
     const now = Date.now();
-    if (now - lastSwipeTime.current < 400) return;
+    if (now - lastSwipeTime.current < 500) return;
     lastSwipeTime.current = now;
     handleNext();
   }, [handleNext]);
@@ -218,11 +218,14 @@ export default function CoreConversationThemes() {
                 }
                 transition={{
                   duration: DESKTOP_BOX_DURATION_MS / 1000,
-                  ease: [0.25, 1, 0.5, 1],
+                  ease: [0.16, 1, 0.3, 1],
+                  zIndex: { delay: diff === 0 ? 0 : 0.08 },
                 }}
                 style={{
                   backfaceVisibility: "hidden",
                   WebkitFontSmoothing: "antialiased",
+                  transform: "translateZ(0)",
+                  willChange: "transform, left, width, height, opacity",
                 }}
                 onClick={() => {
                   if (diff === -1) handlePrev();
@@ -241,7 +244,7 @@ export default function CoreConversationThemes() {
                     }}
                     transition={{
                       duration: DESKTOP_BOX_DURATION_MS / 1000,
-                      ease: [0.25, 1, 0.5, 1],
+                      ease: [0.16, 1, 0.3, 1],
                     }}
                     className="w-full flex items-center justify-center text-center shrink-0 px-2 min-h-[64px]"
                   >
@@ -251,7 +254,7 @@ export default function CoreConversationThemes() {
                       }}
                       transition={{
                         duration: DESKTOP_BOX_DURATION_MS / 1000,
-                        ease: [0.25, 1, 0.5, 1],
+                        ease: [0.16, 1, 0.3, 1],
                       }}
                       style={{
                         display: "-webkit-box",
@@ -281,8 +284,9 @@ export default function CoreConversationThemes() {
                         opacity: diff === 0 ? 1 : 0,
                       }}
                       transition={{
-                        duration: DESKTOP_BOX_DURATION_MS / 1000,
-                        ease: [0.25, 1, 0.5, 1],
+                        duration: diff === 0 ? 0.38 : 0.22,
+                        delay: diff === 0 ? 0.14 : 0,
+                        ease: "easeInOut",
                       }}
                       style={{
                         width: "340px",
@@ -347,11 +351,13 @@ export default function CoreConversationThemes() {
                 }}
                 transition={{
                   duration: MOBILE_BOX_DURATION_MS / 1000,
-                  ease: [0.25, 1, 0.5, 1],
+                  ease: [0.16, 1, 0.3, 1],
                 }}
                 style={{
                   backfaceVisibility: "hidden",
                   WebkitFontSmoothing: "antialiased",
+                  transform: "translateZ(0)",
+                  willChange: "transform, left, width, height, opacity",
                 }}
                 onClick={() => {
                   if (diff === -1) triggerPrev();
@@ -367,7 +373,7 @@ export default function CoreConversationThemes() {
                     }}
                     transition={{
                       duration: MOBILE_BOX_DURATION_MS / 1000,
-                      ease: [0.25, 1, 0.5, 1],
+                      ease: [0.16, 1, 0.3, 1],
                     }}
                     className="w-full h-[62px] sm:h-[68px] flex items-center justify-center px-1 shrink-0"
                   >
@@ -377,7 +383,7 @@ export default function CoreConversationThemes() {
                       }}
                       transition={{
                         duration: MOBILE_BOX_DURATION_MS / 1000,
-                        ease: [0.25, 1, 0.5, 1],
+                        ease: [0.16, 1, 0.3, 1],
                       }}
                       style={{
                         display: "-webkit-box",
@@ -398,8 +404,9 @@ export default function CoreConversationThemes() {
                         opacity: diff === 0 ? 1 : 0,
                       }}
                       transition={{
-                        duration: MOBILE_BOX_DURATION_MS / 1000,
-                        ease: [0.25, 1, 0.5, 1],
+                        duration: diff === 0 ? 0.35 : 0.2,
+                        delay: diff === 0 ? 0.12 : 0,
+                        ease: "easeInOut",
                       }}
                       style={{
                         display: "-webkit-box",
