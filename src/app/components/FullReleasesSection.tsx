@@ -435,6 +435,7 @@ export default function FullReleasesSection() {
     };
     const video = videoRef.current as (HTMLVideoElement & {
       webkitDisplayingFullscreen?: boolean;
+      webkitPresentationMode?: string;
     }) | null;
 
     return Boolean(
@@ -445,7 +446,8 @@ export default function FullReleasesSection() {
       doc.webkitIsFullscreen ||
       doc.mozFullScreenElement ||
       doc.msFullscreenElement ||
-      video?.webkitDisplayingFullscreen
+      video?.webkitDisplayingFullscreen ||
+      (video?.webkitPresentationMode && video.webkitPresentationMode === "fullscreen")
     );
   };
 
@@ -461,6 +463,8 @@ export default function FullReleasesSection() {
     const video = videoRef.current as (HTMLVideoElement & {
       webkitExitFullscreen?: () => void;
       webkitExitFullScreen?: () => void;
+      webkitSetPresentationMode?: (mode: string) => void;
+      webkitPresentationMode?: string;
       webkitDisplayingFullscreen?: boolean;
     }) | null;
 
@@ -487,6 +491,9 @@ export default function FullReleasesSection() {
         } else if (typeof video.webkitExitFullScreen === "function") {
           video.webkitExitFullScreen();
         }
+        if (typeof video.webkitSetPresentationMode === "function") {
+          video.webkitSetPresentationMode("inline");
+        }
       } catch {
         // ignore
       }
@@ -510,6 +517,8 @@ export default function FullReleasesSection() {
       webkitEnterFullScreen?: () => void;
       webkitExitFullscreen?: () => void;
       webkitExitFullScreen?: () => void;
+      webkitSetPresentationMode?: (mode: string) => void;
+      webkitPresentationMode?: string;
     }) | null;
 
     if (!container && !video) return;
@@ -522,18 +531,16 @@ export default function FullReleasesSection() {
           .requestFullscreen()
           .then(() => setIsFullscreen(true))
           .catch(() => {
-            if (container.webkitRequestFullscreen) {
+            if (video && typeof video.webkitSetPresentationMode === "function") {
               try {
-                container.webkitRequestFullscreen();
+                video.webkitSetPresentationMode("fullscreen");
                 setIsFullscreen(true);
-              } catch {
-                if (video && typeof video.webkitEnterFullscreen === "function") {
-                  video.webkitEnterFullscreen();
-                  setIsFullscreen(true);
-                }
-              }
+              } catch {}
             } else if (video && typeof video.webkitEnterFullscreen === "function") {
               video.webkitEnterFullscreen();
+              setIsFullscreen(true);
+            } else if (video && typeof video.webkitEnterFullScreen === "function") {
+              video.webkitEnterFullScreen();
               setIsFullscreen(true);
             }
           });
@@ -542,7 +549,12 @@ export default function FullReleasesSection() {
           container.webkitRequestFullscreen();
           setIsFullscreen(true);
         } catch {
-          if (video && typeof video.webkitEnterFullscreen === "function") {
+          if (video && typeof video.webkitSetPresentationMode === "function") {
+            try {
+              video.webkitSetPresentationMode("fullscreen");
+              setIsFullscreen(true);
+            } catch {}
+          } else if (video && typeof video.webkitEnterFullscreen === "function") {
             video.webkitEnterFullscreen();
             setIsFullscreen(true);
           }
@@ -552,8 +564,23 @@ export default function FullReleasesSection() {
           container.webkitRequestFullScreen();
           setIsFullscreen(true);
         } catch {
-          if (video && typeof video.webkitEnterFullScreen === "function") {
+          if (video && typeof video.webkitSetPresentationMode === "function") {
+            try {
+              video.webkitSetPresentationMode("fullscreen");
+              setIsFullscreen(true);
+            } catch {}
+          } else if (video && typeof video.webkitEnterFullScreen === "function") {
             video.webkitEnterFullScreen();
+            setIsFullscreen(true);
+          }
+        }
+      } else if (video && typeof video.webkitSetPresentationMode === "function") {
+        try {
+          video.webkitSetPresentationMode("fullscreen");
+          setIsFullscreen(true);
+        } catch {
+          if (typeof video.webkitEnterFullscreen === "function") {
+            video.webkitEnterFullscreen();
             setIsFullscreen(true);
           }
         }
@@ -993,27 +1020,8 @@ export default function FullReleasesSection() {
                               )}
                             </button>
 
-                            {/* Top Right Action Buttons: Exit Fullscreen + Close Video */}
+                            {/* Top Right Action Buttons: Close Video */}
                             <div className="flex items-center gap-2">
-                              {isFullscreen && (
-                                <button
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    exitAllFullscreen();
-                                    resetControlsTimeout();
-                                  }}
-                                  aria-label="Exit Fullscreen / Minimize"
-                                  title="Exit Fullscreen / Minimize"
-                                  className="flex items-center gap-1.5 rounded-full bg-[#159A99] px-3.5 py-2 font-geist text-xs font-bold text-white shadow-lg backdrop-blur-md transition-all hover:bg-[#128281] active:scale-95 cursor-pointer"
-                                >
-                                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M4 14h6m0 0v6m0-6L3 21m17-7h-6m0 0v6m0-6l7 7M14 10h6m-6 0V4m0 6l7-7M10 10H4m6 0V4m0 6L3 3" />
-                                  </svg>
-                                  <span>Exit Fullscreen</span>
-                                </button>
-                              )}
-
                               {/* Close Video button */}
                               <button
                                 type="button"
