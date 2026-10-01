@@ -81,7 +81,8 @@ export default function SeriesSection() {
       e.stopPropagation();
     }
     if (typeof window !== "undefined") {
-      const url = `${window.location.origin}/?speaker=${episode.id}#episodes`;
+      const baseUrl = window.location.href.split("?")[0].split("#")[0];
+      const url = `${baseUrl}?speaker=${episode.id}#episodes`;
       navigator.clipboard.writeText(url).then(() => {
         setToastMessage(`Copied direct video link for ${episode.name}!`);
         setTimeout(() => setToastMessage(null), 3000);
@@ -174,6 +175,7 @@ export default function SeriesSection() {
     if (typeof window !== "undefined") {
       const url = new URL(window.location.href);
       url.searchParams.set("speaker", episode.id.toString());
+      url.hash = "episodes";
       window.history.replaceState(null, "", url.toString());
     }
   };
@@ -341,11 +343,18 @@ export default function SeriesSection() {
 
   // Smooth scroll helper to episode video player section
   const scrollToEpisodesContainer = (smooth = true) => {
-    const target =
+    const playerTarget =
+      document.getElementById("episode-player") ||
+      (document.querySelector("#episodes article") as HTMLElement | null) ||
       (document.querySelector("#episodes > div") as HTMLElement | null) ||
       document.getElementById("episodes");
-    if (target) {
-      target.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
+    if (playerTarget) {
+      const yOffset = -90;
+      const targetY = playerTarget.getBoundingClientRect().top + window.scrollY + yOffset;
+      window.scrollTo({
+        top: Math.max(0, targetY),
+        behavior: smooth ? "smooth" : "auto",
+      });
     }
   };
 
@@ -388,15 +397,27 @@ export default function SeriesSection() {
         setShowControls(true);
         setCurrentTime(0);
 
-        // Scroll to document.querySelector("#episodes > div")
-        const delay = isInitial ? 350 : 50;
         setTimeout(() => {
+          safePlay();
+        }, 80);
+
+        if (isInitial) {
+          scrollToEpisodesContainer(false);
+          setTimeout(() => scrollToEpisodesContainer(true), 150);
+          setTimeout(() => scrollToEpisodesContainer(true), 450);
+          setTimeout(() => scrollToEpisodesContainer(true), 900);
+        } else {
           scrollToEpisodesContainer(true);
-        }, delay);
+        }
       } else if (window.location.hash === "#episodes") {
-        setTimeout(() => {
+        if (isInitial) {
+          scrollToEpisodesContainer(false);
+          setTimeout(() => scrollToEpisodesContainer(true), 150);
+          setTimeout(() => scrollToEpisodesContainer(true), 450);
+          setTimeout(() => scrollToEpisodesContainer(true), 900);
+        } else {
           scrollToEpisodesContainer(true);
-        }, isInitial ? 350 : 50);
+        }
       }
     };
 
@@ -528,6 +549,7 @@ export default function SeriesSection() {
         <div className="w-full grid gap-5 xl:gap-[26px] lg:grid-cols-[minmax(0,960fr)_minmax(0,620fr)] xl:grid-cols-[minmax(0,1000fr)_minmax(0,580fr)] 2xl:grid-cols-[minmax(0,1050fr)_minmax(0,550fr)] items-stretch">
           {/* Main Featured Video / Episode Widget */}
           <article
+            id="episode-player"
             onContextMenu={(e) => handleItemContextMenu(e, selectedEpisode)}
             className="group relative w-full aspect-[4/5] min-[480px]:aspect-[3/4] sm:aspect-[16/9.5] md:aspect-[16/9] overflow-hidden rounded-[28px] md:rounded-[32px] max-[760px]:shadow-none max-[760px]:border-0 max-[760px]:ring-0 shadow-xl border-none outline-none bg-black sm:bg-transparent isolate select-none"
           >

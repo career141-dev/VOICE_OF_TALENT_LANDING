@@ -40,11 +40,23 @@ export default function Home() {
       if ("scrollRestoration" in window.history) {
         window.history.scrollRestoration = "manual";
       }
-      if (!window.location.hash || window.location.hash === "#top" || window.location.hash === "#hero") {
+      const searchParams = new URLSearchParams(window.location.search);
+      const hasSpeakerOrEpisode =
+        searchParams.has("speaker") ||
+        searchParams.has("episode") ||
+        searchParams.has("id") ||
+        searchParams.has("v");
+      const isTargetHash =
+        window.location.hash &&
+        window.location.hash !== "#top" &&
+        window.location.hash !== "#hero";
+
+      // If URL has speaker/episode query param or target section hash, do not force scroll to top
+      if (!hasSpeakerOrEpisode && !isTargetHash) {
         window.scrollTo(0, 0);
-        if (window.location.hash) {
-          window.history.replaceState(null, "", window.location.pathname + window.location.search);
-        }
+      } else if (window.location.hash === "#top" || window.location.hash === "#hero") {
+        window.scrollTo(0, 0);
+        window.history.replaceState(null, "", window.location.pathname + window.location.search);
       }
     }
   }, []);
