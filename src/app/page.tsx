@@ -40,14 +40,39 @@ export default function Home() {
       if ("scrollRestoration" in window.history) {
         window.history.scrollRestoration = "manual";
       }
-      window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+      const searchParams = new URLSearchParams(window.location.search);
+      const hasSpeakerOrEpisode =
+        searchParams.has("speaker") ||
+        searchParams.has("episode") ||
+        searchParams.has("id") ||
+        searchParams.has("v");
+      const isTargetHash =
+        window.location.hash &&
+        window.location.hash !== "#top" &&
+        window.location.hash !== "#hero";
 
-      if (window.location.hash) {
+      // If URL has speaker/episode query param or target section hash, do not force scroll to top
+      if (!hasSpeakerOrEpisode && !isTargetHash) {
+        window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+      } else if (window.location.hash === "#top" || window.location.hash === "#hero") {
+        window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
         window.history.replaceState(null, "", window.location.pathname + window.location.search);
       }
 
       const handlePageShow = () => {
-        window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+        const currentParams = new URLSearchParams(window.location.search);
+        const hasParam =
+          currentParams.has("speaker") ||
+          currentParams.has("episode") ||
+          currentParams.has("id") ||
+          currentParams.has("v");
+        const hasHash =
+          window.location.hash &&
+          window.location.hash !== "#top" &&
+          window.location.hash !== "#hero";
+        if (!hasParam && !hasHash) {
+          window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+        }
       };
       window.addEventListener("pageshow", handlePageShow);
       return () => {

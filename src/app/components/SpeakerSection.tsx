@@ -217,7 +217,8 @@ export default function VoicesSlider() {
     e.preventDefault();
     e.stopPropagation();
     if (typeof window !== "undefined") {
-      const url = `${window.location.origin}/?speaker=${speakerId}#episodes`;
+      const baseUrl = window.location.href.split("?")[0].split("#")[0];
+      const url = `${baseUrl}?speaker=${speakerId}#episodes`;
       navigator.clipboard.writeText(url).then(() => {
         setCopiedId(speakerId);
         setTimeout(() => setCopiedId(null), 2000);
@@ -346,16 +347,25 @@ export default function VoicesSlider() {
     }
     const targetId = speakerId ?? voicesData[activeRealIndex]?.id ?? 1;
     if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.set("speaker", targetId.toString());
+      url.hash = "episodes";
+      window.history.replaceState(null, "", url.toString());
+
       window.dispatchEvent(
         new CustomEvent("vota-select-episode", {
           detail: { episodeId: targetId },
         })
       );
-      const episodesTarget =
+      const playerTarget =
+        document.getElementById("episode-player") ||
+        (document.querySelector("#episodes article") as HTMLElement | null) ||
         (document.querySelector("#episodes > div") as HTMLElement | null) ||
         document.getElementById("episodes");
-      if (episodesTarget) {
-        episodesTarget.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (playerTarget) {
+        const yOffset = -90;
+        const targetY = playerTarget.getBoundingClientRect().top + window.scrollY + yOffset;
+        window.scrollTo({ top: Math.max(0, targetY), behavior: "smooth" });
       } else {
         window.location.hash = "episodes";
       }
@@ -449,6 +459,7 @@ export default function VoicesSlider() {
             <button
               type="button"
               onClick={(e) => handleCopyLink(e, item.id)}
+              aria-label={`Copy shareable link to ${item.name}'s video`}
               title="Copy shareable link to this speaker's video"
               className="inline-flex items-center gap-1.5 rounded-full border border-white/40 bg-black/40 px-3 py-1.5 text-[11px] md:text-xs font-semibold text-white backdrop-blur-md hover:bg-white hover:text-black transition-all cursor-pointer shadow"
             >
@@ -709,6 +720,7 @@ export default function VoicesSlider() {
                     <button
                       type="button"
                       onClick={(e) => handleCopyLink(e, speaker.id)}
+                      aria-label={`Copy shareable link to ${speaker.name}'s video`}
                       className="flex items-center gap-1 rounded-full border border-[#159A99]/30 bg-white px-2.5 py-1 text-[11px] sm:text-xs font-semibold text-[#159A99] shadow-sm hover:bg-[#159A99] hover:text-white transition-all cursor-pointer"
                     >
                       {copiedId === speaker.id ? "Copied!" : "Copy Link"}
